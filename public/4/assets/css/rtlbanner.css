@@ -1,0 +1,393 @@
+/***
+=============================================
+Banner One
+=============================================
+***/
+.banner-one {
+    position: relative;
+    display: block;
+    background: rgb(18, 33, 38);
+    background: linear-gradient(90deg, rgba(18, 33, 38, 1) 0%, rgba(18, 33, 38, 1) 35%, rgba(10, 44, 54, 1) 60%, rgba(10, 44, 54, 1) 100%);
+    padding: 512px 0px 94px;
+    z-index: 2;
+}
+
+.banner-one__pattern {
+    position: absolute;
+    top: 0;
+    right: 0; /* تغيير من left إلى right */
+    bottom: 0;
+    left: 0; /* تغيير من right إلى left */
+    background-attachment: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    opacity: 0.02;
+    z-index: -1;
+}
+
+.banner-one__pattern2 {
+    position: absolute;
+    top: 40px;
+    right: 0; /* تغيير من left إلى right */
+    left: 0; /* تغيير من right إلى left */
+    text-align: center;
+    z-index: -1;
+}
+
+.banner-one .shape1 {
+    position: absolute;
+    right: -240px; /* تغيير من left إلى right */
+    bottom: -25px;
+    z-index: -1;
+}
+
+.banner-one__img1 {
+    position: absolute;
+    bottom: -40px;
+    left: -35px; /* تغيير من right إلى left */
+    z-index: 1;
+}
+
+.banner-one__img5 {
+    position: absolute;
+    bottom: -65px;
+    left: 0; /* تغيير من right إلى left */
+    z-index: 1;
+}
+
+.banner-one__location {
+    position: absolute;
+    top: 0;
+    right: 0; /* تغيير من left إلى right */
+    left: 0; /* تغيير من right إلى left */
+    max-width: 1030px;
+    min-height: 470px;
+    margin: 0 auto;
+    z-index: 7;
+}
+
+.banner-one__location-single {}
+
+.banner-one__location-single.style1 {
+    position: absolute;
+    top: 115px;
+    right: 40px; /* تغيير من left إلى right */
+}
+
+.banner-one__location-single.style2 {
+    position: absolute;
+    top: 60px;
+    right: 360px; /* تغيير من left إلى right */
+}
+
+.banner-one__location-single.style3 {
+    position: absolute;
+    top: 150px;
+    right: 570px; /* تغيير من left إلى right */
+}
+
+.banner-one__location-single.style4 {
+    position: absolute;
+    right: 315px; /* تغيير من left إلى right */
+    bottom: 150px;
+}
+
+.banner-one__location-single.style5 {
+    position: absolute;
+    right: 545px; /* تغيير من left إلى right */
+    bottom: 145px;
+}
+
+.banner-one__location-single.style6 {
+    position: absolute;
+    top: 160px;
+    left: 265px; /* تغيير من right إلى left */
+}
+
+.banner-one__location-single.style7 {
+    position: absolute;
+    left: 240px; /* تغيير من right إلى left */
+    bottom: 185px;
+}
+
+.banner-one__location-single.style8 {
+    position: absolute;
+    top: 115px;
+    left: 25px; /* تغيير من right إلى left */
+}
+
+.banner-one__location-single .round-box {
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: var(--logistiq-base);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.banner-one__location-single .round-box::before,
+.banner-one__location-single .round-box::after {
+    position: absolute;
+    top: 50%;
+    right: 50%; /* تغيير من left إلى right */
+    transform: translate(50%, -50%); /* تعديل translate */
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    background: transparent;
+    -webkit-animation-delay: .9s;
+    animation-delay: .9s;
+    content: "";
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 60%);
+    -webkit-animation: ripple 3s infinite;
+    animation: ripple 3s infinite;
+    transition: all .4s ease;
+}
+
+.banner-one__location-single .round-box::after {
+    -webkit-animation-delay: .6s;
+    animation-delay: .6s;
+}
+
+.banner-one__location-single .round-box .bdr {
+    position: absolute;
+    top: -7px;
+    right: -7px; /* تغيير من left إلى right */
+    bottom: -7px;
+    left: -7px; /* تغيير من right إلى left */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--logistiq-base);
+    border-radius: 50%;
+    content: "";
+}
+
+.banner-one__location-single .content-box {
+    position: absolute;
+    top: 55px;
+    right: -100%; /* تغيير من left إلى right */
+    background: var(--logistiq-white);
+    padding: 0px 15px 18px;
+    border: 2px solid var(--logistiq-base);
+    text-align: center;
+    transition: all 0.2s ease;
+    -webkit-transform: translateY(10%);
+    -ms-transform: translateY(10%);
+    transform: translateY(10%);
+    opacity: 0;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    visibility: hidden;
+    z-index: 100;
+    margin-right: -40px; /* تغيير من margin-left إلى margin-right */
+}
+
+.banner-one__location-single:hover .content-box {
+    opacity: 1;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    transform: translateY(0%);
+    visibility: visible;
+}
+
+.banner-one__location-single .content-box::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 0; /* تغيير من left إلى right */
+    left: 0; /* تغيير من right إلى left */
+    margin: 0 auto;
+    width: 65px;
+    border-bottom: 25px solid var(--logistiq-white);
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    z-index: 1;
+}
+
+.banner-one__location-single .content-box::after {
+    content: "";
+    position: absolute;
+    top: -27px;
+    right: 0; /* تغيير من left إلى right */
+    left: 0; /* تغيير من right إلى left */
+    margin: 0 auto;
+    width: 65px;
+    border-bottom: 25px solid var(--logistiq-base);
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    z-index: -1;
+}
+
+.banner-one__location-single .content-box .img-box {
+    position: relative;
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #e4e4e4;
+    padding: 3px 3px 3px;
+    margin: -6px auto 8px;
+    z-index: 2;
+}
+
+.banner-one__location-single .content-box .img-box img {
+    width: 100%;
+}
+
+.banner-one__location-single .content-box .text-box {
+    position: relative;
+    display: block;
+}
+
+.banner-one__location-single .content-box .text-box h4 {
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.banner-one__location-single .content-box .text-box p {
+    color: var(--logistiq-black);
+    font-size: 15px;
+    line-height: 24px;
+}
+
+.banner-one__content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-one__content-left {
+    position: relative;
+    display: block;
+    text-align: left; /* تغيير من right إلى left */
+}
+
+.banner-one__content-left h2 {
+    color: var(--logistiq-white);
+    font-size: 74px;
+    line-height: 1.1em;
+    font-weight: 700;
+    text-transform: capitalize;
+    margin-bottom: 27px;
+}
+
+.banner-one__content-left h2 span {
+    color: var(--logistiq-base);
+}
+
+.banner-one__content-left p {
+    color: var(--logistiq-white);
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.banner-one__content-right {
+    position: relative;
+    display: block;
+    padding-right: 40px; /* تغيير من padding-left إلى padding-right */
+    margin-right: 40px; /* تغيير من margin-left إلى margin-right */
+}
+
+.banner-one__content-right::before {
+    position: absolute;
+    top: 10px;
+    right: 0; /* تغيير من left إلى right */
+    bottom: 0px;
+    width: 2px;
+    background: var(--logistiq-base);
+    content: "";
+}
+
+.banner-one__content-right-text {
+    position: relative;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.banner-one__content-right-text p {
+    color: #E4E4E4;
+    font-size: 20px;
+    line-height: 34px;
+}
+
+.banner-one__content-right-middle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.banner-one__content-right-middle ul {
+    position: relative;
+    display: block;
+}
+
+.banner-one__content-right-middle ul li {
+    position: relative;
+    display: block;
+    float: right; /* تغيير من left إلى right */
+}
+
+.banner-one__content-right-middle ul li+li {
+    margin-right: -20px; /* تغيير من margin-left إلى margin-right */
+    margin-left: 0; /* إضافة */
+}
+
+.banner-one__content-right-middle ul li .img-box {
+    position: relative;
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--logistiq-base);
+}
+
+.banner-one__content-right-middle ul li .img-box img {
+    width: 100%;
+}
+
+.banner-one__content-right-middle .text-box {
+    position: relative;
+    display: block;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.banner-one__content-right-middle .text-box h2 {
+    color: var(--logistiq-white);
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.banner-one__content-right-middle .text-box p {
+    color: var(--logistiq-white);
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 700;
+}
+
+.banner-one__content-right-btn {
+    position: relative;
+    display: block;
+    margin-top: 30px;
+    line-height: 0;
+}
+
+.banner-one__content-right-btn .hover-btn {
+    background-color: var(--logistiq-white);
+}
+
+.banner-one__content-right-btn .thm-btn:hover {
+    color: var(--logistiq-black);
+}

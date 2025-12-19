@@ -28,16 +28,16 @@ Route::get('banners', [App\Http\Controllers\API\BannerController::class, 'index'
 //api
 
 
-Route::prefix('shipper')->group(function () {
-    Route::post('/login', [\App\Http\Controllers\api\ShipperAuthController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\api\ShipperAuthController::class, 'registerapi'])->withoutMiddleware('auth:api');;
-});
+// Route::prefix('shipper')->group(function () {
+//     Route::post('/login', [\App\Http\Controllers\api\ShipperAuthController::class, 'login']);
+//     Route::post('/register', [\App\Http\Controllers\api\ShipperAuthController::class, 'registerapi'])->withoutMiddleware('auth:api');;
+// });
 
-Route::prefix('carrier')->group(function () {
-    Route::post('/login', [\App\Http\Controllers\api\CarrierController::class, 'cclogin']);
-    Route::post('/register', [\App\Http\Controllers\api\CarrierController::class, 'ccregisterapi'])->withoutMiddleware('auth:api');;
-});
-Route::prefix('broker')->group(function () {
-    Route::post('/login', [\App\Http\Controllers\api\brokerController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\api\brokerController::class, 'registerapi'])->withoutMiddleware('auth:api');;
-});
+// Route::prefix('carrier')->group(function () {
+//     Route::post('/login', [\App\Http\Controllers\api\CarrierController::class, 'cclogin']);
+//     Route::post('/register', [\App\Http\Controllers\api\CarrierController::class, 'ccregisterapi'])->withoutMiddleware('auth:api');;
+// });
+// Route::prefix('broker')->group(function () {
+//     Route::post('/login', [\App\Http\Controllers\api\brokerController::class, 'login']);
+//     Route::post('/register', [\App\Http\Controllers\api\brokerController::class, 'registerapi'])->withoutMiddleware('auth:api');;
+// });

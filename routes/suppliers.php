@@ -15,9 +15,6 @@ Route::group(['prefix' => 'supplier'], function () {
 
 
 
-Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth:supplier']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
 
 
 
@@ -48,10 +45,5 @@ Route::group(['prefix' => 'supplier', 'middleware' => 'supplier'], function () {
     Route::get('/supplier-branch/{slug}/', [App\Http\Controllers\Auth\Admin\sellerController::class, 'sngilbranch'])->name('supplier.sngilbranch');
     Route::get('/supplier-box/{slug}/', [App\Http\Controllers\Auth\Admin\sellerController::class, 'groupOfProduct'])->name('supplier.groupOfProduct');
     // Route::get('/cart',[App\Http\Controllers\Auth\Admin\sellerController::class,'cartDetails'])->name('cart');
-    Route::resource('/supplier-trauck', TruckController::class);
 
-
-
-    Route::resource('/supplier-LoadPackage', LoadPackageController::class)->name('*', 'supplier.LoadPackage');
-    Route::match(['get', 'post'], '/supplier-LoadPackage_status', [LoadPackageController::class, 'LoadPackageStatus'])->name('*', 'supplier.LoadPackage.status');
 });

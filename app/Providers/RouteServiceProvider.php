@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
                 $user = $app['auth']->user();
                 if ($user) {
                     if ($user->isAdmin()) {
-                        return $response->setIntendedUrl($app['url']->route('admin.dashboard'));
+                        return $response->setIntendedUrl($app['url']->route('admin'));
                     } elseif ($user->isDoctor()) {
                         return $response->setIntendedUrl($app['url']->route('doctor.dashboard'));
                     } elseif ($user->isPatient()) {

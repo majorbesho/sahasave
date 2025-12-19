@@ -402,7 +402,7 @@
                 });
                 // Make the AJAX POST request
                 $.ajax({
-                    url: "https://smartboxuae.ae/stripe",
+                    url: "https://sehasave.ae/stripe",
                     type: "POST",
                     data: JSON.stringify(data), // Convert data to JSON string
                     contentType: "application/json; charset=utf-8", // Set Content-Type header to JSON

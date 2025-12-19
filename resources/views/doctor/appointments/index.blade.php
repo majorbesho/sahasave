@@ -27,10 +27,14 @@
             </div>
         </div>
         <div class="breadcrumb-bg">
-            <img src="assets/img/bg/breadcrumb-bg-01.png" alt="img" class="breadcrumb-bg-01" />
-            <img src="assets/img/bg/breadcrumb-bg-02.png" alt="img" class="breadcrumb-bg-02" />
-            <img src="assets/img/bg/breadcrumb-icon.png" alt="img" class="breadcrumb-bg-03" />
-            <img src="assets/img/bg/breadcrumb-icon.png" alt="img" class="breadcrumb-bg-04" />
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-bg-01.png') }}" alt="img"
+                class="breadcrumb-bg-01" />
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-bg-02.png') }}" alt="img"
+                class="breadcrumb-bg-02" />
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img"
+                class="breadcrumb-bg-03" />
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img"
+                class="breadcrumb-bg-04" />
         </div>
     </div>
     <!-- /Breadcrumb -->

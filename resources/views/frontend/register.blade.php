@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-6 offset-lg-1 text-center contentCol">
-                <img class="regImg" src="https://smartboxuae.ae/storage/photos/1/beauty8.jpg" alt="image">
+                <img class="regImg" src="https://sehasave.ae/storage/photos/1/beauty8.jpg" alt="image">
                 <h5>Get Started with SmartBox</h5>
                 <p>Be the next winner. Start your Journey now</p>
             </div>

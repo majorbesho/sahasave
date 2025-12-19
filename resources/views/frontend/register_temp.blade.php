@@ -165,7 +165,7 @@
 
 
                     <p class="mt-4 mb-5">
-                    <h4>We're committed to your privacy. SahaSave.com uses the information you provice to
+                    <h4>We're committed to your privacy.SehaSave.com uses the information you provice to
                         us to
                         contact you about our relevant content and services. For more information, see our Privacy Policy.
                     </h4>
@@ -187,18 +187,18 @@
                     ">
                 </div>
 
-                <canvas id="canvas" data-image="{{ asset('4/assets/images/logo2.png') }}"></canvas>
+                <canvas id="canvas" data-image="{{ asset('4/assets/images/logo.png') }}"></canvas>
                 <div class="intro">
                     <div>
 
 
-                        <h1 style="color: #fff">Interactive SahaSave.com </h1>
+                        <h1 style="color: #fff">InteractiveSehaSave.com </h1>
                         <p>
-                        <h4 style="color: #fff">Interactive SahaSave.com is a streamlined solution for shippers and
+                        <h4 style="color: #fff">InteractiveSehaSave.com is a streamlined solution for shippers and
                             carriers,
                             enhancing logistics
                             with real-time tracking and seamless communication. By leveraging technology, it optimizes
-                            SahaSave.com
+                            SehaSave.com
                             management, reduces costs, and improves efficiency. This platform connects businesses with
                             reliable
                             trucking partners, ensuring timely deliveries and fostering a more collaborative supply chain.

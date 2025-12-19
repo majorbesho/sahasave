@@ -5,6 +5,10 @@
                 <p><i class="isax isax-message-text5 me-1"></i><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
                         data-cfemail="">[email&#160;protected]</a></p>
                 <p><i class="isax isax-call5 me-1"></i>+971 545060739</p>
+
+                <p>Current locale: {{ app()->getLocale() }}</p>
+
+
             </div>
             <ul>
                 <li class="header-theme">
@@ -15,6 +19,7 @@
                         <i class="isax isax-moon"></i>
                     </a>
                 </li>
+
                 <li class="d-inline-flex align-items-center drop-header">
                     <div class="dropdown dropdown-country me-3">
                         <!-- عرض اللغة الحالية -->
@@ -23,17 +28,12 @@
                             @if (app()->getLocale() == 'ar')
                                 <img src="{{ asset('frontend/xx/assets/img/flags/arab-flag.svg') }}" class="me-2"
                                     alt="flag"> ARA
-                            @elseif(app()->getLocale() == 'fr')
-                                <img src="{{ asset('frontend/xx/assets/img/flags/france-flag.svg') }}" class="me-2"
-                                    alt="flag"> FRA
                             @else
-                                {{-- اللغة الافتراضية هي الإنجليزية --}}
                                 <img src="{{ asset('frontend/xx/assets/img/flags/us-flag.svg') }}" class="me-2"
                                     alt="flag"> ENG
                             @endif
                         </a>
 
-                        <!-- قائمة اللغات المتاحة للتغيير -->
                         <ul class="p-2 mt-2 dropdown-menu">
                             <li>
                                 <a class="rounded dropdown-item d-flex align-items-center"
@@ -47,13 +47,6 @@
                                     onclick="changeLanguage('ar')">
                                     <img src="{{ asset('frontend/xx/assets/img/flags/arab-flag.svg') }}" class="me-2"
                                         alt="flag">ARA
-                                </a>
-                            </li>
-                            <li>
-                                <a class="rounded dropdown-item d-flex align-items-center"
-                                    onclick="changeLanguage('de')">
-                                    <img src="{{ asset('frontend/xx/assets/img/flags/france-flag.svg') }}"
-                                        class="me-2" alt="flag">FRA
                                 </a>
                             </li>
                         </ul>
@@ -70,6 +63,7 @@
                         </ul>
                     </div>
                 </li>
+
                 <li class="social-header">
                     <div class="social-icon">
                         <a href="javascript:void(0);"><i class="fa-brands fa-facebook"></i></a>
@@ -80,6 +74,7 @@
                     </div>
                 </li>
             </ul>
+
         </div>
     </div>
 </div>
@@ -97,7 +92,7 @@
                     </span>
                 </a>
                 <a href="{{ route('home') }}" class="navbar-brand logo">
-                    <img src="{{ asset('frontend/xx/assets/img/logo/logo2.png') }}" class="img-fluid" alt="Logo">
+                    <img src="{{ asset('frontend/xx/assets/img/logo/logo.png') }}" class="img-fluid" alt="Logo">
                 </a>
             </div>
             <div class="header-menu">
@@ -119,9 +114,9 @@
                         </li>
 
                         <!-- 2. ابحث عن طبيب (للجميع) -->
-                        {{-- <li class="{{ Request::is('doctors/search*') ? 'active' : '' }}">
+                        <li class="{{ Request::is('doctor/search*') ? 'active' : '' }}">
                             <a href="{{ route('doctors.search') }}">{{ __('messages.search_doctors') }}</a>
-                        </li> --}}
+                        </li> -
 
 
                         <!-- =================================================================== -->
@@ -152,6 +147,13 @@
 
                             <!-- روابط خاصة بالمريض -->
                             @if (Auth::user()->isPatient())
+                                <li>
+                                    <a href="#" class="d-flex align-items-center" style="gap: 5px;">
+                                        <i class="fa-solid fa-coins text-warning"></i>
+                                        <span class="fw-bold">{{ Auth::user()->available_points ?? 0 }}</span>
+                                        <small class="text-muted">{{ __('Points') }}</small>
+                                    </a>
+                                </li>
                                 <li class="has-submenu">
                                     <a href="#">{{ __('messages.my_account') }} <i
                                             class="fas fa-chevron-down"></i></a>
@@ -159,7 +161,8 @@
                                         <li><a href="{{ route('patient.dashboard') }}">{{ __('messages.dashboard') }}</a>
                                         </li>
                                         {{-- <li><a href="{{ route('patient.appoint') }}">{{ __('messages.my_appointments') }}</a> </li> --}}
-                                        <li><a href="{{ route('patient.favorites') }}">{{ __('messages.favorites') }}</a>
+                                        <li><a
+                                                href="{{ route('patient.favorites.index') }}">{{ __('messages.favorites') }}</a>
                                         </li>
                                         <li><a
                                                 href="{{ route('patient.profile.settings') }}">{{ __('messages.profile_settings') }}</a>
@@ -194,7 +197,7 @@
                             <!-- روابط خاصة بالادمن -->
                             @if (Auth::user()->isAdmin())
                                 <li>
-                                    <a href="{{ route('admin.dashboard') }}" target="_blank">Admin Dashboard</a>
+                                    <a href="{{ route('admin') }}" target="_blank">Admin Dashboard</a>
                                 </li>
                             @endif
 
@@ -216,7 +219,7 @@
                             <a href="#">{{ __('messages.more') }} <i class="fas fa-chevron-down"></i></a>
                             <ul class="submenu">
                                 <li><a href="{{ route('about') }}">{{ __('messages.about_us') }}</a></li>
-                                <li><a href="{{ route('contact') }}">{{ __('messages.contact_us') }}</a></li>
+                                <li><a href="{{ route('contactus') }}">{{ __('messages.contact_us') }}</a></li>
                                 {{-- <li><a href="{{ route('blog.index') }}">{{ __('messages.blog') }}</a></li> --}}
                             </ul>
                         </li>
@@ -235,17 +238,19 @@
                             </form>
                         </div>
                     </li>
-                    <li>
-                        <a href="{{ route('login') }}"
-                            class="btn btn-md btn-primary-gradient d-inline-flex align-items-center rounded-pill"><i
-                                class="isax isax-lock-1 me-1"></i>Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('register.patient') }}"
-                            class="btn btn-md btn-dark d-inline-flex align-items-center rounded-pill">
-                            <i class="isax isax-user-tick me-1"></i>Register
-                        </a>
-                    </li>
+                    @guest
+                        <li>
+                            <a href="{{ route('login') }}"
+                                class="btn btn-md btn-primary-gradient d-inline-flex align-items-center rounded-pill"><i
+                                    class="isax isax-lock-1 me-1"></i>Sign Up</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('register.patient') }}"
+                                class="btn btn-md btn-dark d-inline-flex align-items-center rounded-pill">
+                                <i class="isax isax-user-tick me-1"></i>Register
+                            </a>
+                        </li>
+                    @endguest
                 </ul>
             </div>
         </nav>

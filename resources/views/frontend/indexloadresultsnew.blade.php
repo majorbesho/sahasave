@@ -116,12 +116,12 @@
                             value="{{ request('location_to') }}"
                             style="width: 100%; font-size: 16px; height: 44px; padding: 0 10px;">
                     </div>
-                    <!-- SahaSave.com Type -->
+                    <!--SehaSave.com Type -->
                     {{-- <div class="form-group col-12 col-md-6 col-lg-3">
-                        <label for="SahaSave.com">SahaSave.com</label>
+                        <label for="SehaSave.com">SehaSave.com</label>
                         <select class="form-control" name="cat_id"
                             style="width: 100%; font-size: 16px; height: 44px; padding: 0 10px;">
-                            <option value="" selected disabled>SahaSave.com Type</option>
+                            <option value="" selected disabled>SehaSave.com Type</option>
                             @foreach (\App\Models\Category::get() as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->title }}</option>
                             @endforeach
@@ -129,14 +129,14 @@
                     </div> --}}
 
                     <div class="form-group col-12 col-md-6 col-lg-3">
-                        <label for="SahaSave.com">{{ __('index.SahaSave.com') }}</label>
+                        <label for="SehaSave.com">{{ __('index.SehaSave.com') }}</label>
                         <div class="custom-dropdown">
                             <div class="dropdown-header">
-                                <span class="selected-value">SahaSave.com Type</span>
+                                <span class="selected-value">SehaSave.com Type</span>
                                 <span class="arrow">&#9660;</span>
                             </div>
                             <ul class="dropdown-list">
-                                <option value="" selected disabled>SahaSave.com Type</option>
+                                <option value="" selected disabled>SehaSave.com Type</option>
                                 @foreach (\App\Models\Category::get() as $brand)
                                     <li class="dropdown-option" data-value="{{ $brand->id }}">
                                         {{ $brand->title }}
@@ -472,8 +472,4 @@
             font-size: 0.75rem;
         }
     </style>
-@endpush
-
-@push('scripts')
-    <!-- Add any necessary scripts here -->
 @endpush

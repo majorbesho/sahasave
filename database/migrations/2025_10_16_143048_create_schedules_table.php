@@ -18,7 +18,10 @@ class CreateSchedulesTable extends Migration
 
             // المفاتيح الخارجية
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('medical_center_id')->constrained()->onDelete('cascade');
+            $table->foreignId('medical_center_id')->nullable()->constrained('medical_centers')
+                ->onDelete('cascade')
+                ->change();
+
 
             // يوم الأسبوع (0: الأحد, 1: الإثنين, ..., 6: السبت)
             $table->integer('day_of_week')->comment('0: Sunday, 1: Monday, ..., 6: Saturday');

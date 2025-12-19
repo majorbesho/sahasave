@@ -12,7 +12,8 @@
                     <div class="account-content">
                         <div class="row align-items-center justify-content-center">
                             <div class="col-md-7 col-lg-6 login-left">
-                                <img src="assets/img/login-banner.png" class="img-fluid" alt="Doccure Login">
+                                <img src="{{ asset('frontend/xx/assets/img/login-banner.png') }}" class="img-fluid"
+                                    alt="SehaSave.com Login">
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
                                 <div class="login-header">
@@ -75,16 +76,18 @@
                                     </div>
                                     <div class="social-login-btn">
                                         <a href="javascript:void(0);" class="btn w-100">
-                                            <img src="assets/img/icons/google-icon.svg" alt="google-icon">Sign in With
+                                            <img src="{{ asset('frontend/xx/assets/img/icons/google-icon.svg') }}"
+                                                alt="google-icon">Sign in With
                                             Google
                                         </a>
                                         <a href="javascript:void(0);" class="btn w-100">
-                                            <img src="assets/img/icons/facebook-icon.svg" alt="fb-icon">Sign in With
+                                            <img src="{{ asset('frontend/xx/assets/img/icons/facebook-icon.svg') }}"
+                                                alt="fb-icon">Sign in With
                                             Facebook
                                         </a>
                                     </div>
                                     <div class="account-signup">
-                                        <p>Already have account? <a href="login.html">Sign In</a></p>
+                                        <p>Already have account? <a href="{{ route('login') }}">Sign In</a></p>
                                     </div>
                                 </form>
                             </div>

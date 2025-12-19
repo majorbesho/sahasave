@@ -11,7 +11,7 @@
     <!-- Stylesheets
         ============================================= -->
 
-    <link rel="canonical" href="https://SahaSave.com .com/" />
+    <link rel="canonical" href="https://SehaSave.com .com/" />
 
 
     <meta charset="UTF-8">
@@ -83,7 +83,7 @@
                         background-image: -moz-linear-gradient(7deg, rgb(101 44 96) 0%, rgb(29 23 96) 50%, rgb(46 135 180) 100%);
                         background-image: -webkit-linear-gradient(7deg, rgb(101 44 96) 0%, rgb(29 23 96) 50%, rgb(46 135 180) 100%);
                         background-image: -ms-linear-gradient(7deg, rgb(101 44 96) 0%, rgb(29 23 96) 50%, rgb(46 135 180) 100%);line-height: 77px;box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);">
-                            <img src="https://SahaSave.com/frontend/4/assets/image/logo.png" alt=""
+                            <img src="https://SehaSave.com/frontend/4/assets/image/logo.png" alt=""
                                 width="300" style="height:auto;display:block;" />
                         </td>
                     </tr>
@@ -94,7 +94,7 @@
                                 <tr>
                                     <td style="padding:0 0 36px 0;color:#153643;">
                                         <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">
-                                            Order Confirmation From SahaSave.com </h1> <br>
+                                            Order Confirmation FromSehaSave.com </h1> <br>
                                         Dear {{ $details['user_name'] }},
 
                                         <p
@@ -108,8 +108,8 @@
                                         </p>
                                         <p
                                             style="margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">
-                                            <a href="https://SahaSave.com .com/"
-                                                style="color:#ee4c50;text-decoration:underline;">https://SahaSave.com
+                                            <a href="https://SehaSave.com .com/"
+                                                style="color:#ee4c50;text-decoration:underline;">https://SehaSave.com
                                                 .com/</a>
                                         </p>
                                     </td>
@@ -206,8 +206,8 @@
                                     <td style="padding:0;width:50%;" align="left">
                                         <p
                                             style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
-                                            &reg; https://SahaSave.com .com/ 2023<br /><a
-                                                href="https://SahaSave.com .com/"
+                                            &reg; https://SehaSave.com .com/ 2023<br /><a
+                                                href="https://SehaSave.com .com/"
                                                 style="color:#ffffff;text-decoration:underline;"></a>
                                         </p>
                                     </td>
@@ -216,7 +216,7 @@
                                             style="border-collapse:collapse;border:0;border-spacing:0;">
                                             <tr>
                                                 <td style="padding:0 0 0 10px;width:38px;">
-                                                    <a href="https://SahaSave.com .com//" style="color:#ffffff;">
+                                                    <a href="https://SehaSave.com .com//" style="color:#ffffff;">
 
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -1,6 +1,8 @@
 @extends('frontend.layouts.master')
 
 @section('content')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <!-- Breadcrumb -->
     <div class="overflow-visible breadcrumb-bar">
         <div class="container">
@@ -98,31 +100,18 @@
                                 </div>
                                 <div id="collapse1" class="accordion-collapse show" aria-labelledby="heading1">
                                     <div class="pt-3 accordion-body">
-                                        @php
-                                            $specialties = [
-                                                'Cardiology',
-                                                'Neurology',
-                                                'Pediatrics',
-                                                'Orthopedics',
-                                                'Dermatology',
-                                                'Psychiatry',
-                                                'Urology',
-                                                'Endocrinology',
-                                            ];
-                                        @endphp
                                         @foreach ($specialties as $specialty)
                                             <div class="mb-2 d-flex align-items-center justify-content-between">
                                                 <div class="form-check">
                                                     <input class="form-check-input specialty-filter" type="checkbox"
-                                                        value="{{ $specialty }}" id="specialty_{{ $loop->index }}">
-                                                    <label class="form-check-label" for="specialty_{{ $loop->index }}">
-                                                        {{ $specialty }}
+                                                        value="{{ $specialty->name }}" id="specialty_{{ $specialty->id }}">
+                                                    <label class="form-check-label" for="specialty_{{ $specialty->id }}">
+                                                        {{ $specialty->name }}
                                                     </label>
                                                 </div>
                                                 <span class="filter-badge">
-                                                    {{ \App\Models\User::where('role', 'doctor')->whereHas('doctorProfile', function ($q) use ($specialty) {
-                                                            $q->where('specialization', 'like', "%{$specialty}%");
-                                                        })->count() }}
+                                                    {{-- {{ $specialty->doctors_count }} --}}
+                                                   {{ $specialty->active_doctors_count }} 
                                                 </span>
                                             </div>
                                         @endforeach
@@ -271,9 +260,15 @@
                                                         <i class="fa-solid fa-star me-1"></i>
                                                         {{ is_numeric($doctor->doctorProfile->average_rating ?? 4.5) ? $doctor->doctorProfile->average_rating : '4.5' }}
                                                     </span>
-                                                    <a href="javascript:void(0)" class="fav-icon">
+                                                    {{-- <a href="javascript:void(0)" class="fav-icon">
                                                         <i class="fa fa-heart"></i>
-                                                    </a>
+                                                    </a> --}}
+
+
+                                                     <a href="javascript:void(0)" class="fav-icon" data-doctor-id="{{ $doctor->id }}">
+                                                        <i
+                                                            class="fa fa-heart {{ auth()->check() && auth()->user()->favoriteDoctors->contains($doctor->id) ? 'text-danger' : '' }}"></i>
+                                                         </a>
                                                 </div>
                                             </div>
                                             <div class="p-0 card-body">
@@ -360,7 +355,7 @@
                                                             <div class="me-3">
                                                                 <p class="mb-1">Consultation Fees</p>
                                                                 <h3 class="text-orange">
-                                                                    ${{ is_numeric($doctor->doctorProfile->consultation_fee ?? 100) ? $doctor->doctorProfile->consultation_fee : '100' }}
+                                                                    AED {{ is_numeric($doctor->doctorProfile->consultation_fee ?? 100) ? $doctor->doctorProfile->consultation_fee : '100' }}
                                                                 </h3>
                                                             </div>
                                                             <p class="mb-0">
@@ -371,11 +366,11 @@
                                                                 @endif
                                                             </p>
                                                         </div>
-                                                        <a href="{{ route('doctorshome.book', $doctor->id) }}"
+                                                         <a href="{{ route('doctorshomex.booking.create', $doctor->id) }}"
                                                             class="inline-flex btn btn-md btn-primary-gradient align-items-center rounded-pill">
                                                             <i class="isax isax-calendar-1 me-2"></i>
                                                             Book Appointment
-                                                        </a>
+                                                        </a> 
                                                     </div>
                                                 </div>
                                             </div>
@@ -425,14 +420,6 @@
             </div>
         </div>
     </div>
-    <!-- /Page Content -->
-@endsection
-
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-@endpush
-
-@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -506,4 +493,93 @@
             experienceFilters.forEach(checkbox => checkbox.addEventListener('change', filterDoctors));
         });
     </script>
-@endpush
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // التعامل مع إضافة/إزالة المفضلة
+            document.querySelectorAll('.fav-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    if (!{{ auth()->check() ? 'true' : 'false' }}) {
+                        showToast('Please login to manage favorites', 'error');
+                        return;
+                    }
+
+                    const doctorId = this.dataset.doctorId;
+                    const heartIcon = this.querySelector('i');
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content') ||
+                        document.querySelector('input[name="_token"]')?.value;
+
+                    if (!csrfToken) {
+                        console.error('CSRF token not found');
+                        showToast('Security error. Please refresh the page.', 'error');
+                        return;
+                    }
+
+                    fetch(`/doctor/${doctorId}/favorite`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'added') {
+                                heartIcon.classList.add('text-danger');
+                                showToast('Doctor added to favorites!', 'success');
+                            } else if (data.status === 'removed') {
+                                heartIcon.classList.remove('text-danger');
+                                showToast('Doctor removed from favorites!', 'info');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            if (error.message.includes('Network')) {
+                                showToast('Network error. Please try again.', 'error');
+                            } else {
+                                showToast('Please login to manage favorites', 'error');
+                            }
+                        });
+                });
+            });
+
+            function showToast(message, type = 'info') {
+                // إزالة أي toast موجود مسبقاً
+                const existingToasts = document.querySelectorAll('.custom-toast');
+                existingToasts.forEach(toast => toast.remove());
+
+                const toast = document.createElement('div');
+                toast.className = `custom-toast alert alert-${type} alert-dismissible fade show position-fixed`;
+                toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+                document.body.appendChild(toast);
+
+                // إزالة التلقائية بعد 3 ثواني
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+@endsection
+

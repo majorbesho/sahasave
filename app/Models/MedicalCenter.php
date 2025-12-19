@@ -79,7 +79,10 @@ class MedicalCenter extends Model
             )
             ->withTimestamps();
     }
-
+    public function labResults()
+    {
+        return $this->hasMany(LabResults::class);
+    }
 
 
     public function admins()
@@ -140,10 +143,6 @@ class MedicalCenter extends Model
         return $query->where('type', 'clinic');
     }
 
-    public function scopeHospitals($query)
-    {
-        return $query->where('type', 'hospital');
-    }
 
     public function scopeVerified($query)
     {
@@ -210,5 +209,25 @@ class MedicalCenter extends Model
     public function labOrders()
     {
         return $this->hasMany(LabOrder::class, 'lab_center_id');
+    }
+
+
+
+
+
+
+    public function scopeVirtual($query)
+    {
+        return $query->where('is_virtual', true);
+    }
+
+    public function scopeAcceptsAppointments($query)
+    {
+        return $query->where('accepts_appointments', true);
+    }
+
+    public function scopeHospitals($query)
+    {
+        return $query->where('type', 'hospital');
     }
 }

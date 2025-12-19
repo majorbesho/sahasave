@@ -4,7 +4,7 @@
             <div class="row justify-content-between align-items-center">
                 <div class="col-lg-auto">
                     <strong><i class="icon-gift"></i> Done </strong> {{ $message }} <a href="#"
-                        class="alert-link"><u> SahaSave.com</u></a>
+                        class="alert-link"><u>SehaSave.com</u></a>
                 </div>
                 {{-- <div class="col-lg-auto mt-3 mt-lg-0">
                 <a href="#" class="btn btn-primary">Shopping now  </a>
@@ -20,7 +20,7 @@
             <div class="row justify-content-between align-items-center">
                 <div class="col-lg-auto">
                     <strong><i class="icon-gift"></i> Sorry </strong> {{ $message }} <a href="#"
-                        class="alert-link"><u>SahaSave.com .com</u></a>
+                        class="alert-link"><u>SehaSave.com .com</u></a>
                 </div>
                 <div class="col-lg-auto mt-3 mt-lg-0">
                     <a href="#" class="btn btn-primary d-none">Active Now </a>

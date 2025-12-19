@@ -20,6 +20,14 @@ class EventServiceProvider extends ServiceProvider
             //SendNewUserNotification::class,
         ],
 
+        \App\Events\UserRegistered::class => [
+            \App\Listeners\InitializeUserWallet::class,
+        ],
+
+        \App\Events\ReferralCompleted::class => [
+            \App\Listeners\ProcessReferralBonus::class,
+        ],
+
         // \Illuminate\Auth\Events\Login::class => [
         //     \App\Listeners\CheckUserStatusAfterLogin::class,
         // ],
@@ -33,6 +41,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \App\Models\Appointment::observe(\App\Observers\AppointmentObserver::class);
     }
 }

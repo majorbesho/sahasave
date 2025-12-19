@@ -182,7 +182,7 @@
 <body>
     <div class="container mx-auto px-4 py-8">
         <div class=" md:px-[40px] mx-auto justify-center items-center">
-            <img src="https://smartboxuae.ae/frontend4/images/color-logo.png" width="50%"
+            <img src="https://sehasave.ae/frontend4/images/color-logo.png" width="50%"
                 class="max-w-md flex text-center mx-auto px-4 py-8 justify-center items-center" />
             <!-- Display a payment form -->
             <form id="payment-form" class="w-full mx-auto justify-center items-center">
@@ -317,7 +317,7 @@
              elements,
              confirmParams: {
                  // Make sure to change this to your payment completion page
-                 return_url: "https://smartboxuae.ae/inapp/checkout/success?order_id={{ $order['order_id'] }}",
+                 return_url: "https://sehasave.ae/inapp/checkout/success?order_id={{ $order['order_id'] }}",
                  receipt_email: emailAddress,
              },
          });

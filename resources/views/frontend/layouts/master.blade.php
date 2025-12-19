@@ -24,8 +24,7 @@
         ============================================= -->
         {{-- <div id="gotoTop" class="icon-angle-up"></div> --}}
         @include('frontend.layouts.script')
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+        @yield('scripts')
 
 
     </div>

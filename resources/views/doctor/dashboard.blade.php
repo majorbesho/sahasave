@@ -19,10 +19,12 @@
             </div>
         </div>
         <div class="breadcrumb-bg">
-            <img src="{{ asset('frontend/x/assets/img/bg/breadcrumb-bg-01.png" alt="img') }}" class="breadcrumb-bg-01">
-            <img src="{{ asset('frontend/x/assets/img/bg/breadcrumb-bg-02.png" alt="img') }}" class="breadcrumb-bg-02">
-            <img src="{{ asset('frontend/x/assets/img/bg/breadcrumb-icon.png" alt="img') }}" class="breadcrumb-bg-03">
-            <img src="{{ asset('frontend/x/assets/img/bg/breadcrumb-icon.png" alt="img') }}" class="breadcrumb-bg-04">
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-bg-01.png') }}" alt="img"
+                class="breadcrumb-bg-01">
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-bg-02.png') }}" alt="img"
+                class="breadcrumb-bg-02">
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img" class="breadcrumb-bg-03">
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img" class="breadcrumb-bg-04">
         </div>
     </div>
     <!-- /Breadcrumb -->
@@ -340,8 +342,8 @@
                                             <ul class="nav nav-pills product-licence-tab" id="pills-tab2" role="tablist">
                                                 <li class="nav-item" role="presentation">
                                                     <button class="nav-link active" id="pills-revenue-tab"
-                                                        data-bs-toggle="pill" data-bs-target="#pills-revenue" type="button"
-                                                        role="tab" aria-controls="pills-revenue"
+                                                        data-bs-toggle="pill" data-bs-target="#pills-revenue"
+                                                        type="button" role="tab" aria-controls="pills-revenue"
                                                         aria-selected="false">Revenue</button>
                                                 </li>
                                                 <li class="nav-item" role="presentation">
@@ -380,7 +382,8 @@
                                         <div class="d-flex recent-patient-grid-boxes">
                                             <div class="recent-patient-grid">
                                                 <a href="patient-details.html" class="patient-img">
-                                                    <img src="assets/img/doctors-dashboard/profile-01.jpg" alt="Img">
+                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-01.jpg') }}"
+                                                        alt="Img">
                                                 </a>
                                                 <h5><a href="patient-details.html">Adrian Marshall</a></h5>
                                                 <span>Patient ID : P0001</span>
@@ -391,7 +394,8 @@
                                             </div>
                                             <div class="recent-patient-grid">
                                                 <a href="patient-details.html" class="patient-img">
-                                                    <img src="assets/img/doctors-dashboard/profile-02.jpg" alt="Img">
+                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-02.jpg') }}"
+                                                        alt="Img">
                                                 </a>
                                                 <h5><a href="patient-details.html">Kelly Stevens</a></h5>
                                                 <span>Patient ID : P0002</span>
@@ -415,7 +419,7 @@
                                     <div class="upcoming-patient-info">
                                         <div class="info-details">
                                             <span class="img-avatar"><img
-                                                    src="assets/img/doctors-dashboard/profile-01.jpg"
+                                                    src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-01.jpg') }}"
                                                     alt="Img"></span>
                                             <div class="name-info">
                                                 <span>#Apt0001</span>
@@ -428,7 +432,8 @@
                                             <h6>Today, 10:45 AM</h6>
                                         </div>
                                         <div class="circle-bg">
-                                            <img src="assets/img/bg/dashboard-circle-bg.png" alt="Img">
+                                            <img src="{{ asset('frontend/xx/assets/img/bg/dashboard-circle-bg.png') }}"
+                                                alt="Img">
                                         </div>
                                     </div>
                                     <div class="appointment-card-footer">
@@ -456,7 +461,7 @@
                                                         <td>
                                                             <div class="patient-info-profile">
                                                                 <a href="invoices-1.html" class="table-avatar">
-                                                                    <img src="assets/img/doctors-dashboard/profile-01.jpg"
+                                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-01.jpg') }}"
                                                                         alt="Img">
                                                                 </a>
                                                                 <div class="patient-name-info">
@@ -488,7 +493,7 @@
                                                         <td>
                                                             <div class="patient-info-profile">
                                                                 <a href="#" class="table-avatar">
-                                                                    <img src="assets/img/doctors-dashboard/profile-02.jpg"
+                                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-02.jpg') }}"
                                                                         alt="Img">
                                                                 </a>
                                                                 <div class="patient-name-info">
@@ -519,7 +524,7 @@
                                                         <td>
                                                             <div class="patient-info-profile">
                                                                 <a href="#" class="table-avatar">
-                                                                    <img src="assets/img/doctors-dashboard/profile-03.jpg"
+                                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-03.jpg') }}"
                                                                         alt="Img">
                                                                 </a>
                                                                 <div class="patient-name-info">
@@ -550,7 +555,7 @@
                                                         <td>
                                                             <div class="patient-info-profile">
                                                                 <a href="#" class="table-avatar">
-                                                                    <img src="assets/img/doctors-dashboard/profile-04.jpg"
+                                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-04.jpg') }}"
                                                                         alt="Img">
                                                                 </a>
                                                                 <div class="patient-name-info">
@@ -581,7 +586,7 @@
                                                         <td>
                                                             <div class="patient-info-profile">
                                                                 <a href="#" class="table-avatar">
-                                                                    <img src="assets/img/doctors-dashboard/profile-05.jpg"
+                                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/profile-05.jpg') }}"
                                                                         alt="Img">
                                                                 </a>
                                                                 <div class="patient-name-info">
@@ -725,7 +730,8 @@
                                         <div class="clinic-head">
                                             <div class="clinic-info">
                                                 <span class="clinic-img">
-                                                    <img src="assets/img/doctors-dashboard/clinic-02.jpg" alt="Img">
+                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/clinic-02.jpg') }}"
+                                                        alt="Img">
                                                 </span>
                                                 <h6>Sofi’s Clinic</h6>
                                             </div>
@@ -753,7 +759,8 @@
                                         <div class="clinic-head">
                                             <div class="clinic-info">
                                                 <span class="clinic-img">
-                                                    <img src="assets/img/doctors-dashboard/clinic-01.jpg" alt="Img">
+                                                    <img src="{{ asset('frontend/xx/assets/img/doctors-dashboard/clinic-01.jpg') }}"
+                                                        alt="Img">
                                                 </span>
                                                 <h6>The Family Dentistry Clinic</h6>
                                             </div>
@@ -789,5 +796,4 @@
         </div>
 
     </div>
-    <!-- /Page Content -->
 @endsection

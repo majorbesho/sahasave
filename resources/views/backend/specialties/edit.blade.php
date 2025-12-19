@@ -197,111 +197,108 @@
         </div>
 
         <script></script>
+        <script>
+            // عرض معاينة الصورة قبل الرفع
+            function previewImage(input, previewId) {
+                const file = input.files[0];
+                const preview = document.getElementById(previewId);
+                const container = document.getElementById(previewId + '-container');
 
-        @push('scripts')
-            <script>
-                // عرض معاينة الصورة قبل الرفع
-                function previewImage(input, previewId) {
-                    const file = input.files[0];
-                    const preview = document.getElementById(previewId);
-                    const container = document.getElementById(previewId + '-container');
+                if (file) {
+                    const reader = new FileReader();
 
-                    if (file) {
-                        const reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            preview.src = e.target.result;
-                            container.style.display = 'block';
-                        }
-
-                        reader.readAsDataURL(file);
-
-                        // عرض اسم الملف
-                        const label = input.nextElementSibling;
-                        label.innerText = file.name;
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        container.style.display = 'block';
                     }
-                }
 
-                // إزالة معاينة الصورة
-                function removeImagePreview(previewId) {
-                    const input = document.getElementById(previewId.replace('-preview', ''));
-                    const preview = document.getElementById(previewId);
-                    const container = document.getElementById(previewId + '-container');
+                    reader.readAsDataURL(file);
 
-                    input.value = '';
-                    preview.src = '';
-                    container.style.display = 'none';
-
-                    // إعادة تسمية label
+                    // عرض اسم الملف
                     const label = input.nextElementSibling;
-                    label.innerText = 'اختر ملف';
+                    label.innerText = file.name;
                 }
+            }
 
-                // تأكيد حذف الصورة
-                function confirmDelete(url, type) {
-                    if (confirm(`هل أنت متأكد من حذف ${type}؟`)) {
-                        // استخدام AJAX لحذف الصورة
-                        fetch(url, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Accept': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // إعادة تحميل الصفحة لعرض التغييرات
-                                    location.reload();
-                                } else {
-                                    alert('حدث خطأ أثناء حذف ' + type);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
+            // إزالة معاينة الصورة
+            function removeImagePreview(previewId) {
+                const input = document.getElementById(previewId.replace('-preview', ''));
+                const preview = document.getElementById(previewId);
+                const container = document.getElementById(previewId + '-container');
+
+                input.value = '';
+                preview.src = '';
+                container.style.display = 'none';
+
+                // إعادة تسمية label
+                const label = input.nextElementSibling;
+                label.innerText = 'اختر ملف';
+            }
+
+            // تأكيد حذف الصورة
+            function confirmDelete(url, type) {
+                if (confirm(`هل أنت متأكد من حذف ${type}؟`)) {
+                    // استخدام AJAX لحذف الصورة
+                    fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // إعادة تحميل الصفحة لعرض التغييرات
+                                location.reload();
+                            } else {
                                 alert('حدث خطأ أثناء حذف ' + type);
-                            });
-                    }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('حدث خطأ أثناء حذف ' + type);
+                        });
+                }
+            }
+
+            // التحقق من حجم الملف قبل الرفع
+            document.addEventListener('DOMContentLoaded', function() {
+                const imageInput = document.getElementById('image');
+                const iconInput = document.getElementById('icon');
+
+                if (imageInput) {
+                    imageInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file && file.size > 5 * 1024 * 1024) { // 5MB
+                            alert('حجم الصورة كبير جداً. الحد الأقصى المسموح به هو 5MB.');
+                            this.value = '';
+                            removeImagePreview('image-preview');
+                        }
+                    });
                 }
 
-                // التحقق من حجم الملف قبل الرفع
-                document.addEventListener('DOMContentLoaded', function() {
-                    const imageInput = document.getElementById('image');
-                    const iconInput = document.getElementById('icon');
-
-                    if (imageInput) {
-                        imageInput.addEventListener('change', function(e) {
-                            const file = e.target.files[0];
-                            if (file && file.size > 5 * 1024 * 1024) { // 5MB
-                                alert('حجم الصورة كبير جداً. الحد الأقصى المسموح به هو 5MB.');
-                                this.value = '';
-                                removeImagePreview('image-preview');
-                            }
-                        });
-                    }
-
-                    if (iconInput) {
-                        iconInput.addEventListener('change', function(e) {
-                            const file = e.target.files[0];
-                            if (file && file.size > 2 * 1024 * 1024) { // 2MB
-                                alert('حجم الأيقونة كبير جداً. الحد الأقصى المسموح به هو 2MB.');
-                                this.value = '';
-                                removeImagePreview('icon-preview');
-                            }
-                        });
-                    }
-                });
-
-                // عرض أسماء الملفات المختارة
-                document.querySelectorAll('.custom-file-input').forEach(function(input) {
-                    input.addEventListener('change', function(e) {
-                        var fileName = e.target.files[0]?.name || 'اختر ملف';
-                        var nextSibling = e.target.nextElementSibling;
-                        nextSibling.innerText = fileName;
+                if (iconInput) {
+                    iconInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (file && file.size > 2 * 1024 * 1024) { // 2MB
+                            alert('حجم الأيقونة كبير جداً. الحد الأقصى المسموح به هو 2MB.');
+                            this.value = '';
+                            removeImagePreview('icon-preview');
+                        }
                     });
+                }
+            });
+
+            // عرض أسماء الملفات المختارة
+            document.querySelectorAll('.custom-file-input').forEach(function(input) {
+                input.addEventListener('change', function(e) {
+                    var fileName = e.target.files[0]?.name || 'اختر ملف';
+                    var nextSibling = e.target.nextElementSibling;
+                    nextSibling.innerText = fileName;
                 });
-            </script>
-        @endpush
+            });
+        </script>
 
 
 

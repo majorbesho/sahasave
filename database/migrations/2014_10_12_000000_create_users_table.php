@@ -70,6 +70,23 @@ class CreateUsersTable extends Migration
             $table->index('referral_tier');
             $table->index('last_referral_at');
             $table->index(['status', 'created_at']);
+
+
+
+
+
+            $table->decimal('lifetime_spent', 15, 2)->default(0)->after('lifetime_savings');
+            $table->integer('total_appointments')->default(0)->after('referral_count');
+            $table->integer('completed_appointments')->default(0)->after('total_appointments');
+            $table->integer('cancelled_appointments')->default(0)->after('completed_appointments');
+            $table->decimal('average_rating', 3, 2)->nullable()->after('total_cashback_earned');
+            $table->integer('total_reviews')->default(0)->after('average_rating');
+            $table->date('member_since')->nullable()->after('total_reviews');
+            $table->json('achievements')->nullable()->after('member_since');
+
+            // فهارس إضافية
+            $table->index(['loyalty_tier', 'available_bonus_points']);
+            $table->index(['total_appointments', 'completed_appointments']);
         });
     }
 

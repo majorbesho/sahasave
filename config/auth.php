@@ -44,28 +44,9 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'emp' => [
-            'driver' => 'session',
-            'provider' => 'emps',
-        ],
-        'supplier' => [
-            'driver' => 'session',
-            'provider' => 'suppliers',
-        ],
-        'broker' => [
-            'driver' => 'session',
-            'provider' => 'brokers',
-        ],
+   
 
-        'shipper' => [
-            'driver' => 'session',
-            'provider' => 'shippers',
-        ],
-
-        'carrier' => [
-            'driver' => 'session',
-            'provider' => 'carriers',
-        ],
+      
         'user' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -100,33 +81,8 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'emps' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Emp::class,
-        ],
-        'suppliers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\supplier::class,
-        ],
-        'brokers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Broker::class,
-        ],
+    
 
-        'shippers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Shipper::class,
-        ],
-
-        'carriers' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Carrier::class,
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -156,37 +112,9 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
-        ],
-        'emps' => [
-            'provider' => 'emps',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'suppliers' => [
-            'provider' => 'suppliers',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'brokers' => [
-            'provider' => 'brokers',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'shippers' => [
-            'provider' => 'shippers',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'carriers' => [
-            'provider' => 'carriers',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
+        ]
+
+
 
 
     ],

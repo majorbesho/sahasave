@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\locale::class,
         \Fruitcake\Cors\HandleCors::class,
+        \App\Http\Middleware\FileUploadSecurity::class,
 
     ];
 
@@ -75,24 +76,23 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         //localize
-        'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
-        'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
-        'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        'localeCookieRedirect'    => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
-        'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
-        'admin' => \App\Http\Middleware\Admin::class,
-        'emp' => \App\Http\Middleware\Emp::class,
-        'user' => \App\Http\Middleware\User::class,
-        'supplier' => \App\Http\Middleware\supplier::class,
-        'broker' => \App\Http\Middleware\broker::class,
-        'shipper' => \App\Http\Middleware\shipper::class,
 
-        'carrier' => \App\Http\Middleware\carrier::class,
+        'admin' => \App\Http\Middleware\Admin::class,
+
+        'user' => \App\Http\Middleware\User::class,
+
+
+
         'X-localization' => \App\Http\Middleware\localization::class,
-        'shipper.or.broker' => \App\Http\Middleware\ShipperOrBroker::class,
+
         'role' => \App\Http\Middleware\CheckUserRole::class,
 
 
 
     ];
+
+
+
+
+    
 }

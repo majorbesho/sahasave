@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Nette\Utils\Paginator as UtilsPaginator;
+use Illuminate\Support\Facades\DB;
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     *  any application services.
      *
      * @return void
      */
@@ -31,11 +34,19 @@ class AppServiceProvider extends ServiceProvider
     {
         //
 
-        $locale = config('app.locale') == 'ar' ? 'ar' : config('app.locale');
-        App::setLocale($locale);
-        Lang::setLocale($locale);
-        Session::put('local', $locale);
-        Carbon::setLocale($locale);
-        //UtilsPaginator::useBootstrapFive();
+
+        if (env('APP_DEBUG')) {
+            DB::listen(function ($query) {
+                \Log::info("Query Time: {$query->time}ms - SQL: {$query->sql}");
+            });
+        }
+
+
+        // $locale = config('app.locale') == 'ar' ? 'ar' : config('app.locale');
+        // App::setLocale($locale);
+        // Lang::setLocale($locale);
+        // Session::put('local', $locale);
+        // Carbon::setLocale($locale);
+        Paginator::useBootstrap();
     }
 }

@@ -1,168 +1,115 @@
 @extends('backend.layouts.master')
 
+@section('title', 'إدارة التصنيفات')
+
 @section('content')
 
-<div class="wrapper">
-    <!-- Navbar -->
-
-
-
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1>DataTables</h1>
-            </div>
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Category</li>
-              </ol>
-            </div>
-          </div>
-        </div><!-- /.container-fluid -->
-      </section>
-
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12">
-                @include('backend.layouts.notification')
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">DataTable with default features</h3>
-
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="mb-2 row">
+                    <div class="col-sm-6">
+                        <h1>category</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+                            <li class="breadcrumb-item active"></li>
+                        </ol>
+                    </div>
                 </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Title</th>
-                     
-                      <th>discreption</th>
-                      <th>is_parent</th>
-                      <th>parent_id</th>
-                      <th>Caturl</th>
-                      <th>Image</th>
-                      <th>Status</th>
-                      <th>action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($categories  as $item )
-                    <tr>
-                      <td>{{$loop->iteration}}</td>
-                      <td>{{$item->title}}</td>
-                      
-                      <td>{{$item->discreption}}</td>
-                      <td>{{$item->is_parent===1 ?'yes' : 'no' }}</td>
-                      <td>{{\App\Models\Category::where('id',$item->parent_id)->value('title') }}</td>
-                      <td>{{$item->Caturl}}</td>
-                      <td>
-                        <img src="{{$item->photo}}" alt="image" style="max-height: 90px; max-width: 90;">
-                    </td>
-                      <td>
-                        @if ($item->status=='active')
-                        <span class="badge badge-success">{{$item->status}}</span>
-                      @else
-                      <span class="badge badge-danger">{{$item->status}}</span>
-                      @endif
-                    </td>
-                    <td>
-                        <a href="{{route('category.edit',$item->id)}}" data-toggle="tooltip"
-                         title="edit"
-                         data-placement="bottom"
-                         class="float-left ml-2 abtn btn-xs btn-outline-info">
-                         <i class="fas fa-edit"></i>
-                        </a>
-                        {{-- //{{route('banner.delete',$item->id)}} --}}
-                        <form action="{{route('category.destroy',$item->id)}}" method="post">
-                            @csrf
-                            @method('delete')
-                            <a href="" data-toggle="tooltip"
-                                title="delete"
-                                data-placement="bottom"
-                                data-id="{{$item->id}}"
-                                class="cltBtn float-left ml-2 btn btn-xs btn-outline-danger" >
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </form>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                       
-                        <th>discreption</th>
-                        <th>is_parent</th>
-                        <th>parent_id</th>
-                        <th>Caturl</th>
-                        <th>Image</th>
-                        <th>Status</th>
-                        <th>action</th>
-                    </tr>
-                    </tfoot>
-                  </table>
+            </div><!-- /.container-fluid -->
+        </section>
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">قائمة التصنيفات</h3>
+                            <div class="card-tools">
+                                <a href="{{ route('categories.create') }}" class="btn btn-success">
+                                    <i class="fas fa-plus"></i> إضافة تصنيف جديد
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if (session('success'))
+                                <div class="alert alert-success">{{ session('success') }}</div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @endif
+
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم</th>
+                                        <th>الأيقونة</th>
+                                        <th>التصنيف الأب</th>
+                                        <th>عدد الأطباء</th>
+                                        <th>الترتيب</th>
+                                        <th>الحالة</th>
+                                        <th>مميز</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($categories as $category)
+                                        <tr>
+                                            <td>{{ $category->name }}</td>
+                                            <td>
+                                                @if ($category->icon)
+                                                    <img src="{{ Storage::url($category->icon) }}"
+                                                        alt="{{ $category->name }}"
+                                                        style="width: 30px; height: 30px; object-fit: cover;">
+                                                @endif
+                                            </td>
+                                            <td>{{ $category->parent->name ?? '-' }}</td>
+                                            <td>{{ $category->doctors_count }}</td>
+                                            <td>{{ $category->sort_order }}</td>
+                                            <td>
+                                                <span
+                                                    class="badge badge-{{ $category->status == 'active' ? 'success' : 'danger' }}">
+                                                    {{ $category->status == 'active' ? 'مفعل' : 'غير مفعل' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge badge-{{ $category->is_featured ? 'warning' : 'secondary' }}">
+                                                    {{ $category->is_featured ? 'مميز' : 'عادي' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{{ route('categories.show', $category) }}"
+                                                        class="btn btn-info btn-sm" title="عرض">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ route('categories.edit', $category) }}"
+                                                        class="btn btn-primary btn-sm" title="تعديل">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('categories.destroy', $category) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="حذف"
+                                                            onclick="return confirm('هل أنت متأكد من الحذف؟')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
             </div>
-            <!-- /.col -->
-          </div>
-          <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
-      </section>
-      <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-    <!-- /.control-sidebar -->
-  </div>
-
-
-@endsection
-@section('scripts')
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script>
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $('.cltBtn').click(function (e){
-        var form=$(this).closest('form');
-        var  dataId=$(this).data('id');
-        e.preventDefault();
-        swal({
-    title: "Are you sure?",
-    text: "Once deleted, you will not be able to recover this imaginary file!",
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-    })
-    .then((willDelete) => {
-    if (willDelete) {
-        form.submit();
-        swal("Poof! Your imaginary file has been deleted!", {
-        icon: "success",
-        });
-    } else {
-        swal("Your imaginary file is safe!");
-    }
-    });
-
-
-    });
-</script>
-@endsection
+    @endsection

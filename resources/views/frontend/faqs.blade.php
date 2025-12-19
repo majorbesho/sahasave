@@ -15,7 +15,7 @@
                 </div>
                 <div class="ec-faq-wrapper">
                     <div class="ec-faq-container">
-                        <h2 class="ec-faq-heading">What is SahaSave.com services?</h2>
+                        <h2 class="ec-faq-heading">What SehaSave.com services?</h2>
                         <div id="ec-faq">
 
                             @foreach ($faqs as $faq)

@@ -10,10 +10,13 @@
                 <div class="profile-det-info">
                     <h3><a href="#">{{ Auth::user()->name }}</a></h3>
                     <div class="patient-details">
-                        <h5 class="mb-0">{{ Auth::user()->profile->qualifications ?? 'Qualifications not set' }}</h5>
+                        <h5 class="mb-0">
+                            {{ Auth::user()->doctorProfile->qualifications_display ?? 'Qualifications not set' }}</h5>
                     </div>
-                    {{-- سنحتاج لعلاقة مع التخصص لعرضه --}}
-                    <span class="badge doctor-role-badge"><i class="fa-solid fa-circle"></i> {{ 'Specialty' }}</span>
+                    <span class="badge doctor-role-badge">
+                        <i class="fa-solid fa-circle"></i>
+                        {{ Auth::user()->doctorProfile->specialization ?? 'Specialty not set' }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -31,89 +34,105 @@
         <div class="dashboard-widget">
             <nav class="dashboard-menu">
                 <ul>
-                    <li>
-                        <a href="{{ route('doctor.schedule.index') }}">
+                    <li class="{{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.dashboard') }}">
                             <i class="isax isax-category-2"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-request.html">
+                    <li class="{{ request()->routeIs('doctor.requests.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.doctor.requests') }}">
                             <i class="isax isax-clipboard-tick"></i>
                             <span>Requests</span>
                             <small class="unread-msg">2</small>
                         </a>
                     </li>
-                    <li class="active">
+                    <li class="{{ request()->routeIs('doctor.appointments.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.appointments.index') }}">
                             <i class="isax isax-calendar-1"></i>
                             <span>Appointments</span>
                         </a>
                     </li>
-                    <li>
+
+
+
+                    <li class="{{ request()->routeIs('doctor.medical-centers.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.doctor.medical-centers.index') }}">
+                            <i class="isax isax-calendar-1"></i>
+                            <span>doctor Linked to Ceneter</span>
+                        </a>
+                    </li>
+
+
+
+                    <li class="{{ request()->routeIs('doctor.schedule.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.schedule.index') }}">
                             <i class="isax isax-calendar-tick"></i>
                             <span>Available Timings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="my-patients.html">
+
+                    <li class="{{ request()->routeIs('doctor.patients.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.doctor.patients.index') }}">
                             <i class="fa-solid fa-user-injured"></i>
                             <span>My Patients</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-specialities.html">
+                    <li class="{{ request()->routeIs('doctor.specialties.*') ? 'active' : '' }}">
+                        <a href="{{ route('specialties.index') }}">
                             <i class="isax isax-clock"></i>
-                            <span>Specialties &
-                                Services</span>
+                            <span>Specialties & Services</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="reviews.html">
+
+
+
+
+                    <li class="{{ request()->routeIs('doctor.reviews.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.reviews.index') }}">
                             <i class="isax isax-star-1"></i>
                             <span>Reviews</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="accounts.html">
+                    <li class="{{ request()->routeIs('doctor.accounts.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.accounts.index') }}">
                             <i class="isax isax-profile-tick"></i>
                             <span>Accounts</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="invoices.html">
+                    <li class="{{ request()->routeIs('doctor.invoices.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.invoices.index') }}">
                             <i class="isax isax-document-text"></i>
                             <span>Invoices</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-payment.html">
+                    <li class="{{ request()->routeIs('doctor.payouts.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.payouts.index') }}">
                             <i class="fa-solid fa-money-bill-1"></i>
                             <span>Payout Settings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="chat-doctor.html">
+                    <li class="{{ request()->routeIs('doctor.chat.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.chat.index') }}">
                             <i class="isax isax-messages-1"></i>
                             <span>Message</span>
                             <small class="unread-msg">7</small>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-profile-settings.html">
+                    <li class="{{ request()->routeIs('doctor.profile.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.profile.edit') }}">
                             <i class="isax isax-setting-2"></i>
                             <span>Profile Settings</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="social-media.html">
+                    <li class="{{ request()->routeIs('doctor.social.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.social.index') }}">
                             <i class="fa-solid fa-shield-halved"></i>
                             <span>Social Media</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="doctor-change-password.html">
+                    <li class="{{ request()->routeIs('doctor.password.*') ? 'active' : '' }}">
+                        <a href="{{ route('doctor.password.edit') }}">
                             <i class="isax isax-key"></i>
                             <span>Change Password</span>
                         </a>

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.master')
 
-@section('title', $specialty->name . ' - الأطباء المتخصصين')
+@section('title', __('specialties.title', ['name' => $specialty->name]))
 
 @section('content')
     <!-- Breadcrumb -->
@@ -13,11 +13,11 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ route('home') }}"><i class="isax isax-home-15"></i></a>
                             </li>
-                            <li class="breadcrumb-item">التخصصات</li>
+                            <li class="breadcrumb-item">@lang('specialties.breadcrumb.specialties')</li>
                             <li class="breadcrumb-item active">{{ $specialty->name }}</li>
                         </ol>
                         <h2 class="breadcrumb-title">{{ $specialty->name }}</h2>
-                        <p class="text-muted">{{ $specialty->doctors_count }} طبيب متخصص</p>
+                        <p class="text-muted">@lang('specialties.breadcrumb.doctors_count', ['count' => $specialty->doctors_count])</p>
                     </nav>
                 </div>
             </div>
@@ -30,15 +30,14 @@
                         <div class="search-input search-line">
                             <i class="isax isax-hospital5 bficon"></i>
                             <div class="mb-0">
-                                <input type="text" class="form-control" name="search"
-                                    placeholder="ابحث عن أطباء في {{ $specialty->name }}..."
+                                <input type="text" class="form-control" name="search" placeholder="@lang('specialties.search.placeholder', ['name' => $specialty->name])"
                                     value="{{ request('search') }}">
                             </div>
                         </div>
                         <div class="search-input search-map-line">
                             <i class="isax isax-location5"></i>
                             <div class="mb-0">
-                                <input type="text" class="form-control" name="location" placeholder="المدينة أو المنطقة"
+                                <input type="text" class="form-control" name="location" placeholder="@lang('specialties.search.location')"
                                     value="{{ request('location') }}">
                             </div>
                         </div>
@@ -46,12 +45,12 @@
                             <i class="isax isax-calendar-tick5"></i>
                             <div class="mb-0">
                                 <input type="text" class="form-control datetimepicker" name="date"
-                                    placeholder="تاريخ الموعد" value="{{ request('date') }}">
+                                    placeholder="@lang('specialties.search.date')" value="{{ request('date') }}">
                             </div>
                         </div>
                         <div class="form-search-btn">
                             <button class="btn btn-primary d-inline-flex align-items-center rounded-pill" type="submit">
-                                <i class="isax isax-search-normal-15 me-2"></i>بحث
+                                <i class="isax isax-search-normal-15 me-2"></i>@lang('specialties.search.button')
                             </button>
                         </div>
                     </form>
@@ -63,8 +62,7 @@
                 class="breadcrumb-bg-01">
             <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-bg-02.png') }}" alt="img"
                 class="breadcrumb-bg-02">
-            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img"
-                class="breadcrumb-bg-03">
+            <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img" class="breadcrumb-bg-03">
             <img src="{{ asset('frontend/xx/assets/img/bg/breadcrumb-icon.png') }}" alt="img"
                 class="breadcrumb-bg-04">
         </div>
@@ -79,14 +77,14 @@
                     <div class="card filter-lists">
                         <div class="card-header">
                             <div class="d-flex align-items-center filter-head justify-content-between">
-                                <h4>المرشحات</h4>
+                                <h4>@lang('specialties.filters.title')</h4>
                                 <a href="{{ route('specialties.show', $specialty->slug) }}"
-                                    class="text-secondary text-decoration-underline">مسح الكل</a>
+                                    class="text-secondary text-decoration-underline">@lang('specialties.filters.clear_all')</a>
                             </div>
                             <div class="filter-input">
                                 <div class="position-relative input-icon">
                                     <input type="text" class="form-control" id="filterSearch"
-                                        placeholder="ابحث في الأطباء...">
+                                        placeholder="@lang('specialties.filters.search_doctors')">
                                     <span><i class="isax isax-search-normal-1"></i></span>
                                 </div>
                             </div>
@@ -99,14 +97,14 @@
                                     <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse1"
                                         aria-controls="collapse1" role="button">
                                         <div class="d-flex align-items-center w-100">
-                                            <h5>التخصصات</h5>
+                                            <h5>@lang('specialties.filters.specialties')</h5>
                                             <div class="ms-auto">
                                                 <span><i class="fas fa-chevron-down"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="collapse1" class="accordion-collapse show" aria-labelledby="heading1">
+                                {{-- <div id="collapse1" class="accordion-collapse show" aria-labelledby="heading1">
                                     <div class="pt-3 accordion-body">
                                         @foreach ($otherSpecialties as $otherSpecialty)
                                             <div class="mb-2 d-flex align-items-center justify-content-between">
@@ -123,7 +121,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <!-- تصفية الجنس -->
@@ -132,7 +130,7 @@
                                     <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2"
                                         aria-controls="collapse2" role="button">
                                         <div class="d-flex align-items-center w-100">
-                                            <h5>الجنس</h5>
+                                            <h5>@lang('specialties.filters.gender')</h5>
                                             <div class="ms-auto">
                                                 <span><i class="fas fa-chevron-down"></i></span>
                                             </div>
@@ -145,7 +143,8 @@
                                             <div class="form-check">
                                                 <input class="form-check-input gender-filter" type="radio"
                                                     name="gender" value="male" id="gender_male">
-                                                <label class="form-check-label" for="gender_male">ذكر</label>
+                                                <label class="form-check-label"
+                                                    for="gender_male">@lang('specialties.filters.male')</label>
                                             </div>
                                             <span class="filter-badge">
                                                 {{ \App\Models\User::where('role', 'doctor')->where('gender', 'male')->count() }}
@@ -155,7 +154,8 @@
                                             <div class="form-check">
                                                 <input class="form-check-input gender-filter" type="radio"
                                                     name="gender" value="female" id="gender_female">
-                                                <label class="form-check-label" for="gender_female">أنثى</label>
+                                                <label class="form-check-label"
+                                                    for="gender_female">@lang('specialties.filters.female')</label>
                                             </div>
                                             <span class="filter-badge">
                                                 {{ \App\Models\User::where('role', 'doctor')->where('gender', 'female')->count() }}
@@ -171,7 +171,7 @@
                                     <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse5"
                                         aria-controls="collapse5" role="button">
                                         <div class="d-flex align-items-center w-100">
-                                            <h5>سنوات الخبرة</h5>
+                                            <h5>@lang('specialties.filters.experience')</h5>
                                             <div class="ms-auto">
                                                 <span><i class="fas fa-chevron-down"></i></span>
                                             </div>
@@ -184,21 +184,21 @@
                                             <div class="form-check">
                                                 <input class="form-check-input experience-filter" type="radio"
                                                     name="experience" value="2" id="exp_2">
-                                                <label class="form-check-label" for="exp_2">2+ سنوات</label>
+                                                <label class="form-check-label" for="exp_2">@lang('specialties.filters.experience_years', ['years' => 2])</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 d-flex align-items-center justify-content-between">
                                             <div class="form-check">
                                                 <input class="form-check-input experience-filter" type="radio"
                                                     name="experience" value="5" id="exp_5">
-                                                <label class="form-check-label" for="exp_5">5+ سنوات</label>
+                                                <label class="form-check-label" for="exp_5">@lang('specialties.filters.experience_years', ['years' => 5])</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 d-flex align-items-center justify-content-between">
                                             <div class="form-check">
                                                 <input class="form-check-input experience-filter" type="radio"
                                                     name="experience" value="10" id="exp_10">
-                                                <label class="form-check-label" for="exp_10">10+ سنوات</label>
+                                                <label class="form-check-label" for="exp_10">@lang('specialties.filters.experience_years', ['years' => 10])</label>
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +211,7 @@
                                     <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse9"
                                         aria-controls="collapse9" role="button">
                                         <div class="d-flex align-items-center w-100">
-                                            <h5>التقييم</h5>
+                                            <h5>@lang('specialties.filters.rating')</h5>
                                             <div class="ms-auto">
                                                 <span><i class="fas fa-chevron-down"></i></span>
                                             </div>
@@ -236,7 +236,7 @@
                                                                 @endif
                                                             @endfor
                                                         </span>
-                                                        {{ $i }} نجوم
+                                                        @lang('specialties.filters.stars', ['rating' => $i])
                                                     </label>
                                                 </div>
                                             </div>
@@ -254,8 +254,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h3>
-                                    عرض <span class="text-secondary">{{ $doctors->total() }}</span>
-                                    طبيب في تخصص <span class="text-primary">{{ $specialty->name }}</span>
+                                    @lang('specialties.doctors.title', ['count' => $doctors->total(), 'name' => $specialty->name])
                                 </h3>
                             </div>
                         </div>
@@ -264,27 +263,27 @@
                                 <div class="dropdown header-dropdown me-2">
                                     <a class="dropdown-toggle sort-dropdown" data-bs-toggle="dropdown"
                                         href="javascript:void(0);" aria-expanded="false">
-                                        <span>ترتيب حسب:</span> الاسم (أ-ي)
+                                        <span>@lang('specialties.doctors.sort.label')</span> @lang('specialties.doctors.sort.name_asc')
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <a href="javascript:void(0);" class="dropdown-item sort-option" data-sort="name">
-                                            الاسم (أ-ي)
+                                            @lang('specialties.doctors.sort.name_asc')
                                         </a>
                                         <a href="javascript:void(0);" class="dropdown-item sort-option"
                                             data-sort="experience">
-                                            الخبرة (الأعلى أولاً)
+                                            @lang('specialties.doctors.sort.experience_desc')
                                         </a>
                                         <a href="javascript:void(0);" class="dropdown-item sort-option"
                                             data-sort="rating">
-                                            التقييم (الأعلى أولاً)
+                                            @lang('specialties.doctors.sort.rating_desc')
                                         </a>
                                         <a href="javascript:void(0);" class="dropdown-item sort-option"
                                             data-sort="price_low">
-                                            السعر (منخفض-مرتفع)
+                                            @lang('specialties.doctors.sort.price_low')
                                         </a>
                                         <a href="javascript:void(0);" class="dropdown-item sort-option"
                                             data-sort="price_high">
-                                            السعر (مرتفع-منخفض)
+                                            @lang('specialties.doctors.sort.price_high')
                                         </a>
                                     </div>
                                 </div>
@@ -332,7 +331,7 @@
                                             </a>
                                             <span class="badge bg-success-light d-inline-flex align-items-center">
                                                 <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                                {{ $doctor->doctorProfile->accepting_new_patients ? 'متاح' : 'غير متاح' }}
+                                                {{ $doctor->doctorProfile->accepting_new_patients ? __('specialties.doctors.card.available') : __('specialties.doctors.card.not_available') }}
                                             </span>
                                         </div>
                                         <div class="p-3 pt-0 flex-grow-1">
@@ -346,14 +345,14 @@
                                                     <p class="mb-0 d-flex align-items-center fs-14">
                                                         <i class="isax isax-location me-2"></i>
                                                         @if ($doctor->medicalCenters->count() > 0)
-                                                            {{ $doctor->medicalCenters->first()->city ?? 'موقع غير محدد' }}
+                                                            {{ $doctor->medicalCenters->first()->city ?? __('specialties.doctors.card.location') }}
                                                         @else
-                                                            {{ $doctor->address ?? 'موقع غير محدد' }}
+                                                            {{ $doctor->address ?? __('specialties.doctors.card.location') }}
                                                         @endif
                                                     </p>
                                                     <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
                                                     <span class="fs-14 fw-medium">
-                                                        {{ $doctor->doctorProfile->years_of_experience ?? 0 }} سنة خبرة
+                                                        @lang('specialties.doctors.card.experience', ['years' => $doctor->doctorProfile->years_of_experience ?? 0])
                                                     </span>
                                                 </div>
                                                 @if ($doctor->doctorProfile->qualifications)
@@ -368,15 +367,15 @@
                                             </div>
                                             <div class="mt-auto d-flex align-items-center justify-content-between">
                                                 <div>
-                                                    <p class="mb-1">رسوم الاستشارة</p>
+                                                    <p class="mb-1">@lang('specialties.doctors.card.consultation_fee')</p>
                                                     <h3 class="text-orange">
-                                                        ${{ $doctor->doctorProfile->consultation_fee ?? '100' }}
+                                                        AED {{ $doctor->doctorProfile->consultation_fee ?? '100' }}
                                                     </h3>
                                                 </div>
-                                                <a href="{{ route('doctorshome.book', $doctor->id) }}"
+                                                <a href="{{ route('doctorshomex.booking.create', $doctor->id) }}"
                                                     class="btn btn-md btn-dark d-inline-flex align-items-center rounded-pill">
                                                     <i class="isax isax-calendar-1 me-2"></i>
-                                                    حجز موعد
+                                                    @lang('specialties.doctors.card.book_appointment')
                                                 </a>
                                             </div>
                                         </div>
@@ -388,11 +387,11 @@
                                 <div class="py-5 text-center card">
                                     <div class="card-body">
                                         <i class="mb-3 isax isax-search-status-1 display-1 text-muted"></i>
-                                        <h3 class="text-muted">لا توجد نتائج</h3>
-                                        <p class="text-muted">لم نعثر على أطباء في هذا التخصص حسب معايير البحث.</p>
+                                        <h3 class="text-muted">@lang('specialties.doctors.no_results.title')</h3>
+                                        <p class="text-muted">@lang('specialties.doctors.no_results.message')</p>
                                         <a href="{{ route('specialties.show', $specialty->slug) }}"
                                             class="btn btn-primary">
-                                            عرض جميع الأطباء
+                                            @lang('specialties.doctors.no_results.show_all')
                                         </a>
                                     </div>
                                 </div>
@@ -404,7 +403,7 @@
                     @if ($doctors->hasPages())
                         <div class="col-md-12">
                             <div class="mt-0 mb-4 pagination dashboard-pagination mt-md-3">
-                                {{ $doctors->links() }}
+                                {{ $doctors->onEachSide(1)->links('pagination::bootstrap-4') }}
                             </div>
                         </div>
                     @endif
@@ -412,7 +411,7 @@
                     @if ($doctors->count() > 0)
                         <div class="col-md-12">
                             <div class="mb-4 text-center">
-                                <p class="text-muted">عرض {{ $doctors->count() }} من أصل {{ $doctors->total() }} طبيب</p>
+                                <p class="text-muted">@lang('specialties.doctors.pagination.results', ['count' => $doctors->count(), 'total' => $doctors->total()])</p>
                             </div>
                         </div>
                     @endif
@@ -420,92 +419,126 @@
             </div>
         </div>
     </div>
-@endsection
-
-@push('scripts')
     <script>
-        // تصفية الأطباء في الصفحة
         document.addEventListener('DOMContentLoaded', function() {
-                    const filterSearch = document.getElementById('filterSearch');
-                    const specialtyFilters = document.querySelectorAll('.specialty-filter');
-                    const genderFilters = document.querySelectorAll('.gender-filter');
-                    const experienceFilters = document.querySelectorAll('.experience-filter');
-                    const ratingFilters = document.querySelectorAll('.rating-filter');
-                    const sortOptions = document.querySelectorAll('.sort-option');
-                    const doctorCards = document.querySelectorAll('.doctor-card');
+            const filterSearch = document.getElementById('filterSearch');
+            const specialtyFilters = document.querySelectorAll('.specialty-filter');
+            const genderFilters = document.querySelectorAll('.gender-filter');
+            const experienceFilters = document.querySelectorAll('.experience-filter');
+            const ratingFilters = document.querySelectorAll('.rating-filter');
+            const sortOptions = document.querySelectorAll('.sort-option');
+            const doctorCards = document.querySelectorAll('.doctor-card');
 
-                    // تطبيق التصفية
-                    function applyFilters() {
-                        const searchText = filterSearch.value.toLowerCase();
-                        const selectedGender = document.querySelector('input[name="gender"]:checked')?.value;
-                        const selectedExperience = document.querySelector('input[name="experience"]:checked')?.value;
-                        const selectedRating = document.querySelector('input[name="rating"]:checked')?.value;
+            // تطبيق التصفية
+            function applyFilters() {
+                const searchText = filterSearch.value.toLowerCase();
+                const selectedGender = document.querySelector('input[name="gender"]:checked')?.value;
+                const selectedExperience = document.querySelector('input[name="experience"]:checked')?.value;
+                const selectedRating = document.querySelector('input[name="rating"]:checked')?.value;
 
-                        let visibleCount = 0;
+                let visibleCount = 0;
 
-                        doctorCards.forEach(card => {
-                            const name = card.dataset.name.toLowerCase();
-                            const gender = card.dataset.gender;
-                            const experience = parseInt(card.dataset.experience);
-                            const rating = parseFloat(card.dataset.rating);
+                doctorCards.forEach(card => {
+                    const name = card.dataset.name.toLowerCase();
+                    const gender = card.dataset.gender;
+                    const experience = parseInt(card.dataset.experience);
+                    const rating = parseFloat(card.dataset.rating);
 
-                            const matchesSearch = name.includes(searchText);
-                            const matchesGender = !selectedGender || gender === selectedGender;
-                            const matchesExperience = !selectedExperience || experience >= parseInt(
-                                selectedExperience);
-                            const matchesRating = !selectedRating || rating >= parseInt(selectedRating);
+                    const matchesSearch = name.includes(searchText);
+                    const matchesGender = !selectedGender || gender === selectedGender;
+                    const matchesExperience = !selectedExperience || experience >= parseInt(
+                        selectedExperience);
+                    const matchesRating = !selectedRating || rating >= parseInt(selectedRating);
 
-                            if (matchesSearch && matchesGender && matchesExperience && matchesRating) {
-                                card.style.display = 'block';
-                                visibleCount++;
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-
-                        // تحديث عدد النتائج
-                        const resultsCount = document.querySelector('.mb-4 h3');
-                        if (resultsCount) {
-                            resultsCount.innerHTML =
-                                `عرض <span class="text-secondary">${visibleCount}</span> طبيب في تخصص <span class="text-primary">{{ $specialty->name }}</span>`;
-                        }
+                    if (matchesSearch && matchesGender && matchesExperience && matchesRating) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
                     }
+                });
 
-                    // إضافة مستمعي الأحداث
-                    filterSearch.addEventListener('input', applyFilters);
-                    specialtyFilters.forEach(checkbox => checkbox.addEventListener('change', applyFilters); genderFilters
-                            .forEach(radio => radio.addEventListener('change', applyFilters); experienceFilters.forEach(
-                                radio => radio.addEventListener('change', applyFilters); ratingFilters.forEach(radio =>
-                                    radio.addEventListener('change', applyFilters));
+                // تحديث عدد النتائج
+                const resultsCount = document.querySelector('.mb-4 h3');
+                if (resultsCount) {
+                    resultsCount.innerHTML =
+                        `عرض <span class="text-secondary">${visibleCount}</span> طبيب في تخصص <span class="text-primary">{{ $specialty->name }}</span>`;
+                }
+            }
 
-                                // الترتيب
-                                sortOptions.forEach(option => {
-                                    option.addEventListener('click', function() {
-                                        const sort = this.dataset.sort;
-                                        window.location.href =
-                                            `{{ route('specialties.show', $specialty->slug) }}?sort=${sort}`;
-                                    });
-                                });
+            // إضافة event listeners
+            filterSearch.addEventListener('input', applyFilters);
 
-                                // إضافة إلى المفضلة
-                                document.querySelectorAll('.fav-icon').forEach(icon => {
-                                    icon.addEventListener('click', function() {
-                                        const doctorId = this.dataset.doctorId;
-                                        // هنا يمكنك إضافة كود AJAX لإضافة الطبيب إلى المفضلة
-                                        this.classList.toggle('text-danger');
-                                        alert('تم إضافة الطبيب إلى المفضلة');
-                                    });
-                                });
-                            });
+            specialtyFilters.forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
 
-                            // تهيئة التقويم
-                            flatpickr(".datetimepicker", {
-                                enableTime: true,
-                                dateFormat: "Y-m-d H:i",
-                                minDate: "today",
-                                time_24hr: true,
-                                minuteIncrement: 30,
-                                locale: "ar"
-                            });
+            genderFilters.forEach(radio => {
+                radio.addEventListener('change', applyFilters);
+            });
+
+            experienceFilters.forEach(radio => {
+                radio.addEventListener('change', applyFilters);
+            });
+
+            ratingFilters.forEach(radio => {
+                radio.addEventListener('change', applyFilters);
+            });
+
+            // الترتيب
+            sortOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const sort = this.dataset.sort;
+                    window.location.href =
+                        `{{ route('specialties.show', $specialty->slug) }}?sort=${sort}`;
+                });
+            });
+
+            // إضافة إلى المفضلة
+            document.querySelectorAll('.fav-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const doctorId = this.dataset.doctorId;
+                    // هنا يمكنك إضافة كود AJAX لإضافة الطبيب إلى المفضلة
+                    this.classList.toggle('text-danger');
+
+                    // استخدام الترجمة بدلاً من النص الثابت
+                    const message = this.classList.contains('text-danger') ?
+                        '{{ __('تم إضافة الطبيب إلى المفضلة') }}' :
+                        '{{ __('تم إزالة الطبيب من المفضلة') }}';
+
+                    // يمكنك استخدام toast أو sweetalert بدلاً من alert
+                    showNotification(message);
+                });
+            });
+
+            // دالة لعرض الإشعارات (بديل عن alert)
+            function showNotification(message) {
+                // يمكنك استخدام مكتبة مثل Toastify أو إنشاء إشعار مخصص
+                if (typeof Toastify !== 'undefined') {
+                    Toastify({
+                        text: message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }).showToast();
+                } else {
+                    alert(message);
+                }
+            }
+
+            // تهيئة التقويم
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr(".datetimepicker", {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    minDate: "today",
+                    time_24hr: true,
+                    minuteIncrement: 30,
+                    locale: "ar"
+                });
+            }
+        });
     </script>
-@endpush
+
+@endsection

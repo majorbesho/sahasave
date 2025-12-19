@@ -33,6 +33,7 @@ use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 use App\Models\EmailVerification;
 use Mail;
 
+
 use Illuminate\Support\Str;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Mail\OrderMail;
@@ -41,6 +42,7 @@ use App\Models\Category;
 use App\Models\Emp as ModelsEmp;
 use Kalnoy\Nestedset\NodeTrait;
 use Kalnoy\Nestedset\NestedSet;
+use Illuminate\Support\Facades\Validator;
 
 
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -48,6 +50,7 @@ use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\TwitterCard;
 use Artesaos\SEOTools\Facades\JsonLd;
 use App\Models\Emp;
+use App\Models\NewsletterSubscriber;
 use App\Models\Specialty;
 use Illuminate\Support\Facades\Cache;
 
@@ -56,10 +59,14 @@ use Artesaos\SEOTools\Facades\JsonLdMulti;
 
 // OR
 use Artesaos\SEOTools\Facades\SEOTools;
+use App\Models\Blog;
 
-use function PHPUnit\Framework\isNull;
 use Artesaos\SEOTools\Traits\SEOTools as SEOToolsTrait;
 
+use Share;
+
+// OR for joedixon/laravel-social-share
+use JD\Laradit\SocialShare;
 
 class IndexController extends Controller
 {
@@ -75,21 +82,21 @@ class IndexController extends Controller
 
     public function homex()
     {
-        SEOMeta::setTitle('SahaSave.comHome');
-        SEOMeta::setDescription('SahaSave.comlogistic logistic   ');
-        SEOMeta::setCanonical('http://SahaSave.com/');
+        SEOMeta::setTitle('SehaSave.comHome');
+        SEOMeta::setDescription('SehaSave.com   ');
+        SEOMeta::setCanonical('http://SehaSave.com/');
 
-        OpenGraph::setDescription('SahaSave.comlogistic logistic   ');
-        OpenGraph::setTitle('SahaSave.com ');
-        OpenGraph::setUrl('http://SahaSave.com/');
+        OpenGraph::setDescription('SehaSave.com   ');
+        OpenGraph::setTitle('SehaSave.com ');
+        OpenGraph::setUrl('http://SehaSave.com/');
         OpenGraph::addProperty('type', 'articles');
 
-        TwitterCard::setTitle('SahaSave.com');
+        TwitterCard::setTitle('SehaSave.com');
         // TwitterCard::setSite('@LuizVinicius73');
 
-        JsonLd::setTitle('SahaSave.com');
-        JsonLd::setDescription('SahaSave.comlogistic logistic ');
-        JsonLd::addImage('http://SahaSave.com');
+        JsonLd::setTitle('SehaSave.com');
+        JsonLd::setDescription('SehaSave.com ');
+        JsonLd::addImage('http://SehaSave.com');
 
 
 
@@ -102,14 +109,20 @@ class IndexController extends Controller
             return $this->getHomePageStats();
         });
 
-        $specialties = Specialty::withCount(['activeDoctors as doctors_count'])
+        // $specialties = Specialty::withCount(['activeDoctors as doctors_count'])
+        //     ->featured()
+        //     ->active()
+        //     ->ordered()
+        //     ->take(8)
+        //     ->get();
+
+        $specialties = Specialty::withCount(['activeVerifiedDoctors as doctors_count'])
             ->featured()
             ->active()
             ->ordered()
-            ->take(8)
+
             ->get();
-
-
+        //return $specialties;
 
         $date = \Carbon\Carbon::now()->addDays(7);
 
@@ -119,17 +132,31 @@ class IndexController extends Controller
         $testim = testim::orderBy('id', 'DESC')->limit('8')->get();
         $branch = Branch::orderBy('id', 'DESC')->limit('8')->get();
         $user = User::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
+        $featuredDoctors = User::with(['doctorProfile', 'schedules'])
+            ->where('role', 'doctor')
+            ->where('status', 'active')
+            ->whereHas('doctorProfile', function ($query) {
+                $query->where('is_featured', true)
+                    ->where('is_verified', true)
+                    ->where('accepting_new_patients', true);
+            })
+            ->withCount(['doctorAppointments as total_appointments'])
+            ->join('doctor_profiles', 'users.id', '=', 'doctor_profiles.doctor_id')
+            ->orderByDesc('doctor_profiles.average_rating')
+            ->select('users.*') // تأكد من تحديد أعمدة users فقط
+            ->limit(10)
+            ->get();
 
+        $recentBlogs = Blog::with(['category'])
+            ->published()
+            ->orderBy('published_at', 'desc')
+            ->take(4)
+            ->get();
 
 
         // popular
 
-        //return $banneHeader;
-        $shareComponent = \Share::page(
-            'https://SahaSave.com/'
 
-        )
-            ->facebook()->twitter()->linkedin()->telegram()->whatsapp()->reddit();
         if (auth()->user()) {
             if (is_null(auth()->user()->email_verified_at) or is_null(auth()->user()->phoneOtp_verified_at)) {
                 return view('frontend.index', compact([
@@ -142,9 +169,12 @@ class IndexController extends Controller
                     'branch',
                     'stats',
                     'user',
-                    'shareComponent',
+                    // 'shareComponent',
                     'categories',
                     'specialties',
+                    'specialties',
+                    'featuredDoctors',
+                    'recentBlogs'
                     //'upcoming',
                     // 'banner',
                     //'bannePromo',
@@ -161,11 +191,12 @@ class IndexController extends Controller
                 'branch',
                 'stats',
                 'user',
-                'shareComponent',
+                // 'shareComponent',
                 'categories',
                 'specialties',
 
-
+                'featuredDoctors',
+                'recentBlogs',
                 //'upcoming',
                 //'banner',
                 //'countOfOrder',
@@ -173,6 +204,48 @@ class IndexController extends Controller
             ]));
         }
     }
+
+
+    public function toggleFavorite(Request $request, $doctorId)
+    {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Please login to add favorites'], 401);
+        }
+
+        $patient = auth()->user();
+
+        // Check if doctor exists and is actually a doctor
+        $doctor = User::where('id', $doctorId)->where('role', 'doctor')->first();
+
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+
+        // Use the favorites table directly
+        $isFavorite = DB::table('favorites')
+            ->where('patient_id', $patient->id)
+            ->where('doctor_id', $doctorId)
+            ->exists();
+
+        if ($isFavorite) {
+            DB::table('favorites')
+                ->where('patient_id', $patient->id)
+                ->where('doctor_id', $doctorId)
+                ->delete();
+            return response()->json(['status' => 'removed', 'message' => 'Doctor removed from favorites']);
+        } else {
+            DB::table('favorites')
+                ->insert([
+                    'patient_id' => $patient->id,
+                    'doctor_id' => $doctorId,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            return response()->json(['status' => 'added', 'message' => 'Doctor added to favorites']);
+        }
+    }
+
+
 
     private function getHomePageStats()
     {
@@ -226,27 +299,41 @@ class IndexController extends Controller
     // دالة البحث عن الأطباء
     public function searchDoctors(Request $request)
     {
-        $search = $request->input('search');
-        $location = $request->input('location');
-        $date = $request->input('date');
+        $search = $request->input('search', '');
+        $location = $request->input('location', '');
+        $date = $request->input('date', '');
 
+        // البحث الأساسي عن الأطباء مع التأكد من وجود doctorProfile
         $doctors = User::where('role', 'doctor')
             ->where('status', 'active')
+            ->whereHas('doctorProfile') // فقط الأطباء الذين لديهم ملف طبي
+            ->with(['doctorProfile', 'medicalCenters'])
             ->when($search, function ($query) use ($search) {
-                return $query->where('name', 'like', "%{$search}%")
-                    ->orWhereHas('doctorProfile', function ($q) use ($search) {
-                        $q->where('specialization', 'like', "%{$search}%");
-                    });
-            })
-            ->when($location, function ($query) use ($location) {
-                return $query->whereHas('medicalCenters', function ($q) use ($location) {
-                    $q->where('address', 'like', "%{$location}%");
+                return $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhereHas('doctorProfile', function ($profileQuery) use ($search) {
+                            $profileQuery->where('specialization', 'like', "%{$search}%")
+                                ->orWhere('medical_school', 'like', "%{$search}%")
+                                ->orWhereJsonContains('qualifications', $search);
+                        });
                 });
             })
-            ->with(['doctorProfile', 'medicalCenters'])
+            ->when($location, function ($query) use ($location) {
+                return $query->where(function ($q) use ($location) {
+                    $q->where('address', 'like', "%{$location}%")
+                        ->orWhereHas('medicalCenters', function ($centerQuery) use ($location) {
+                            $centerQuery->where('name', 'like', "%{$location}%")
+                                ->orWhere('address', 'like', "%{$location}%")
+                                ->orWhere('city', 'like', "%{$location}%");
+                        });
+                });
+            })
+            ->orderBy('name')
             ->paginate(10);
 
-        return view('frontend.doctors-search', compact('doctors', 'search', 'location', 'date'));
+        $totalDoctors = $doctors->total();
+
+        return view('frontend.doctors-search', compact('doctors', 'search', 'location', 'date', 'totalDoctors'));
     }
 
     // دالة لتفريغ الـ Cache عند حدوث تغييرات
@@ -308,14 +395,6 @@ class IndexController extends Controller
 
         return view('frontend.register_temp');
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -381,7 +460,7 @@ class IndexController extends Controller
 
                 if ($userId) {
                     //return redirect()->route('verification', $userId);
-                    return redirect()->route('home')->with('success', 'success  Welcome to SahaSave.com ');
+                    return redirect()->route('home')->with('success', 'success  Welcome toSehaSave.com ');
                 } else {
                     return back()->with('error', 'check your data Please ');
                 }
@@ -431,7 +510,7 @@ class IndexController extends Controller
 
             if ($userId) {
                 //return redirect()->route('verification', $userId);
-                return redirect()->route('home')->with('success', 'success  Welcome to SahaSave.com ');
+                return redirect()->route('home')->with('success', 'success  Welcome toSehaSave.com ');
             } else {
                 return back()->with('error', 'check your data Please ');
             }
@@ -468,141 +547,138 @@ class IndexController extends Controller
     //new-userreferral
 
 
-    public function new_userreferral(Request $request)
-    {
-        $user = Auth::user();
-        // return  $user_id;
-        $domain = URL::to('/');
+    // public function new_userreferral(Request $request)
+    // {
+    //     $user = Auth::user();
+    //     // return  $user_id;
+    //     $domain = URL::to('/');
 
-        $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
-        // /refs/{user_id}/{ref_cat_id}
-        $url = $domain . '/referral-register?ref=' . $user->referral_code;
-        $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $user->referral_code;
-        return view('frontend.user.newuserreferral', compact(['user', 'userref']));
-    }
+    //     $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
+    //     // /refs/{user_id}/{ref_cat_id}
+    //     $url = $domain . '/referral-register?ref=' . $user->referral_code;
+    //     $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $user->referral_code;
+    //     return view('frontend.user.newuserreferral', compact(['user', 'userref']));
+    // }
 
-    public function refs(Request $request,  $ref_category_id)
-    {
-        $user = Auth::user();
-        // return  $user_id;
-        $domain = URL::to('/');
+    // public function refs(Request $request,  $ref_category_id)
+    // {
+    //     $user = Auth::user();
+    //     // return  $user_id;
+    //     $domain = URL::to('/');
 
-        $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
-        // /refs/{user_id}/{ref_cat_id}
-        $url = $domain . '/referral-register?ref=' . $referral_code;
-        $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $referral_code;
-        return view('frontend.user.newuserreferral', compact(['user', 'userref']));
-    }
-    private function create(array $data)
-    {
-        return User::create([
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'name' => $data['name'],
-            // 'photo'=>$data['photo'],
-            'phone' => $data['phone'],
-            'nationality' => $data['nationality'],
-            'dateOfbarth' => $data['dateOfbarth'],
-            'referral_code' => $data['referral_code'],
+    //     $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
+    //     // /refs/{user_id}/{ref_cat_id}
+    //     $url = $domain . '/referral-register?ref=' . $referral_code;
+    //     $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $referral_code;
+    //     return view('frontend.user.newuserreferral', compact(['user', 'userref']));
+    // }
+    // private function create(array $data)
+    // {
+    //     return User::create([
+    //         'email' => $data['email'],
+    //         'password' => Hash::make($data['password']),
+    //         'name' => $data['name'],
+    //         // 'photo'=>$data['photo'],
+    //         'phone' => $data['phone'],
+    //         'nationality' => $data['nationality'],
+    //         'dateOfbarth' => $data['dateOfbarth'],
+    //         'referral_code' => $data['referral_code'],
 
-            // 'address'=>$data['address'],
-        ]);
-    }
+    //         // 'address'=>$data['address'],
+    //     ]);
+    // }
 
-    public function cachview()
-    {
-        $user = Auth::user();
-
-
-        return view('frontend.cach', compact('user'));
-    }
-    //cachpost
+    // public function cachview()
+    // {
+    //     $user = Auth::user();
 
 
-    public function cachpost(Request $request)
-    {
-
-        $user = Auth::user();
-        // $emp = Emp::where('repcode', $request->empid)->get();
-
-        //return $request->empid;
-
-        $emp = Emp::where('repcode', $request->empid)->get();
-        // return $emp;
-        if ($emp->isEmpty()) {
-            //return $emp;
-            return redirect()->route('home')->with('error', 'check emp rep ');
-        } else {
+    //     return view('frontend.cach', compact('user'));
+    // }
+    // //cachpost
 
 
-            foreach (Cart::instance('shopping')->content() as $item) {
-                $cart_array[] = $item->id;
-            }
-            $totale = Cart::subtotal();
-            $totale = (float) str_replace(',', '', Cart::subtotal());
+    // public function cachpost(Request $request)
+    // {
 
-            $qty  = $request->qty;
+    //     $user = Auth::user();
+    //     // $emp = Emp::where('repcode', $request->empid)->get();
+
+    //     //return $request->empid;
+
+    //     $emp = Emp::where('repcode', $request->empid)->get();
+    //     // return $emp;
+    //     if ($emp->isEmpty()) {
+    //         //return $emp;
+    //         return redirect()->route('home')->with('error', 'check emp rep ');
+    //     } else {
 
 
-            $order = new order();
+    //         foreach (Cart::instance('shopping')->content() as $item) {
+    //             $cart_array[] = $item->id;
+    //         }
+    //         $totale = Cart::subtotal();
+    //         $totale = (float) str_replace(',', '', Cart::subtotal());
+
+    //         $qty  = $request->qty;
 
 
-            $order['user_id'] = auth()->user()->id;
-            $order['order_number'] = Str::upper('SB-' . Str::random(8));
-            $order['total_amount'] = $totale;
-            $order['user_name'] = auth()->user()->name;
-            $order['email'] = auth()->user()->email;
-            $order['address'] = auth()->user()->address;
-            $order['phone'] =  auth()->user()->phone;
-            $order['condition'] = 'complete';
-            $order['payment_status'] = 'paid';
-            $order['payment_method'] = 'cash';
-            $order['empid'] = $request->empid;
-            //empid
-            //  $order['condition']= 'complete';
-            //quantity
-            //$order['quantity']= $qty;
+    //         $order = new order();
 
-            //return $order;
 
-            $status = $order->save();
-            foreach (Cart::instance('shopping')->content() as $item) {
-                $gop_id[] = $item->id;
-                $qty = $item->qty;
-                //return $qty;
-                $order->gproduct()->attach($gproduct, ['qty' => $qty]);
+    //         $order['user_id'] = auth()->user()->id;
+    //         $order['order_number'] = Str::upper('SB-' . Str::random(8));
+    //         $order['total_amount'] = $totale;
+    //         $order['user_name'] = auth()->user()->name;
+    //         $order['email'] = auth()->user()->email;
+    //         $order['address'] = auth()->user()->address;
+    //         $order['phone'] =  auth()->user()->phone;
+    //         $order['condition'] = 'complete';
+    //         $order['payment_status'] = 'paid';
+    //         $order['payment_method'] = 'cash';
+    //         $order['empid'] = $request->empid;
+    //         //empid
+    //         //  $order['condition']= 'complete';
+    //         //quantity
+    //         //$order['quantity']= $qty;
 
-                //return $order;//
-            }
+    //         //return $order;
 
-            if ($status) {
-                Mail::to($order['email'])
-                    // ->bcc('SahaSave.commarketing@gmail.com')
-                    ->cc('beshog32@gmail.com')
-                    ->send(new OrderMail($order));
+    //         $status = $order->save();
+    //         foreach (Cart::instance('shopping')->content() as $item) {
+    //             $gop_id[] = $item->id;
+    //             $qty = $item->qty;
+    //             //return $qty;
+    //             $order->gproduct()->attach($gproduct, ['qty' => $qty]);
 
-                Cart::instance('shopping')->destroy();
-                Session::forget('checkout1');
-                return redirect()->route('dashboard')->with('Success');
-            }
+    //             //return $order;//
+    //         }
 
-            return redirect()->route('dashboard')->with('Success');
-        }
-    }
+    //         if ($status) {
+    //             Mail::to($order['email'])
+    //                 // ->bcc('SehaSave.commarketing@gmail.com')
+    //                 ->cc('beshog32@gmail.com')
+    //                 ->send(new OrderMail($order));
 
-    public function SearchView()
-    {
-        return view('frontend.search');
-    }
+    //             Cart::instance('shopping')->destroy();
+    //             Session::forget('checkout1');
+    //             return redirect()->route('dashboard')->with('Success');
+    //         }
+
+    //         return redirect()->route('dashboard')->with('Success');
+    //     }
+    // }
+
+
 
 
 
 
     // otp
-    public function searchRes($request)
-    {
-        return $request->all();
-    }
+    // public function searchRes($request)
+    // {
+    //     return $request->all();
+    // }
 
 
     public function verification($id)
@@ -988,11 +1064,6 @@ class IndexController extends Controller
     }
 
 
-    public function getin()
-    {
-        return view('frontend.getin');
-    }
-
 
 
     public function artsDispaly($slug)
@@ -1051,27 +1122,27 @@ class IndexController extends Controller
 
 
     // GEt URl SLUG FILTER BY SLUG
-    public function groupOfProduct($slug)
-    {
+    // public function groupOfProduct($slug)
+    // {
 
-        //dd($slug);
-        $shareComponent = \Share::page(
-            'https://SahaSave.com/',
-            'Your share text comes here',
-        )
-            ->facebook()
-            //->twitter()
-            ->linkedin()
-            //->telegram()
-            ->whatsapp()
-            //->reddit()
-        ;
+    //     //dd($slug);
+    //     $shareComponent = \Share::page(
+    //         'https://SehaSave.com/',
+    //         'Your share text comes here',
+    //     )
+    //         ->facebook()
+    //         //->twitter()
+    //         ->linkedin()
+    //         //->telegram()
+    //         ->whatsapp()
+    //         //->reddit()
+    //     ;
 
 
-        //$product = prodcut::where('',$gop->id)->get();
-        //return $gop;
-        return view('frontend.pages.box', compact(['gop',  'shareComponent']));
-    }
+    //     //$product = prodcut::where('',$gop->id)->get();
+    //     //return $gop;
+    //     return view('frontend.pages.box', compact(['gop',  'shareComponent']));
+    // }
 
 
 
@@ -1096,11 +1167,26 @@ class IndexController extends Controller
         $abouts = about::where(['status' => 'active'])->orderBy('id', 'DESC')->limit('1')->get();
         $arts = art::where(['status' => 'active'])->orderBy('id', 'DESC')->limit(3)->get();
 
+        $featuredDoctors = User::with(['doctorProfile', 'schedules'])
+            ->where('role', 'doctor')
+            ->where('status', 'active')
+            ->whereHas('doctorProfile', function ($query) {
+                $query->where('is_featured', true)
+                    ->where('is_verified', true)
+                    ->where('accepting_new_patients', true);
+            })
+            ->withCount(['doctorAppointments as total_appointments'])
+            ->join('doctor_profiles', 'users.id', '=', 'doctor_profiles.doctor_id')
+            ->orderByDesc('doctor_profiles.average_rating')
+            ->select('users.*') // تأكد من تحديد أعمدة users فقط
+            ->limit(10)
+            ->get();
 
+        $faqs = faq::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
 
         $setting = setting::orderBy('id', 'DESC')->limit('1')->get();
 
-        return view('frontend.about', compact(['banners', 'client', 'testim', 'team', 'setting', 'abouts', 'arts']));
+        return view('frontend.about', compact(['banners', 'client', 'testim', 'team', 'setting', 'abouts', 'arts', 'featuredDoctors', 'faqs']));
     }
 
 
@@ -1225,20 +1311,68 @@ class IndexController extends Controller
 
 
 
-    public function priceindex()
+    public function subscribe(Request $request)
     {
+        // التحقق من البيانات
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:newsletter_subscribers,email'
+        ], [
+            'email.required' => __('newsletter.email_required'),
+            'email.email' => __('newsletter.email_valid'),
+            'email.unique' => __('newsletter.email_already_subscribed')
+        ]);
 
-        return view('frontend.price');
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            // حفظ المشترك
+            NewsletterSubscriber::create([
+                'email' => $request->email,
+                'status' => 'active',
+                'subscribed_at' => now(),
+                'locale' => app()->getLocale()
+            ]);
+
+            // رسالة نجاح حسب اللغة
+            $message = app()->getLocale() == 'ar'
+                ? 'تم الاشتراك بنجاح في النشرة البريدية!'
+                : 'Successfully subscribed to newsletter!';
+
+            return redirect()->back()->with('success', $message);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', __('newsletter.subscription_failed'));
+        }
     }
 
-
-
-
-    public function  indextrucks($slug)
+    /**
+     * إلغاء الاشتراك
+     */
+    public function unsubscribe($email)
     {
+        try {
+            $subscriber = NewsletterSubscriber::where('email', $email)->first();
 
+            if ($subscriber) {
+                $subscriber->update(['status' => 'unsubscribed']);
+                return view('frontend.newsletter.unsubscribe-success');
+            }
 
-        //return $truck;
-        return view('frontend.indextrucks', compact('truck'));
+            return view('frontend.newsletter.unsubscribe-error');
+        } catch (\Exception $e) {
+            return view('frontend.newsletter.unsubscribe-error');
+        }
+    }
+
+    /**
+     * عرض صفحة إدارة الاشتراك
+     */
+    public function manageSubscription()
+    {
+        return view('frontend.newsletter.manage-subscription');
     }
 }

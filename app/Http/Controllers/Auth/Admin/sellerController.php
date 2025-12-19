@@ -110,7 +110,7 @@ class sellerController extends Controller
                 Auth::login($userid);
                 if ($userId) {
                     //return redirect()->route('verification', $userId);
-                    return redirect()->route('backend.sellerbackend.index')->with('success', 'success  Welcome toSahaSave.com .com ');
+                    return redirect()->route('backend.sellerbackend.index')->with('success', 'success  Welcome toSehaSave.com .com ');
                 } else {
 
                     return back()->with('error', 'check your data Please ');

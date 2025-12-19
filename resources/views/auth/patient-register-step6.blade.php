@@ -9,8 +9,8 @@
                 <div class="inner-right-login">
                     <div class="login-header">
                         <div class="logo-icon">
-                            <img src="https://doccure.dreamstechnologies.com/laravel/template/public/assets/img/logo.png"
-                                alt="doccure-logo">
+                            <img src="https://SehaSave.com.dreamstechnologies.com/laravel/template/public/assets/img/logo.png"
+                                alt="SehaSave.com-logo">
                         </div>
                         <div class="step-list">
                             <ul>
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                             <div class="mt-5">
-                                <a href="https://doccure.dreamstechnologies.com/laravel/template/public/patient-register-step4"
+                                <a href="https://SehaSave.com.dreamstechnologies.com/laravel/template/public/patient-register-step4"
                                     class="btn btn-primary w-100 btn-lg login-btn step3_submit">Continue </a>
                             </div>
                         </form>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="login-bottom-copyright">
                     <span>©
-                        <script type="0e01b108b0e430f0ac849d56-text/javascript">document.write(new Date().getFullYear())</script> Doccure. All rights reserved.
+                        <script type="0e01b108b0e430f0ac849d56-text/javascript">document.write(new Date().getFullYear())</script> SehaSave.com. All rights reserved.
                     </span>
                 </div>
             </div>

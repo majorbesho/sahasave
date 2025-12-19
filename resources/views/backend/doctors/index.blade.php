@@ -137,10 +137,27 @@
                                                             class="btn btn-info btn-sm" title="عرض">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
+
+
+                                                        @if ($doctor->doctorProfile)
+                                                            <form
+                                                                action="{{ route('doctors.toggle-featured', $doctor->id) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <button type="submit"
+                                                                    class="btn btn-{{ $doctor->doctorProfile->is_featured ? 'warning' : 'primary' }} btn-sm">
+                                                                    {{ $doctor->doctorProfile->is_featured ? 'إلغاء التميز' : 'تمييز' }}
+                                                                </button>
+                                                            </form>
+                                                        @endif
+
                                                         <a href="{{ route('doctors.edit', $doctor->id) }}"
                                                             class="btn btn-primary btn-sm" title="تعديل">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
+
+
                                                         @if ($doctor->status == 'pending')
                                                             <form action="{{ route('doctors.approve', $doctor->id) }}"
                                                                 method="POST" class="d-inline">
@@ -151,6 +168,8 @@
                                                                 </button>
                                                             </form>
                                                         @endif
+
+
                                                         <form action="{{ route('doctors.destroy', $doctor->id) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf

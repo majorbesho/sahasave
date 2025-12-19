@@ -260,9 +260,6 @@
                 </div>
             </div>
         </div>
-    @endsection
-
-    @push('scripts')
         <script>
             // Show file name in file input
             document.querySelectorAll('.custom-file-input').forEach(function(input) {
@@ -286,4 +283,5 @@
                 }
             });
         </script>
-    @endpush
+
+    @endsection

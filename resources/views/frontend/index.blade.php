@@ -1,125 +1,33 @@
 @extends('frontend.layouts.master')
 @section('content')
-    {{-- <section class="banner-section banner-sec-one">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <div class="banner-content aos" data-aos="fade-up">
-                        <div class="gap-2 rating-appointment d-inline-flex align-items-center">
-                            <div class="avatar-list-stacked avatar-group-lg">
-                                <span class="avatar avatar-rounded">
-                                    <img class="border border-white"
-                                        src="{{ asset('frontend/xx/assets/img/doctors/doctor-thumb-22.jpg') }}"
-                                        alt="img" />
-                                </span>
-                                <span class="avatar avatar-rounded">
-                                    <img class="border border-white"
-                                        src="{{ asset('frontend/xx/assets//img/doctors/doctor-thumb-23.jpg') }}"
-                                        alt="img" />
-                                </span>
-                                <span class="avatar avatar-rounded">
-                                    <img src="{{ asset('frontend/xx/assets//img/doctors/doctor-thumb-24.jpg') }}"
-                                        alt="img" />
-                                </span>
-                            </div>
-                            <div class="me-2">
-                                <h6>5K+ Appointments</h6>
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fa-solid fa-star text-orange me-1"></i>
-                                        <i class="fa-solid fa-star text-orange me-1"></i>
-                                        <i class="fa-solid fa-star text-orange me-1"></i>
-                                        <i class="fa-solid fa-star text-orange me-1"></i>
-                                        <i class="fa-solid fa-star text-orange me-1"></i>
-                                    </div>
-                                    <p>5.0 Ratings</p>
-                                </div>
-                            </div>
-                        </div>
-                        <h1 class="display-5">
-                            Discover Health: Find Your Trusted
-                            <span class="banner-icon"><img src="{{ asset('frontend/xx/assets//img/icons/video.svg') }}"
-                                    alt="img" /></span>
-                            <span class="text-gradient">Doctors</span>
-                            Today
-                        </h1>
-                        <div class="search-box-one aos" data-aos="fade-up">
-                            <form action="https://doccure.dreamstechnologies.com/laravel/template/public/search-2">
-                                <div class="search-input search-line">
-                                    <i class="isax isax-hospital5 bficon"></i>
-                                    <div class="mb-0">
-                                        <input type="text" class="form-control"
-                                            placeholder="Search doctors, clinics, hospitals, etc" />
-                                    </div>
-                                </div>
-                                <div class="search-input search-map-line">
-                                    <i class="isax isax-location5"></i>
-                                    <div class="mb-0">
-                                        <input type="text" class="form-control" placeholder="Location" />
-                                    </div>
-                                </div>
-                                <div class="search-input search-calendar-line">
-                                    <i class="isax isax-calendar-tick5"></i>
-                                    <div class="mb-0">
-                                        <input type="text" class="form-control datetimepicker" placeholder="Date" />
-                                    </div>
-                                </div>
-                                <div class="form-search-btn">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="isax isax-search-normal5 me-2"></i>Search
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="banner-img aos" data-aos="fade-up">
-                        <img src="{{ asset('frontend/xx/assets//img/banner/banner-doctor.svg') }}" class="img-fluid"
-                            alt="patient-image" />
-                        <div class="banner-appointment">
-                            <h6>1K</h6>
-                            <p>
-                                Appointments
-                                <span class="d-block">Completed</span>
-                            </p>
-                        </div>
-                        <div class="banner-patient">
-                            <div class="avatar-list-stacked avatar-group-sm">
-                                <span class="avatar avatar-rounded">
-                                    <img src="{{ asset('frontend/xx/assets//img/patients/patient19.jpg') }}"
-                                        alt="img" />
-                                </span>
-                                <span class="avatar avatar-rounded">
-                                    <img src="{{ asset('frontend/xx/assets//img/patients/patient16.jpg') }}"
-                                        alt="img" />
-                                </span>
-                                <span class="avatar avatar-rounded">
-                                    <img src="{{ asset('frontend/xx/assets//img/patients/patient18.jpg') }}"
-                                        alt="img" />
-                                </span>
-                            </div>
-                            <p>15K+</p>
-                            <p>Satisfied Patients</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="banner-bg">
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-bg-02.png') }}" alt="img" class="banner-bg-01" />
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-bg-03.png') }}" alt="img" class="banner-bg-02" />
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-bg-04.png') }}" alt="img" class="banner-bg-03" />
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-bg-05.png') }}" alt="img" class="banner-bg-04" />
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-icon-01.svg') }}" alt="img" class="banner-bg-05" />
-            <img src="{{ asset('frontend/xx/assets//img/bg/banner-icon-01.svg') }}" alt="img" class="banner-bg-06" />
-        </div>
-    </section> --}}
-    <!-- /Home Banner -->
+<style>
+    /* دعم RTL للغة العربية */
+[dir="rtl"] .horizontal-slide {
+    direction: rtl;
+}
 
+[dir="rtl"] .slide-list {
+    flex-direction: row-reverse;
+}
 
+/* سويتشر اللغات */
+.language-switcher {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 
+.language-switcher a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
 
+.language-switcher a.active {
+    color: #007bff;
+    font-weight: bold;
+}
+</style>
     <section class="banner-section banner-sec-one">
         <div class="container">
             <div class="row align-items-center">
@@ -231,69 +139,14 @@
 
 
 
-    <!-- List -->
-    {{-- <div class="list-section">
-        <div class="container">
-            <div class="mb-0 list-card card">
-                <div class="card-body">
-                    <div
-                        class="flex-wrap gap-4 d-flex align-items-center justify-content-center justify-content-xl-between list-wraps">
-                        <a href="booking.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-secondary">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-01.svg') }}" alt="img" />
-                            </div>
-                            <h6>Book Appointment</h6>
-                        </a>
-                        <a href="doctor-grid.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-primary">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-02.svg') }}" alt="img" />
-                            </div>
-                            <h6>Talk to Doctors</h6>
-                        </a>
-                        <a href="hospitals.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-pink">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-03.svg') }}"
-                                    alt="img" />
-                            </div>
-                            <h6>Hospitals & Clinics</h6>
-                        </a>
-                        <a href="index-3.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-cyan">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-04.svg') }}"
-                                    alt="img" />
-                            </div>
-                            <h6>Healthcare</h6>
-                        </a>
-                        <a href="index-13.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-purple">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-05.svg') }}"
-                                    alt="img" />
-                            </div>
-                            <h6>Medicine & Supplies</h6>
-                        </a>
-                        <a href="index-12.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-orange">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-06.svg') }}"
-                                    alt="img" />
-                            </div>
-                            <h6>Lab Testing</h6>
-                        </a>
-                        <a href="index-13.html" class="list-item aos" data-aos="fade-up">
-                            <div class="list-icon bg-teal">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/list-icon-07.svg') }}"
-                                    alt="img" />
-                            </div>
-                            <h6>Home Care</h6>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- /List -->
 
 
-    <!-- List -->
+
+
+
+
+
+
     <!-- List -->
     <div class="list-section">
         <div class="container">
@@ -301,30 +154,59 @@
                 <div class="card-body">
                     <div
                         class="flex-wrap gap-4 d-flex align-items-center justify-content-center justify-content-xl-between list-wraps">
-                        @foreach ($categories as $category)
-                            <a href="{{ route('categories.show', $category->slug) }}" class="list-item aos"
-                                data-aos="fade-up">
-                                <div class="list-icon" style="background-color: {{ $category->color }}">
-                                    <img src="{{ asset('frontend/xx/assets/img/icons/' . $category->icon) }}"
-                                        alt="{{ $category->name }}" />
-                                </div>
-                                <h6>{{ $category->name }}</h6>
-                                @if ($category->doctors_count > 0)
-                                    <span class="category-count">{{ $category->doctors_count }}+</span>
-                                @endif
-                            </a>
-                        @endforeach
+                        <a href="{{route('doctors.search')}}" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-secondary">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-01.svg') }}" alt="img" />
+                            </div>
+                            <h6>Book Appointment</h6>
+                        </a>
+                     
+                        <a href="{{route('medical-centershome.index')}}" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-pink">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-03.svg') }}" alt="img" />
+                            </div>
+                            <h6>Hospitals & Clinics</h6>
+                        </a>
+                        <a href="{{route('map.index')}}" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-cyan">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-04.svg') }}" alt="img" />
+                            </div>
+                            <h6>Healthcare</h6>
+                        </a>
+                        {{-- <a href="index-13.html" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-purple">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-05.svg') }}" alt="img" />
+                            </div>
+                            <h6>Medicine & Supplies</h6><br>
+                            <span>(coming soon)</span>
+                        </a> --}}
+
+                        {{-- <a href="index-12.html" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-orange">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-06.svg') }}" alt="img" />
+                            </div>
+                            <h6>Lab Testing</h6><br>
+                            <span>(coming soon)</span>
+                        </a> --}}
+                        <a href="index-13.html" class="list-item aos" data-aos="fade-up">
+                            <div class="list-icon bg-teal">
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-07.svg') }}" alt="img" />
+                            </div>
+                            <h6>Home Care</h6>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- /List -->
-    <!-- /List -->
 
 
-    <!-- Speciality Section -->
-    <!-- Speciality Section -->
+
+
+
+
+
     <section class="speciality-section">
         <div class="container">
             <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
@@ -345,7 +227,7 @@
                                 {{ $specialty->name }}
                             </a>
                         </h6>
-                        <p class="mb-0">{{ $specialty->doctors_count }} Doctors</p>
+                        <p class="mb-0">{{ $specialty->active_doctors_count }} Doctors</p>
                     </div>
                 @endforeach
             </div>
@@ -358,9 +240,11 @@
             @endif
         </div>
     </section>
+
     <!-- /Speciality Section -->
     <!-- /Speciality Section -->
 
+    <!-- Doctor Section -->
     <!-- Doctor Section -->
     <section class="doctor-section">
         <div class="container">
@@ -370,250 +254,86 @@
             </div>
 
             <div class="doctors-slider owl-carousel aos" data-aos="fade-up">
-                <div class="card">
-                    <div class="card-img card-img-hover">
-                        <a href="doctor-profile.html"><img
-                                src="{{ asset('frontend/xx/assets//img/doctor-grid/doctor-grid-01.jpg') }}"
-                                alt="" /></a>
-                        <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                            <span class="badge bg-orange"><i class="fa-solid fa-star me-1"></i>5.0</span>
-                            <a href="javascript:void(0)" class="fav-icon">
-                                <i class="fa fa-heart"></i>
+                @forelse($featuredDoctors as $doctor)
+                    <div class="card">
+                        <div class="card-img card-img-hover">
+                            <a href="{{ route('doctorshome.show', $doctor->id) }}">
+                                <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctor-grid/doctor-grid-01.jpg') }}"
+                                    alt="Dr. {{ $doctor->name }}" />
                             </a>
-                        </div>
-                    </div>
-                    <div class="p-0 card-body">
-                        <div class="p-3 d-flex active-bar align-items-center justify-content-between">
-                            <a href="#" class="text-indigo fw-medium fs-14">Psychologist</a>
-                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                Available
-                            </span>
-                        </div>
-                        <div class="p-3 pt-0">
-                            <div class="pb-3 mb-3 doctor-info-detail">
-                                <h3 class="mb-1">
-                                    <a href="doctor-profile.html">Dr. Michael Brown</a>
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <p class="mb-0 d-flex align-items-center fs-14">
-                                        <i class="isax isax-location me-2"></i>Minneapolis, MN
-                                    </p>
-                                    <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
-                                    <span class="fs-14 fw-medium">30 Min</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-1">
-                                        Consultation Fees
-                                    </p>
-                                    <h3 class="text-orange">$650</h3>
-                                </div>
-                                <a href="#" class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
-                                    <i class="isax isax-calendar-1 me-2"></i>
-                                    Book Now
+                            <div class="grid-overlay-item d-flex align-items-center justify-content-between">
+                                <span class="badge bg-orange">
+                                    <i class="fa-solid fa-star me-1"></i>{{ number_format($doctor->doctor_rating, 1) }}
+                                </span>
+                                <a href="javascript:void(0)" class="fav-icon" data-doctor-id="{{ $doctor->id }}">
+                                    <i
+                                        class="fa fa-heart {{ auth()->check() && auth()->user()->favoriteDoctors->contains($doctor->id) ? 'text-danger' : '' }}"></i>
                                 </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-img card-img-hover">
-                        <a href="doctor-profile.html"><img
-                                src="{{ asset('frontend/xx/assets//img/doctor-grid/doctor-grid-02.jpg') }}"
-                                alt="" /></a>
-                        <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                            <span class="badge bg-orange"><i class="fa-solid fa-star me-1"></i>4.6</span>
-                            <a href="javascript:void(0)" class="fav-icon">
-                                <i class="fa fa-heart"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="p-0 card-body">
-                        <div class="p-3 d-flex active-bar active-bar-pink align-items-center justify-content-between">
-                            <a href="#" class="text-pink fw-medium fs-14">Pediatrician</a>
-                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                Available
-                            </span>
-                        </div>
-                        <div class="p-3 pt-0">
-                            <div class="pb-3 mb-3 doctor-info-detail">
-                                <h3 class="mb-1">
-                                    <a href="doctor-profile.html">Dr. Nicholas Tello</a>
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <p class="mb-0 d-flex align-items-center fs-14">
-                                        <i class="isax isax-location me-2"></i>Ogden, IA
-                                    </p>
-                                    <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
-                                    <span class="fs-14 fw-medium">60 Min</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-1">
-                                        Consultation Fees
-                                    </p>
-                                    <h3 class="text-orange">$400</h3>
-                                </div>
-                                <a href="#" class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
-                                    <i class="isax isax-calendar-1 me-2"></i>
-                                    Book Now
+                        <div class="p-0 card-body">
+                            <div class="p-3 d-flex active-bar align-items-center justify-content-between">
+                                <a href="#" class="text-indigo fw-medium fs-14">
+                                    {{ $doctor->doctorProfile->specialization ?? 'General Practitioner' }}
                                 </a>
+                                <span class="badge bg-success-light d-inline-flex align-items-center">
+                                    <i class="fa-solid fa-circle fs-5 me-1"></i>
+                                    {{ $doctor->doctorProfile->accepting_new_patients ? 'Available' : 'Not Available' }}
+                                </span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-img card-img-hover">
-                        <a href="doctor-profile.html"><img
-                                src="{{ asset('frontend/xx/assets//img/doctor-grid/doctor-grid-03.jpg') }}"
-                                alt="" /></a>
-                        <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                            <span class="badge bg-orange"><i class="fa-solid fa-star me-1"></i>4.8</span>
-                            <a href="javascript:void(0)" class="fav-icon">
-                                <i class="fa fa-heart"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="p-0 card-body">
-                        <div class="p-3 d-flex active-bar active-bar-teal align-items-center justify-content-between">
-                            <a href="#" class="text-teal fw-medium fs-14">Neurologist</a>
-                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                Available
-                            </span>
-                        </div>
-                        <div class="p-3 pt-0">
-                            <div class="pb-3 mb-3 doctor-info-detail">
-                                <h3 class="mb-1">
-                                    <a href="doctor-profile.html">Dr. Harold Bryant</a>
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <p class="mb-0 d-flex align-items-center fs-14">
-                                        <i class="isax isax-location me-2"></i>Winona, MS
-                                    </p>
-                                    <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
-                                    <span class="fs-14 fw-medium">30 Min</span>
+                            <div class="p-3 pt-0">
+                                <div class="pb-3 mb-3 doctor-info-detail">
+                                    <h3 class="mb-1">
+                                        <a href="{{ route('doctorshome.show', $doctor->id) }}">Dr.
+                                            {{ $doctor->name }}</a>
+                                    </h3>
+                                    <div class="d-flex align-items-center">
+                                        <p class="mb-0 d-flex align-items-center fs-14">
+                                            <i class="isax isax-location me-2"></i>
+                                            {{ $doctor->address ?? 'Location not specified' }}
+                                        </p>
+                                        <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
+                                        <span class="fs-14 fw-medium">
+                                            {{ $doctor->doctorProfile->appointment_duration ?? '30' }} Min
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <p class="mb-1">Consultation Fees</p>
+                                        <h3 class="text-orange">
+                                            ${{ number_format($doctor->doctorProfile->consultation_fee ?? 0, 0) }}</h3>
+                                    </div>
+                                    @if ($doctor->doctorProfile && $doctor->doctorProfile->canAcceptAppointments())
+                                        <a href="{{ route('doctorshome.show', $doctor->id) }}"
+                                            class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
+                                            <i class="isax isax-calendar-1 me-2"></i>
+                                            Book Now
+                                        </a>
+                                    @else
+                                        <button
+                                            class="inline-flex btn btn-md btn-secondary align-items-center rounded-pill"
+                                            disabled>
+                                            <i class="isax isax-calendar-1 me-2"></i>
+                                            Not Available
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-1">
-                                        Consultation Fees
-                                    </p>
-                                    <h3 class="text-orange">$500</h3>
-                                </div>
-                                <a href="#" class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
-                                    <i class="isax isax-calendar-1 me-2"></i>
-                                    Book Now
-                                </a>
-                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-img card-img-hover">
-                        <a href="doctor-profile.html"><img
-                                src="{{ asset('frontend/xx/assets//img/doctor-grid/doctor-grid-04.jpg') }}"
-                                alt="" /></a>
-                        <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                            <span class="badge bg-orange"><i class="fa-solid fa-star me-1"></i>4.8</span>
-                            <a href="javascript:void(0)" class="fav-icon">
-                                <i class="fa fa-heart"></i>
-                            </a>
+                @empty
+                    <div class="text-center col-12">
+                        <div class="alert alert-info">
+                            <p>No featured doctors available at the moment.</p>
                         </div>
                     </div>
-                    <div class="p-0 card-body">
-                        <div class="p-3 d-flex active-bar active-bar-info align-items-center justify-content-between">
-                            <a href="#" class="text-info fw-medium fs-14">Cardiologist</a>
-                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                Available
-                            </span>
-                        </div>
-                        <div class="p-3 pt-0">
-                            <div class="pb-3 mb-3 doctor-info-detail">
-                                <h3 class="mb-1">
-                                    <a href="doctor-profile.html">Dr. Sandra Jones</a>
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <p class="mb-0 d-flex align-items-center fs-14">
-                                        <i class="isax isax-location me-2"></i>Beckley, WV
-                                    </p>
-                                    <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
-                                    <span class="fs-14 fw-medium">30 Min</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-1">
-                                        Consultation Fees
-                                    </p>
-                                    <h3 class="text-orange">$550</h3>
-                                </div>
-                                <a href="#" class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
-                                    <i class="isax isax-calendar-1 me-2"></i>
-                                    Book Now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-img card-img-hover">
-                        <a href="doctor-profile.html"><img
-                                src="{{ asset('frontend/xx/assets//img/doctor-grid/doctor-grid-05.jpg') }}"
-                                alt="" /></a>
-                        <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                            <span class="badge bg-orange"><i class="fa-solid fa-star me-1"></i>4.2</span>
-                            <a href="javascript:void(0)" class="fav-icon">
-                                <i class="fa fa-heart"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="p-0 card-body">
-                        <div class="p-3 d-flex active-bar active-bar-teal align-items-center justify-content-between">
-                            <a href="#" class="text-teal fw-medium fs-14">Neurologist</a>
-                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                Available
-                            </span>
-                        </div>
-                        <div class="p-3 pt-0">
-                            <div class="pb-3 mb-3 doctor-info-detail">
-                                <h3 class="mb-1">
-                                    <a href="doctor-profile.html">Dr. Charles Scott</a>
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <p class="mb-0 d-flex align-items-center fs-14">
-                                        <i class="isax isax-location me-2"></i>Hamshire, TX
-                                    </p>
-                                    <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
-                                    <span class="fs-14 fw-medium">30 Min</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <p class="mb-1">
-                                        Consultation Fees
-                                    </p>
-                                    <h3 class="text-orange">$600</h3>
-                                </div>
-                                <a href="#" class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
-                                    <i class="isax isax-calendar-1 me-2"></i>
-                                    Book Now
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
             <div class="doctor-nav nav-bottom owl-nav"></div>
         </div>
     </section>
+    <!-- /Doctor Section -->
     <!-- /Doctor Section -->
 
     <!-- Services Section -->
@@ -622,92 +342,96 @@
             <div class="gap-4 slide-list d-flex">
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Multi Speciality Treatments & Doctors</a>
+                        <a href="javascript:void(0);">{{ __('services.treatments') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Lab Testing Services</a>
+                        <a href="javascript:void(0);">{{ __('services.lab_testing') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Medecines & Supplies</a>
+                        <a href="javascript:void(0);">{{ __('services.medicines') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Hospitals & Clinics</a>
+                        <a href="javascript:void(0);">{{ __('services.hospitals') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Health Care Services</a>
+                        <a href="javascript:void(0);">{{ __('services.health_care') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Talk to Doctors</a>
+                        <a href="javascript:void(0);">{{ __('services.talk_doctors') }}</a>
                     </h6>
                 </div>
                 <div class="services-slide">
                     <h6>
-                        <a href="javascript:void(0);">Home Care Services</a>
+                        <a href="javascript:void(0);">{{ __('services.home_care') }}</a>
                     </h6>
                 </div>
             </div>
         </div>
     </section>
     <!-- /Services Section -->
-
-    <!-- Reasons Section -->
-    <section class="reason-section">
-        <div class="container">
-            <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
-                <span class="badge badge-primary">Why Book With Us</span>
-                <h2>Compelling Reasons to Choose</h2>
-            </div>
-            <div class="row-gap-4 row justify-content-center">
-                <div class="col-lg-4 col-md-6">
-                    <div class="reason-item aos" data-aos="fade-up">
-                        <h6 class="mb-2">
-                            <i class="isax isax-tag-user5 text-orange me-2"></i>Follow-Up Care
-                        </h6>
-                        <p class="mb-0 fs-14">
-                            We ensure continuity of care through regular
-                            follow-ups and communication, helping you
-                            stay on track with health goals.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="reason-item aos" data-aos="fade-up">
-                        <h6 class="mb-2">
-                            <i class="isax isax-voice-cricle text-purple me-2"></i>Patient-Centered Approach
-                        </h6>
-                        <p class="mb-0 fs-14">
-                            We prioritize your comfort and preferences,
-                            tailoring our services to meet your
-                            individual needs and Care from Our Experts
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="reason-item aos" data-aos="fade-up">
-                        <h6 class="mb-2">
-                            <i class="isax isax-wallet-add-15 text-cyan me-2"></i>Convenient Access
-                        </h6>
-                        <p class="mb-0 fs-14">
-                            Easily book appointments online or through
-                            our dedicated customer service team, with
-                            flexible hours to fit your schedule.
-                        </p>
-                    </div>
-                </div>
-            </div>
+ 
+  <!-- Reasons Section -->
+<section class="reason-section">
+    <div class="container">
+        <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
+            <span class="badge badge-primary">{{ __('reasones.reasons_section.title') }}</span>
+            <h2>{{ __('reasones.reasons_section.heading') }}</h2>
         </div>
-    </section>
-    <!-- /Reasons Section -->
+        <div class="row-gap-4 row justify-content-center">
+            
+            <!-- Reason 1: Follow-Up Care -->
+            <div class="col-lg-4 col-md-6">
+                <div class="reason-item aos" data-aos="fade-up">
+                    <h6 class="mb-2">
+                        <i class="{{ __('reasones.reasons_section.reasons.follow_up_care.icon') }} {{ __('reasones.reasons_section.reasons.follow_up_care.color') }} me-2"></i>
+                        {{ __('reasones.reasons_section.reasons.follow_up_care.title') }}
+                    </h6>
+                    <p class="mb-0 fs-14">
+                        {{ __('reasones.reasons_section.reasons.follow_up_care.description') }}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Reason 2: Patient-Centered Approach -->
+            <div class="col-lg-4 col-md-6">
+                <div class="reason-item aos" data-aos="fade-up">
+                    <h6 class="mb-2">
+                        <i class="{{ __('reasones.reasons_section.reasons.patient_centered.icon') }} {{ __('reasones.reasons_section.reasons.patient_centered.color') }} me-2"></i>
+                        {{ __('reasones.reasons_section.reasons.patient_centered.title') }}
+                    </h6>
+                    <p class="mb-0 fs-14">
+                        {{ __('reasones.reasons_section.reasons.patient_centered.description') }}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Reason 3: Convenient Access -->
+            <div class="col-lg-4 col-md-6">
+                <div class="reason-item aos" data-aos="fade-up">
+                    <h6 class="mb-2">
+                        <i class="{{ __('reasones.reasons_section.reasons.convenient_access.icon') }} {{ __('reasones.reasons_section.reasons.convenient_access.color') }} me-2"></i>
+                        {{ __('reasones.reasons_section.reasons.convenient_access.title') }}
+                    </h6>
+                    <p class="mb-0 fs-14">
+                        {{ __('reasones.reasons_section.reasons.convenient_access.description') }}
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+<!-- /Reasons Section -->
 
     <!-- Bookus Section -->
     <section class="bookus-section bg-dark">
@@ -897,7 +621,7 @@
         <div class="container">
             <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
                 <span class="badge badge-primary">Testimonials</span>
-                <h2>15k Users Trust Doccure Worldwide</h2>
+                <h2>15k Users Trust SehaSave.com Worldwide</h2>
             </div>
 
             <!-- Testimonial Slider -->
@@ -1300,7 +1024,7 @@
                         <div class="app-content d-flex flex-column justify-content-center">
                             <div class="app-header aos" data-aos="fade-up">
                                 <h3 class="text-white display-6">
-                                    Download the Doccure App today!
+                                    Download the SehaSave.com App today!
                                 </h3>
                                 <p class="text-light">
                                     To download an app related to a
@@ -1350,105 +1074,45 @@
                 <h2>Stay Updated With Our Latest Articles</h2>
             </div>
             <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="article-item aos" data-aos="fade-up">
-                        <div class="article-img">
-                            <a href="blog-details.html">
-                                <img src="{{ asset('frontend/xx/assets//img/blog/article-01.jpg') }}" class="img-fluid"
-                                    alt="img" />
-                            </a>
-                            <div class="date-icon">
-                                <span>15</span>May
+                @if(isset($recentBlogs) && $recentBlogs->count() > 0)
+                    @foreach($recentBlogs as $blog)
+                    <div class="col-lg-6">
+                        <div class="article-item aos" data-aos="fade-up">
+                            <div class="article-img">
+                                <a href="{{ route('blog.show', $blog->slug) }}">
+                                    @if($blog->featured_image)
+                                        <img src="{{ asset('storage/' . $blog->featured_image) }}" class="img-fluid" alt="{{ $blog->title }}" />
+                                    @else
+                                        <img src="{{ asset('frontend/xx/assets//img/blog/article-01.jpg') }}" class="img-fluid" alt="img" />
+                                    @endif
+                                </a>
+                                <div class="date-icon">
+                                    <span>{{ $blog->published_at ? $blog->published_at->format('d') : $blog->created_at->format('d') }}</span>
+                                    {{ $blog->published_at ? $blog->published_at->format('M') : $blog->created_at->format('M') }}
+                                </div>
+                            </div>
+                            <div class="article-info">
+                                @if($blog->category)
+                                    <span class="mb-2 badge badge-cyan">{{ $blog->category->name }}</span>
+                                @endif
+                                <h6 class="mb-2">
+                                    <a href="{{ route('blog.show', $blog->slug) }}">{{ Str::limit($blog->title, 50) }}</a>
+                                </h6>
+                                <p>
+                                    {{ Str::limit(strip_tags($blog->content), 100) }}
+                                </p>
                             </div>
                         </div>
-                        <div class="article-info">
-                            <span class="mb-2 badge badge-cyan">Treatments</span>
-                            <h6 class="mb-2">
-                                <a href="blog-details.html">Understanding and Preventing
-                                    Glaucoma: A Detailed Guide</a>
-                            </h6>
-                            <p>
-                                Glaucoma is a leading cause of blind
-                                worldwide, yet many....
-                            </p>
-                        </div>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="article-item aos" data-aos="fade-up">
-                        <div class="article-img">
-                            <a href="blog-details.html">
-                                <img src="{{ asset('frontend/xx/assets//img/blog/article-02.jpg') }}" class="img-fluid"
-                                    alt="img" />
-                            </a>
-                            <div class="date-icon">
-                                <span>18</span>May
-                            </div>
-                        </div>
-                        <div class="article-info">
-                            <span class="mb-2 badge badge-cyan">Neurology</span>
-                            <h6 class="mb-2">
-                                <a href="blog-details.html">Understanding and Preventing
-                                    Glaucoma: A Detailed Guide</a>
-                            </h6>
-                            <p>
-                                Discover the intersection of technology
-                                and neurology, transforming....
-                            </p>
-                        </div>
+                    @endforeach
+                @else
+                    <div class="col-12 text-center">
+                        <p>No recent articles found.</p>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="article-item aos" data-aos="fade-up">
-                        <div class="article-img">
-                            <a href="blog-details.html">
-                                <img src="{{ asset('frontend/xx/assets//img/blog/article-03.jpg') }}" class="img-fluid"
-                                    alt="img" />
-                            </a>
-                            <div class="date-icon">
-                                <span>21</span>Apr
-                            </div>
-                        </div>
-                        <div class="article-info">
-                            <span class="mb-2 badge badge-cyan">Dental</span>
-                            <h6 class="mb-2">
-                                <a href="blog-details.html">5 Essential Tips for Maintaining
-                                    Optimal Oral Health</a>
-                            </h6>
-                            <p>
-                                Learn the top five daily practices to
-                                keep your teeth....
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="article-item aos" data-aos="fade-up">
-                        <div class="article-img">
-                            <a href="blog-details.html">
-                                <img src="{{ asset('frontend/xx/assets//img/blog/article-04.jpg') }}" class="img-fluid"
-                                    alt="img" />
-                            </a>
-                            <div class="date-icon">
-                                <span>22</span>Jan
-                            </div>
-                        </div>
-                        <div class="article-info">
-                            <span class="mb-2 badge badge-cyan">Care & Treatment</span>
-                            <h6 class="mb-2">
-                                <a href="blog-details.html">Beating Strong: The Digital Revol
-                                    in Cardiac Care</a>
-                            </h6>
-                            <p>
-                                Discover how digital advancements are
-                                transforming cardiac care...
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                @endif
             </div>
             <div class="text-center load-item aos" data-aos="fade-up">
-                <a href="blog-grid.html" class="btn btn-dark">View All Articles<i
+                <a href="{{ route('blog.index') }}" class="btn btn-dark">View All Articles<i
                         class="isax isax-arrow-right-3 ms-2"></i></a>
             </div>
         </div>
@@ -1475,7 +1139,7 @@
                                     Customer Support
                                 </p>
                                 <p class="mb-0 text-white fw-medium">
-                                    +1 56589 54598
+                                    +97545060739
                                 </p>
                             </div>
                         </div>
@@ -1602,6 +1266,93 @@
 
             // Initialize
             updateCarousel();
+        });
+    </script>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // التعامل مع إضافة/إزالة المفضلة
+            document.querySelectorAll('.fav-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    if (!{{ auth()->check() ? 'true' : 'false' }}) {
+                        showToast('Please login to manage favorites', 'error');
+                        return;
+                    }
+
+                    const doctorId = this.dataset.doctorId;
+                    const heartIcon = this.querySelector('i');
+
+                    // الحصول على CSRF token بطريقة آمنة
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content') ||
+                        document.querySelector('input[name="_token"]')?.value;
+
+                    if (!csrfToken) {
+                        console.error('CSRF token not found');
+                        showToast('Security error. Please refresh the page.', 'error');
+                        return;
+                    }
+
+                    fetch(`/doctor/${doctorId}/favorite`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'added') {
+                                heartIcon.classList.add('text-danger');
+                                showToast('Doctor added to favorites!', 'success');
+                            } else if (data.status === 'removed') {
+                                heartIcon.classList.remove('text-danger');
+                                showToast('Doctor removed from favorites!', 'info');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            if (error.message.includes('Network')) {
+                                showToast('Network error. Please try again.', 'error');
+                            } else {
+                                showToast('Please login to manage favorites', 'error');
+                            }
+                        });
+                });
+            });
+
+            function showToast(message, type = 'info') {
+                // إزالة أي toast موجود مسبقاً
+                const existingToasts = document.querySelectorAll('.custom-toast');
+                existingToasts.forEach(toast => toast.remove());
+
+                const toast = document.createElement('div');
+                toast.className = `custom-toast alert alert-${type} alert-dismissible fade show position-fixed`;
+                toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+                document.body.appendChild(toast);
+
+                // إزالة التلقائية بعد 3 ثواني
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 3000);
+            }
         });
     </script>
 @endsection

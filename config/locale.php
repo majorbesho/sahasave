@@ -9,8 +9,8 @@
  */
 
 return [
-'status'=>true,
-    'language'=> [
+    'status' => true,
+    'language' => [
 
         /**
          * Key is local code
@@ -21,9 +21,9 @@ return [
          * https://www.youtube.com/watch?v=I4fQ17had1U&list=PLvNu8E-aj20msH9hAAIQhRqibQLWYLkV4&index=2
          *
          */
-        'en'=>['en','en_US',false,'English'],
-        'ar'=>['ar','ar_SA',true,'Arabic'],
+        'en' => ['en', 'en_US', false, 'English'],
+        'ar' => ['ar', 'ar_SA', true, 'Arabic'],
+        'fr' => ['fr', 'fa_FR', true, 'Fr'],
     ]
 
 ];
-

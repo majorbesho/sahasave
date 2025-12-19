@@ -312,4 +312,31 @@ class DoctorManagementController extends Controller
     /**
      * عرض الإحصائيات
      */
+
+
+    // في DoctorManagementController
+    /**
+     * تبديل حالة التميز للطبيب
+     */
+    public function toggleFeatured($id)
+    {
+        $doctor = User::where('role', 'doctor')->findOrFail($id);
+
+        if (!$doctor->doctorProfile) {
+            return redirect()->back()
+                ->with('error', 'لا يوجد بروفايل طبي لهذا الطبيب.');
+        }
+
+        $newFeaturedStatus = !$doctor->doctorProfile->is_featured;
+
+        $doctor->doctorProfile->update([
+            'is_featured' => $newFeaturedStatus,
+            'updated_at' => now()
+        ]);
+
+        $status = $newFeaturedStatus ? 'مميز' : 'غير مميز';
+
+        return redirect()->back()
+            ->with('success', "تم جعل الطبيب {$status} بنجاح.");
+    }
 }

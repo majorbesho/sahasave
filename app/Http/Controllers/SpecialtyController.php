@@ -6,6 +6,7 @@ use App\Models\cr;
 use App\Models\Specialty;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SpecialtyController extends Controller
 {
@@ -69,11 +70,11 @@ class SpecialtyController extends Controller
 
             return view('frontend.specialties.show', compact(
                 'specialty',
-                'doctors',
-                'otherSpecialties'
+                'doctors'
+
             ));
         } catch (\Exception $e) {
-            \Log::error('Error in SpecialtyController@show: ' . $e->getMessage());
+            Log::error('Error in SpecialtyController@show: ' . $e->getMessage());
             return redirect()->route('home')->with('error', 'حدث خطأ في تحميل الصفحة.');
         }
     }
@@ -151,23 +152,84 @@ class SpecialtyController extends Controller
         return view('frontend.specialties.show', compact('specialty', 'doctors'));
     }
 
+
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $locale = app()->getLocale();
+
+        $query = Specialty::withCount([
+            'doctors as doctors_count' => function ($query) {
+                $query->where('status', 'active')
+                    ->whereHas('doctorProfile', function ($q) {
+                        $q->where('is_verified', true)
+                            ->where('accepting_new_patients', true);
+                    });
+            }
+        ])
+            ->active()
+            ->ordered();
+
+        if ($search) {
+            $nameField = $locale == 'ar' ? 'name_ar' : 'name_en';
+            $descField = $locale == 'ar' ? 'description_ar' : 'description_en';
+
+            $query->where(function ($q) use ($search, $nameField, $descField) {
+                $q->where($nameField, 'LIKE', "%{$search}%")
+                    ->orWhere($descField, 'LIKE', "%{$search}%");
+            });
+        }
+
+        $specialties = $query->paginate(12);
+
+        return view('frontend.specialties.index', compact(
+            'specialties',
+            'search'
+        ));
+    }
     /**
      * عرض جميع التخصصات
      */
-    public function index()
-    {
-        $specialties = Specialty::withCount(['activeDoctors as doctors_count'])
-            ->active()
-            ->ordered()
-            ->get()
-            ->groupBy('parent_id');
+    // public function index(Request $request)
+    // {
+    //     // البحث إذ
 
-        $mainSpecialties = $specialties->get(null, collect());
-        $subSpecialties = $specialties->filter(fn($item, $key) => $key !== null);
+    //     // $specialties = Specialty::withCount(['activeVerifiedDoctors as doctors_count'])
+    //     // ->featured()
+    //     // ->active()
+    //     // ->ordered()
 
-        return view('frontend.specialties.index', compact('mainSpecialties', 'subSpecialties'));
-    }
+    //     // ->get();
 
+    //     $search = $request->input('search');
+
+    //     $query = Specialty::withCount(['activeVerifiedDoctors as doctors_count'])
+    //         ->active()
+    //         ->ordered();
+
+    //     // // تطبيق البحث إذا كان موجود
+    //     if ($search) {
+    //         $query->where('name', 'LIKE', "%{$search}%")
+    //             ->orWhere('description', 'LIKE', "%{$search}%");
+    //     }
+
+    //     // الحصول على النتائج مع الترقيم
+    //     $specialties = $query->paginate(12); // أو أي عدد تريده
+    //     // return $specialties;
+    //     // الحصول على التخصصات الرئيسية والفرعية للعرض (إذا لزم الأمر)
+    //     // $allSpecialties = Specialty::active()->ordered()->get();
+
+
+    //     // $mainSpecialties = $allSpecialties->whereNull('parent_id');
+    //     // $subSpecialties = $allSpecialties->whereNotNull('parent_id');
+    //     //return $mainSpecialties;
+    //     return view('frontend.specialties.index', compact(
+    //         'specialties',
+    //         // 'mainSpecialties',
+    //         // 'subSpecialties',
+    //         'search'
+    //     ));
+    // }
     /**
      * البحث في التخصصات
      */

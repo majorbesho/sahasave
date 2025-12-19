@@ -69,10 +69,10 @@
 
                                         <div class="col-xl-4 col-lg-4 col-md-4">
                                             <div class="input-box">
-                                                <label>SahaSave.com</label>
+                                                <label>SehaSave.com</label>
                                                 <div class="select-box">
                                                     <select class="selectmenu wide" name="cat_id">
-                                                        {{-- <option selected="selected">SahaSave.com Type
+                                                        {{-- <option selected="selected">SehaSave.com Type
                                                         </option> --}}
                                                         @foreach (\App\Models\Category::get() as $brand)
                                                             <option value="{{ $brand->id }}" selected="selected">

@@ -14,7 +14,7 @@
                     <div class="section-title">
                         <h2 class="ec-bg-title">Log In</h2>
                         <h2 class="ec-title">Log In</h2>
-                        <p class="sub-title mb-3">Best place to Booking SahaSave.com </p>
+                        <p class="sub-title mb-3">Best place to BookingSehaSave.com </p>
                     </div>
                 </div>
                 <div class="ec-login-wrapper">

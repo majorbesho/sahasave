@@ -15,22 +15,61 @@ class DoctorSearchController extends Controller
      */
 
 
+    // public function search(Request $request)
+    // {
+    //     $search = $request->input('search', '');
+    //     $location = $request->input('location', '');
+    //     $date = $request->input('date', '');
+
+    //     // البحث الأساسي عن الأطباء
+    //     $doctors = User::where('role', 'doctor')
+    //         ->where('status', 'active')
+    //         ->with(['doctorProfile', 'medicalCenters'])
+    //         ->when($search, function ($query) use ($search) {
+    //             return $query->where(function ($q) use ($search) {
+    //                 $q->where('name', 'like', "%{$search}%")
+    //                     ->orWhereHas('doctorProfile', function ($profileQuery) use ($search) {
+    //                         $profileQuery->where('specialization', 'like', "%{$search}%")
+    //                             ->orWhere('qualifications', 'like', "%{$search}%");
+    //                     });
+    //             });
+    //         })
+    //         ->when($location, function ($query) use ($location) {
+    //             return $query->where(function ($q) use ($location) {
+    //                 $q->where('address', 'like', "%{$location}%")
+    //                     ->orWhereHas('medicalCenters', function ($centerQuery) use ($location) {
+    //                         $centerQuery->where('name', 'like', "%{$location}%")
+    //                             ->orWhere('address', 'like', "%{$location}%");
+    //                     });
+    //             });
+    //         })
+    //         ->orderBy('name')
+    //         ->paginate(10);
+
+    //     // تأكد من أن جميع البيانات strings
+    //     $totalDoctors = $doctors->total();
+
+    //     return view('frontend.doctors-search', compact('doctors', 'search', 'location', 'date', 'totalDoctors'));
+    // }
+
     public function search(Request $request)
     {
         $search = $request->input('search', '');
         $location = $request->input('location', '');
         $date = $request->input('date', '');
 
-        // البحث الأساسي عن الأطباء
+        // البحث الأساسي عن الأطباء مع التأكد من وجود doctorProfile
         $doctors = User::where('role', 'doctor')
             ->where('status', 'active')
+            ->whereHas('doctorProfile') // فقط الأطباء الذين لديهم ملف طبي
             ->with(['doctorProfile', 'medicalCenters'])
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhereHas('doctorProfile', function ($profileQuery) use ($search) {
                             $profileQuery->where('specialization', 'like', "%{$search}%")
-                                ->orWhere('qualifications', 'like', "%{$search}%");
+                                ->orWhere('medical_school', 'like', "%{$search}%")
+                                ->orWhereJsonContains('qualifications', $search);
                         });
                 });
             })
@@ -39,19 +78,69 @@ class DoctorSearchController extends Controller
                     $q->where('address', 'like', "%{$location}%")
                         ->orWhereHas('medicalCenters', function ($centerQuery) use ($location) {
                             $centerQuery->where('name', 'like', "%{$location}%")
-                                ->orWhere('address', 'like', "%{$location}%");
+                                ->orWhere('address', 'like', "%{$location}%")
+                                ->orWhere('city', 'like', "%{$location}%");
                         });
                 });
             })
             ->orderBy('name')
             ->paginate(10);
 
-        // تأكد من أن جميع البيانات strings
         $totalDoctors = $doctors->total();
+        $specialties = \App\Models\Specialty::active()->get();
 
-        return view('frontend.doctors-search', compact('doctors', 'search', 'location', 'date', 'totalDoctors'));
+        return view('frontend.doctors-search', compact('doctors', 'search', 'location', 'date', 'totalDoctors', 'specialties'));
     }
 
+    /**
+     * SEO-friendly search by city and specialty
+     * Handles URLs like /doctors/dubai/cardiology
+     */
+    public function searchBySpecialty($city, $specialty)
+    {
+        // Convert URL-friendly names to readable format
+        $cityName = ucfirst(str_replace('-', ' ', $city));
+        $specialtyName = ucfirst(str_replace('-', ' ', $specialty));
+
+        // Search for doctors matching the specialty and city
+        $doctors = User::where('role', 'doctor')
+            ->where('status', 'active')
+            ->whereHas('doctorProfile', function ($query) use ($specialtyName) {
+                $query->where('specialization', 'like', "%{$specialtyName}%");
+            })
+            ->whereHas('medicalCenters', function ($query) use ($cityName) {
+                $query->where('city', 'like', "%{$cityName}%")
+                    ->orWhere('address', 'like', "%{$cityName}%");
+            })
+            ->with(['doctorProfile', 'medicalCenters'])
+            ->orderBy('name')
+            ->paginate(12);
+
+        $totalDoctors = $doctors->total();
+        $specialties = \App\Models\Specialty::active()->get();
+
+        // SEO metadata
+        $pageTitle = __('seo.doctors_in_city_specialty', [
+            'specialty' => $specialtyName,
+            'city' => $cityName
+        ]);
+
+        $search = $specialtyName;
+        $location = $cityName;
+        $date = '';
+
+        return view('frontend.doctors-search', compact(
+            'doctors',
+            'search',
+            'location',
+            'date',
+            'totalDoctors',
+            'specialties',
+            'pageTitle',
+            'cityName',
+            'specialtyName'
+        ));
+    }
 
     // public function search(Request $request)
     // {

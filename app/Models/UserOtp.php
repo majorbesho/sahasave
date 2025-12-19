@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
-include __DIR__ . "/vendor/twilio/sdk/src/Twilio/Rest/Client.php";
-require_once "Twilio/autoload.php";
+
 
 use Twilio\Rest\Client;
 

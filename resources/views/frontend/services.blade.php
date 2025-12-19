@@ -208,7 +208,7 @@
                                 </div>
                             </div>
                             <h2 class="sec-title__title tg-element-title">Our Expertise Stands in <br>
-                                <span>SahaSave.com
+                                <span>SehaSave.com
                                     Solutions</span>
                             </h2>
                         </div>
@@ -621,12 +621,12 @@
                                     <div class="input-box">
                                         <div class="select-box">
                                             <select class="selectmenu wide">
-                                                <option selected="selected">SahaSave.com Type</option>
-                                                <option>SahaSave.com Type 01</option>
-                                                <option>SahaSave.com Type 02</option>
-                                                <option>SahaSave.com Type 03</option>
-                                                <option>SahaSave.com Type 04</option>
-                                                <option>SahaSave.com Type 05</option>
+                                                <option selected="selected">SehaSave.com Type</option>
+                                                <option>SehaSave.com Type 01</option>
+                                                <option>SehaSave.com Type 02</option>
+                                                <option>SehaSave.com Type 03</option>
+                                                <option>SehaSave.com Type 04</option>
+                                                <option>SehaSave.com Type 05</option>
                                             </select>
                                         </div>
                                     </div>
@@ -636,11 +636,11 @@
                                         <div class="select-box">
                                             <select class="selectmenu wide">
                                                 <option selected="selected">Load</option>
-                                                <option>SahaSave.com Type 01</option>
-                                                <option>SahaSave.com Type 02</option>
-                                                <option>SahaSave.com Type 03</option>
-                                                <option>SahaSave.com Type 04</option>
-                                                <option>SahaSave.com Type 05</option>
+                                                <option>SehaSave.com Type 01</option>
+                                                <option>SehaSave.com Type 02</option>
+                                                <option>SehaSave.com Type 03</option>
+                                                <option>SehaSave.com Type 04</option>
+                                                <option>SehaSave.com Type 05</option>
                                             </select>
                                         </div>
                                     </div>

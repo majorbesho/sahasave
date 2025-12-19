@@ -56,7 +56,7 @@
 
                                     {{-- Caturl --}}
                                     <div class="form-group">
-                                        <label for="Caturl">Csategory URl For SahaSave.com </label>
+                                        <label for="Caturl">Csategory URl ForSehaSave.com </label>
                                         <input type="text" name="Caturl" class="form-control" id="exampleInputEmail1"
                                             placeholder="Enter title" value="{{ old('Caturl') }}">
                                     </div>

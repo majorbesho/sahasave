@@ -2,21 +2,18 @@
 @section('title', 'تفاصيل الطبيب - ' . $doctor->name)
 
 @section('content')
-
-
-
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
                 <div class="mb-2 row">
                     <div class="col-sm-6">
-                        <h1>Users Account</h1>
+                        <h1>تفاصيل الطبيب</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-                            <li class="breadcrumb-item active"></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">الرئيسية</a></li>
+                            <li class="breadcrumb-item active">تفاصيل الطبيب</li>
                         </ol>
                     </div>
                 </div>
@@ -93,37 +90,55 @@
                                 </form>
                             @endif
 
+                            <!-- زر التميز - مرة واحدة فقط -->
+                            @if ($doctor->doctorProfile)
+                                <form action="{{ route('doctors.toggle-featured', $doctor->id) }}" method="POST"
+                                    class="mt-3">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit"
+                                        class="btn btn-{{ $doctor->doctorProfile->is_featured ? 'warning' : 'primary' }} btn-block">
+                                        <i class="fas fa-star"></i>
+                                        {{ $doctor->doctorProfile->is_featured ? 'إلغاء التميز' : 'تمييز الطبيب' }}
+                                    </button>
+                                </form>
+                            @endif
+
                             <!-- تحديث حالة التحقق -->
-                            <form action="{{ route('doctors.updateVerificationStatus', $doctor->id) }}" method="POST"
-                                class="mt-3">
-                                @csrf
-                                @method('PUT')
-                                <div class="form-group">
-                                    <label>تحديث حالة التحقق:</label>
-                                    <select name="verification_status" class="form-control" required>
-                                        <option value="pending_review"
-                                            {{ $doctor->doctorProfile && $doctor->doctorProfile->verification_status == 'pending_review' ? 'selected' : '' }}>
-                                            قيد المراجعة</option>
-                                        <option value="under_review"
-                                            {{ $doctor->doctorProfile && $doctor->doctorProfile->verification_status == 'under_review' ? 'selected' : '' }}>
-                                            قيد الدراسة</option>
-                                        <option value="verified"
-                                            {{ $doctor->doctorProfile && $doctor->doctorProfile->verification_status == 'verified' ? 'selected' : '' }}>
-                                            معتمد</option>
-                                        <option value="rejected"
-                                            {{ $doctor->doctorProfile && $doctor->doctorProfile->verification_status == 'rejected' ? 'selected' : '' }}>
-                                            مرفوض</option>
-                                        <option value="suspended"
-                                            {{ $doctor->doctorProfile && $doctor->doctorProfile->verification_status == 'suspended' ? 'selected' : '' }}>
-                                            موقوف</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>ملاحظات:</label>
-                                    <textarea name="verification_notes" class="form-control" rows="3" placeholder="ملاحظات حول حالة التحقق...">{{ $doctor->doctorProfile->verification_notes ?? '' }}</textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block">تحديث حالة التحقق</button>
-                            </form>
+                            @if ($doctor->doctorProfile)
+                                <form action="{{ route('doctors.updateVerificationStatus', $doctor->id) }}" method="POST"
+                                    class="mt-3">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="form-group">
+                                        <label>تحديث حالة التحقق:</label>
+                                        <select name="verification_status" class="form-control" required>
+                                            <option value="pending_review"
+                                                {{ $doctor->doctorProfile->verification_status == 'pending_review' ? 'selected' : '' }}>
+                                                قيد المراجعة</option>
+                                            <option value="under_review"
+                                                {{ $doctor->doctorProfile->verification_status == 'under_review' ? 'selected' : '' }}>
+                                                قيد الدراسة</option>
+                                            <option value="verified"
+                                                {{ $doctor->doctorProfile->verification_status == 'verified' ? 'selected' : '' }}>
+                                                معتمد</option>
+                                            <option value="rejected"
+                                                {{ $doctor->doctorProfile->verification_status == 'rejected' ? 'selected' : '' }}>
+                                                مرفوض</option>
+                                            <option value="suspended"
+                                                {{ $doctor->doctorProfile->verification_status == 'suspended' ? 'selected' : '' }}>
+                                                موقوف</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ملاحظات:</label>
+                                        <textarea name="verification_notes" class="form-control" rows="3" placeholder="ملاحظات حول حالة التحقق...">{{ $doctor->doctorProfile->verification_notes ?? '' }}</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">تحديث حالة التحقق</button>
+                                </form>
+                            @else
+                                <p class="text-center text-danger">لا يوجد بروفايل طبي</p>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -145,6 +160,12 @@
                                             {{ $doctor->doctorProfile->years_of_experience ?? 'غير محدد' }}</p>
                                         <p><strong>رسوم الاستشارة:</strong>
                                             {{ $doctor->doctorProfile->consultation_fee ? $doctor->doctorProfile->consultation_fee . ' $' : 'غير محدد' }}
+                                        </p>
+                                        <p><strong>مميز:</strong>
+                                            <span
+                                                class="badge badge-{{ $doctor->doctorProfile->is_featured ? 'primary' : 'secondary' }}">
+                                                {{ $doctor->doctorProfile->is_featured ? 'نعم' : 'لا' }}
+                                            </span>
                                         </p>
                                     </div>
                                     <div class="col-md-6">
@@ -264,9 +285,6 @@
                             <button type="submit" class="btn btn-danger">رفض الطبيب</button>
                         </div>
                     </form>
-
-
-                    
                 </div>
             </div>
         </div>
@@ -296,4 +314,5 @@
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

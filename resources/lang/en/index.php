@@ -20,7 +20,7 @@ return [
     'Origin' => 'Origin',
     'Destination' => 'Destination',
 
-    'SahaSave.com' => ' SahaSave.com',
+    'SehaSave.com' => 'SehaSave.com',
     'Weight' => 'Weight',
     'Length' => 'Length',
     'Price' => 'Price',
@@ -31,7 +31,7 @@ return [
     'Shippers' => 'Shippers',
     'Carriers' => 'Carriers',
     'individuals' => 'individuals',
-    'Brokerstext' => 'Navigate dynamic SahaSave.com markets with access to the largest comprehensive database of truckload rates.',
+    'Brokerstext' => 'Navigate dynamicSehaSave.com markets with access to the largest comprehensive database of truckload rates.',
     'Shipperstext' => 'Strengthen supply chain resilience with 360° market visibility and Access To the industrys Largest source of capacity',
     'Carrierstext' => 'Find optimal loads for your truck at competitive rates, ensuring timely delivery without delays.',
     'individualstext' => 'Discover the best loads for your truck at competitive rates. Ensure timely deliveries without delays, maximizing your efficiency and profitability.',

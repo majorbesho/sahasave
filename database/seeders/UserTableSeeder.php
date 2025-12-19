@@ -24,7 +24,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Admin User',
                 'phone' => '01000000001',
-                'password' => Hash::make('111111'),
+                'password' => Hash::make('11111111'),
                 'role' => 'admin',
                 'status' => 'active',
                 'email_verified_at' => now(), // تفعيل الإيميل مباشرة
@@ -38,7 +38,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Dr. Ahmed Mahmoud',
                 'phone' => '01100000002',
-                'password' => Hash::make('111111'),
+                'password' => Hash::make('11111111'),
                 'role' => 'doctor',
                 'status' => 'active',
                 'email_verified_at' => now(),
@@ -60,7 +60,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Dr. Sara Ali (Pending)',
                 'phone' => '01200000003',
-                'password' => Hash::make('111111'),
+                'password' => Hash::make('11111111'),
                 'role' => 'doctor',
                 'status' => 'pending', // <<-- أهم جزء: الحالة قيد المراجعة
                 'email_verified_at' => now(),

@@ -12,22 +12,28 @@ class DashboardController extends Controller
 {
     //
 
+    
     public function index()
     {
         $doctor = Auth::user();
 
+        // تحقق مما إذا كان المستخدم طبيباً
+        if (!$doctor->isDoctor()) {
+            abort(403, 'غير مصرح بالوصول لهذه الصفحة');
+        }
+
         // الإحصائيات
         $totalPatientsCount = $doctor->doctorAppointments()->distinct('patient_id')->count();
         $todayAppointmentsCount = $doctor->doctorAppointments()
-            ->whereDate('appointment_time', Carbon::today())
+            ->whereDate('scheduled_for', Carbon::today())
             ->count();
 
-        // المواعيد القادمة (مثال: أحدث 5 مواعيد قادمة)
+        // المواعيد القادمة
         $upcomingAppointments = $doctor->doctorAppointments()
-            ->with('patient') // لجلب بيانات المريض مع الموعد بكفاءة
-            ->where('appointment_time', '>=', now())
+            ->with('patient')
+            ->where('scheduled_for', '>=', now())
             ->where('status', 'confirmed')
-            ->orderBy('appointment_time', 'asc')
+            ->orderBy('scheduled_for', 'asc')
             ->limit(5)
             ->get();
 

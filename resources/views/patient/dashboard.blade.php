@@ -109,105 +109,9 @@
             <div class="row">
                 <!-- Profile Sidebar -->
                 <div class="col-lg-4 col-xl-3 theiaStickySidebar">
-                    <div class="profile-sidebar patient-sidebar profile-sidebar-new">
-                        <div class="widget-profile pro-widget-content">
-                            <div class="profile-info-widget">
-                                <a href="{{ route('patient.profile.settings') }}" class="booking-doc-img">
-                                    <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('frontend/xx/assets/img/doctors-dashboard/profile-06.jpg') }}"
-                                        alt="User Image">
-                                </a>
-                                <div class="profile-det-info">
-                                    <h3><a href="{{ route('patient.profile.settings') }}">{{ Auth::user()->name }}</a></h3>
-                                    <div class="patient-details">
-                                        <h5 class="mb-0">Patient ID : PT{{ str_pad(Auth::id(), 6, '0', STR_PAD_LEFT) }}
-                                        </h5>
-                                    </div>
-                                    <span>
-                                        {{ ucfirst(Auth::user()->gender) }}
-                                        <i class="fa-solid fa-circle"></i>
-                                        {{ Auth::user()->date_of_birth ? Auth::user()->date_of_birth->age . ' years' : 'Age not set' }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- القائمة الجانبية المحسنة -->
-                        <div class="dashboard-widget">
-                            <nav class="dashboard-menu">
-                                <ul>
-                                    <li class="active">
-                                        <a href="{{ route('patient.dashboard') }}">
-                                            <i class="isax isax-category-2"></i>
-                                            <span>Dashboard</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.appointments') }}">
-                                            <i class="isax isax-calendar-1"></i>
-                                            <span>My Appointments</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.favorites') }}">
-                                            <i class="fa-solid fa-user-doctor"></i>
-                                            <span>Favourites</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.medical-records') }}">
-                                            <i class="isax isax-note-21"></i>
-                                            <span>Medical Records</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.prescriptions') }}">
-                                            <i class="fa-solid fa-prescription"></i>
-                                            <span>Prescriptions</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.lab-orders') }}">
-                                            <i class="fa-solid fa-flask"></i>
-                                            <span>Lab Orders</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.referrals') }}">
-                                            <i class="fa-solid fa-share-nodes"></i>
-                                            <span>Referrals & Rewards</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.messages') }}">
-                                            <i class="isax isax-messages-1"></i>
-                                            <span>Messages</span>
-                                            {{-- @if ($unreadMessages > 0)
-                                                <small class="unread-msg">{{ $unreadMessages }}</small>
-                                            @endif --}}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('patient.profile.settings') }}">
-                                            <i class="isax isax-setting-2"></i>
-                                            <span>Profile Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="isax isax-logout"></i>
-                                            <span>Logout</span>
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                    @include('patient.sidebar')
                 </div>
+                <!-- / Profile Sidebar -->
                 <!-- / Profile Sidebar -->
 
                 <div class="col-lg-8 col-xl-9">
@@ -277,7 +181,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="vital-stats">
-                                                <h6>Vital Statistics</h6>
+                                                <h6>profile Statistics</h6>
                                                 @if (Auth::user()->medicalProfile)
                                                     <div class="vital-item">
                                                         <span>Height:</span>
@@ -372,7 +276,7 @@
                                         <h5>Upcoming Appointments</h5>
                                     </div>
                                     <div class="card-view-link">
-                                        <a href="{{ route('patient.appointments') }}">View All</a>
+                                        <a href="{{ route('patient.appointmentsslide') }}">View All</a>
                                     </div>
                                 </div>
                                 <div class="dashboard-card-body">
@@ -407,12 +311,13 @@
                                                     class="btn btn-gray">
                                                     <i class="fa-solid fa-comment-dots"></i> Chat
                                                 </a>
-                                                <a href="{{ route('patient.appointments.show', $appointment->id) }}"
+                                                <a href="{{ route('patient.appointmentsslide.show', $appointment->id) }}"
                                                     class="btn btn-outline-primary">
                                                     <i class="fa-solid fa-calendar-check"></i> Details
                                                 </a>
                                             </div>
                                         </div>
+
                                     @empty
                                         <div class="py-4 text-center">
                                             <i class="mb-3 fa-solid fa-calendar-xmark fa-2x text-muted"></i>
@@ -433,7 +338,7 @@
                                         <h5>Favorite Doctors</h5>
                                     </div>
                                     <div class="card-view-link">
-                                        <a href="{{ route('patient.favorites') }}">View All</a>
+                                        <a href="{{ route('patient.favorites.index') }}">View All</a>
                                     </div>
                                 </div>
                                 <div class="dashboard-card-body">
@@ -544,13 +449,11 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-@endsection
-
-@push('scripts')
     <script>
         function copyReferralCode() {
             const referralCode = document.getElementById('referralCode');
@@ -562,4 +465,4 @@
             alert('Referral code copied to clipboard!');
         }
     </script>
-@endpush
+@endsection

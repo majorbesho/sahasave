@@ -148,7 +148,7 @@
 
                         <button class="btn btn-primary w-100 mt-4" type="submit">Sign up!</button>
                     </form>
-                    <p class="mt-4 mb-5">We're committed to your privacy. SahaSave.com uses the information you provice to
+                    <p class="mt-4 mb-5">We're committed to your privacy.SehaSave.com uses the information you provice to
                         us to
                         contact you about our relevant content and services. For more information, see our Privacy Policy.
                     </p>
@@ -156,7 +156,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-6 offset-lg-1 text-center contentCol">
                 <img class="regImg" src="{{ asset('frontend/4/images/logo10.png') }}" alt="image">
-                <h5>Get Started with SahaSave.com </h5>
+                <h5>Get Started withSehaSave.com </h5>
                 <p>Be the next winner. Start your Journey now</p>
             </div>
             <hr>

@@ -1,8 +1,8 @@
 <!-- Brand Logo -->
 <a href="/" class="brand-link">
-    <img src="{{ asset('frontend/img/logo/1.png') }}" alt=" SahaSave.com "
+    <img src="{{ asset('frontend/img/logo/1.png') }}" alt="SehaSave.com "
         class="brand-image img-circle elevation-3"style="opacity: .8">
-    <span class="brand-text font-weight-light"> SahaSave.com </span>
+    <span class="brand-text font-weight-light">SehaSave.com </span>
 </a>
 @php
     $name = explode(' ', auth('admin')->user()->name);
@@ -91,6 +91,39 @@
                     </li>
                 </ul>
             </li>
+
+
+
+
+
+
+            
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-copy"></i>
+                    <p>
+                        blog
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('adminblog.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>blog </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('adminblog.create') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Add blog </p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
 
 
             <li class="nav-item">
@@ -204,6 +237,30 @@
                 </ul>
             </li>
 
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-list-alt"></i>
+                    <p>
+                        التصنيفات الطبية
+                        <i class="fas fa-angle-left right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('categories.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>جميع التصنيفات</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('categories.admin.create') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>إضافة تصنيف جديد</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
 
 
 
@@ -231,30 +288,7 @@
                 </ul>
             </li>
 
-            <li class="nav-item">
 
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-copy"></i>
-                    <p>
-                        Focus
-                        <i class="fas fa-angle-left right"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('focus.index') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>All Focus</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('focus.create') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Add Focus</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
             <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -321,32 +355,10 @@
             </li>
 
 
-
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-copy"></i>
-                    <p>emp Account<i class="fas fa-angle-left right"></i> </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('emp.index') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>All emp</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('emp.create') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Add emp</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-copy"></i>
-                    <p>faq Account<i class="fas fa-angle-left right"></i> </p>
+                    <p>faq <i class="fas fa-angle-left right"></i> </p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
@@ -424,30 +436,6 @@
 
 
 
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-copy"></i>
-                    <p>
-                        Team Edit
-                        <i class="fas fa-angle-left right"></i>
-
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="{{ route('team.index') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>All Team</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('team.create') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Teanm Add </p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
             <li class="nav-item">
                 <a href="#" class="nav-link">

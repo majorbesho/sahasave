@@ -59,6 +59,15 @@ class CreateMedicalCentersTable extends Migration
             $table->index(['type', 'status']);
             $table->index('city');
             $table->index('is_verified');
+
+
+            $table->string('logo')->nullable()->after('slug');
+            $table->boolean('is_virtual')->default(false)->after('is_featured');
+            $table->boolean('accepts_appointments')->default(true)->after('is_virtual');
+
+            // إضافة فهارس جديدة
+            $table->index('is_virtual');
+            $table->index('accepts_appointments');
         });
     }
 

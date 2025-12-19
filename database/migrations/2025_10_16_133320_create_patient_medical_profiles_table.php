@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\SoftDeletes; // أضف هذا
 
 class CreatePatientMedicalProfilesTable extends Migration
 {
@@ -42,6 +43,7 @@ class CreatePatientMedicalProfilesTable extends Migration
             $table->timestamps();
 
             $table->unique('patient_id');
+            $table->softDeletes();
         });
     }
 

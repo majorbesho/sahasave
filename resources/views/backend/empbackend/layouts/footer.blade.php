@@ -1,5 +1,5 @@
 <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://SahaSave.com .com"> SahaSave.com </a>.</strong>
+    <strong>Copyright &copy; 2014-2021 <a href="https://SehaSave.com .com">SehaSave.com </a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
         <b></b>

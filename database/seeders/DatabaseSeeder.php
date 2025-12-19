@@ -26,6 +26,11 @@ class DatabaseSeeder extends Seeder
             CategoriesSeeder::class,
             ScheduleSeeder::class,
             // باقي الـ Seeders...
+            WalletAndLoyaltySeeder::class,
+            LanguageSeeder::class,
+            BlogCategorySeeder::class,
+            BlogTagSeeder::class,
+            BlogSeeder::class,
         ]);
 
 
@@ -43,6 +48,11 @@ class DatabaseSeeder extends Seeder
         \App\Models\testim::factory(10)->create();
         \App\Models\Banner::factory(10)->create();
         \App\Models\about::factory(10)->create();
+
+        \App\Models\testim::factory(10)->create();
+
+        $this->command->info('✅ 10 random testimonials created successfully!');
+
         // \App\Models\shipment_owners::factory(10)->create();
         // \App\Models\shipments::factory(10)->create();
 

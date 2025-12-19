@@ -149,8 +149,8 @@ class CheckoutController extends Controller
 
         if ($status) {
             Mail::to($order['email'])
-                ->bcc('SahaSave.commarketing@gmail.com')
-                //SahaSave.commarketing@gmail.com
+                ->bcc('SehaSave.commarketing@gmail.com')
+                //SehaSave.commarketing@gmail.com
 
                 ->cc('beshog32@gmail.com')
                 ->send(new OrderMail($order));
@@ -227,7 +227,7 @@ class CheckoutController extends Controller
 
             if ($status) {
                 Mail::to($order['email'])
-                    ->bcc('operation.SahaSave.com@gmail.com')
+                    ->bcc('operation.SehaSave.com@gmail.com')
                     ->cc('beshog32@gmail.com')
                     ->send(new OrderMail($order));
 

@@ -12,7 +12,7 @@ class SocialShareButtonsController extends Controller
     public function ShareWidget()
     {
         $shareComponent = \Share::page(
-            'https://SahaSave.com/',
+            'https://SehaSave.com/',
             'Your share text comes here',
         )
             ->facebook()

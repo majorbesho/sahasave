@@ -1,8 +1,8 @@
 <!-- Brand Logo -->
 <a href="/" class="brand-link">
-    <img src="{{ asset('frontend/img/logo/1.png') }}" alt=" SahaSave.com " class="brand-image img-circle elevation-3"
+    <img src="{{ asset('frontend/img/logo/1.png') }}" alt="SehaSave.com " class="brand-image img-circle elevation-3"
         style="opacity: .8">
-    <span class="brand-text font-weight-light"> SahaSave.com </span>
+    <span class="brand-text font-weight-light">SehaSave.com </span>
 </a>
 @php
     $name = explode(' ', auth('emp')->user()->name);

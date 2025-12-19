@@ -38,7 +38,9 @@ class DoctorProfile extends Model
         'consultation_fee',
         'verification_notes',
         'verification_reviewed_at',
-        'verified_by'
+        'verified_by',
+        'languages',
+        'memberships'
     ];
 
     protected $casts = [
@@ -57,6 +59,17 @@ class DoctorProfile extends Model
         'consultation_fee' => 'decimal:2',
         'license_verified_at' => 'datetime',
         'verification_reviewed_at' => 'datetime',
+
+
+        'languages', // يمكن أن يكون نصًا أو JSON
+        'awards',    // يمكن أن يكون نصًا أو JSON
+        'memberships', // يمكن أن يكون نصًا أو JSON
+        'recommendation_percentage', // نسبة التوصية
+        'languages' => 'array',
+        'awards' => 'array',
+        'memberships' => 'array',
+        'recommendation_percentage' => 'integer',
+
     ];
 
     // العلاقات
@@ -66,13 +79,13 @@ class DoctorProfile extends Model
     }
 
 
-  // دالة لمعالجة qualifications
+    // دالة لمعالجة qualifications
     public function getQualificationsDisplayAttribute()
     {
         if (is_array($this->qualifications)) {
             return implode(', ', $this->qualifications);
         }
-        
+
         return $this->qualifications ?? 'MBBS';
     }
 
@@ -82,7 +95,7 @@ class DoctorProfile extends Model
         if (is_array($this->certifications)) {
             return implode(', ', $this->certifications);
         }
-        
+
         return $this->certifications ?? '';
     }
 
@@ -92,7 +105,7 @@ class DoctorProfile extends Model
         if (is_array($this->subspecialties)) {
             return implode(', ', $this->subspecialties);
         }
-        
+
         return $this->subspecialties ?? '';
     }
 
@@ -210,5 +223,28 @@ class DoctorProfile extends Model
         ]);
 
         $this->doctor->update(['status' => 'rejected']);
+    }
+
+
+
+
+
+
+    // في نموذج DoctorProfile
+    public function specialties()
+    {
+        return $this->belongsToMany(Specialty::class, 'doctor_specialties', 'doctor_id', 'specialty_id')
+            ->withPivot('is_primary')
+            ->withTimestamps();
+    }
+
+    public function services()
+    {
+        return $this->hasMany(DoctorService::class, 'doctor_id', 'doctor_id');
+    }
+
+    public function primarySpecialty()
+    {
+        return $this->specialties()->wherePivot('is_primary', true)->first();
     }
 }

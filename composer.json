@@ -2,13 +2,17 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
         "artesaos/seotools": "^1.2",
         "astrotomic/laravel-translatable": "^11.9",
         "bensampo/laravel-embed": "^2.0",
+        "doctrine/dbal": "^3.10",
         "ferdous/laravel-otp-validate": "^2.0",
         "fruitcake/laravel-cors": "^3.0",
         "google/apiclient": "^2.15",
@@ -19,7 +23,7 @@
         "kalnoy/nestedset": "^6.0",
         "kreait/firebase-php": "^5.26",
         "laravel/cashier": "^13.17",
-        "laravel/framework": "^8.75",
+        "laravel/framework": "8.83.29",
         "laravel/sanctum": "^2.15",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.5",
@@ -31,12 +35,15 @@
         "pusher/pusher-php-server": "^7.2",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "stripe/stripe-php": "^7.128",
+        "symfony/mailer": "^6.0",
         "tamara-solution/php-sdk": "^2.0",
         "twilio/sdk": "^7.3",
-        "unisharp/laravel-filemanager": "^2.6",
-        "yajra/laravel-datatables-oracle": "~9.0"
+        "yajra/laravel-datatables-oracle": "^9.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.13",
+        "enlightn/enlightn": "1.22.0",
+        "enlightn/security-checker": "^1.11",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.10",
@@ -51,15 +58,10 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-        "tamara": [
-            "vendor/tamara-solution/php-sdk/src/Tamara/Configuration.php"
+        "files": [
+            "app/Helpers/Helper.php"
         ]
     },
-        "tamara": {
-
-            "Tamara": "vendor/tamara-solution/php-sdk/src/Tamara"
-        },
-
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
@@ -78,7 +80,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "security-audit": "composer audit",
+        "security-check": "./vendor/bin/security-checker security:check"
     },
     "extra": {
         "laravel": {
@@ -88,8 +92,17 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "replace": {
+        "swiftmailer/swiftmailer": "*"
+    },
+    "conflict": {
+        "swiftmailer/swiftmailer": "*"
+    }
 }

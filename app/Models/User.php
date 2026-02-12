@@ -24,6 +24,10 @@ class User extends Authenticatable
         'nationality',
         'date_of_birth',
         'address',
+        'city',
+        'latitude',
+        'longitude',
+        'primary_clinic_id',
         'emergency_contact',
         'emergency_phone',
         'referral_code',
@@ -80,6 +84,11 @@ class User extends Authenticatable
         return $this->doctorProfile->specialization ?? 'General';
     }
 
+    public function getSpecializationAttribute()
+    {
+        return $this->doctor_specialization;
+    }
+
     public function getDoctorExperienceAttribute()
     {
         return $this->doctorProfile->years_of_experience ?? 0;
@@ -122,10 +131,54 @@ class User extends Authenticatable
         return $this->referral_code;
     }
 
+    /**
+     * Get masked name (e.g., "Bi****orge")
+     */
+    public function getMaskedNameAttribute()
+    {
+        $name = $this->name;
+        if (!$name) return 'Unknown';
+
+        $parts = explode(' ', $name);
+        $maskedParts = array_map(function ($part) {
+            $len = mb_strlen($part);
+            if ($len <= 2) return $part;
+
+            $show = floor($len / 3);
+            if ($show < 1) $show = 1;
+
+            $start = mb_substr($part, 0, $show);
+            $end = mb_substr($part, -$show);
+            $stars = str_repeat('*', $len - (2 * $show));
+
+            return $start . $stars . $end;
+        }, $parts);
+
+        return implode(' ', $maskedParts);
+    }
+
     public function canEarnReferralBonus()
     {
         return $this->status === 'active' &&
             in_array($this->role, ['patient', 'doctor']);
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        return $this->photoUrl();
+    }
+
+    public function photoUrl($default = null)
+    {
+        if (!$this->photo) {
+            return $default ?: asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg');
+        }
+
+        if (filter_var($this->photo, FILTER_VALIDATE_URL)) {
+            return $this->photo;
+        }
+
+        return asset('storage/' . $this->photo);
     }
 
     public function getReferralTierBenefits()
@@ -204,6 +257,7 @@ class User extends Authenticatable
     }
 
 
+    // العلاقة مع المراكز الطبية (إذا كان الطبيب يعمل في عدة مراكز)
     public function medicalCenters()
     {
         return $this->belongsToMany(MedicalCenter::class, 'doctor_medical_center')
@@ -225,7 +279,8 @@ class User extends Authenticatable
                 'is_approved',
                 'approved_at',
                 'approved_by',
-                'notes'
+                'notes',
+                'is_primary'
             )
             ->withTimestamps();
     }
@@ -278,6 +333,39 @@ class User extends Authenticatable
         return $this->hasMany(Referral::class, 'referred_id');
     }
 
+    /**
+     * Recursive Referral Relationships (3 Levels)
+     */
+
+    // Level 1: Direct referrals
+    public function referralsL1()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
+
+    // Level 2: Referrals of Level 1
+    public function referralsL2()
+    {
+        return $this->hasManyThrough(User::class, User::class, 'referred_by', 'referred_by', 'id', 'id');
+    }
+
+    // Level 3: Referrals of Level 2
+    // For 3 levels, it's easier to use nested relationships in Eloquent
+    public function children()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
+
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function getReferralTree()
+    {
+        return $this->referralsL1()->with(['children.children'])->get();
+    }
+
     public function rewards()
     {
         return $this->hasMany(Reward::class);
@@ -292,6 +380,33 @@ class User extends Authenticatable
     {
         return $this->hasMany(Appointment::class, 'patient_id');
     }
+
+    public function appointments()
+    {
+        if ($this->isDoctor()) {
+            return $this->doctorAppointments();
+        }
+        return $this->patientAppointments();
+    }
+
+    public function reviews()
+    {
+        if ($this->isDoctor()) {
+            return $this->reviewsReceived();
+        }
+        return $this->reviewsGiven();
+    }
+
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'patient_id');
+    }
+
+    public function reviewsReceived()
+    {
+        return $this->hasMany(Review::class, 'doctor_id')->where('status', 'approved');
+    }
+
 
 
     // النطاقات المساعدة
@@ -315,6 +430,16 @@ class User extends Authenticatable
         return $query->where('status', 'active');
     }
 
+    // نطاق للأطباء النشطين
+    public function scopeActiveDoctors($query)
+    {
+        return $query->where('role', 'doctor')
+            ->where('status', 'active')
+            ->whereHas('doctorProfile', function ($q) {
+                $q->where('is_verified', true);
+            });
+    }
+
     // الطرق المساعدة - أضف طريقة isAdmin هنا
     public function isPatient(): bool
     {
@@ -331,10 +456,55 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isMedicalCenterAdmin(): bool
+    public function roles()
     {
-        return $this->role === 'medical_center_admin';
+        return $this->belongsToMany(Role::class, 'user_roles')
+            ->withPivot('medical_center_id');
     }
+
+    public function userRoles()
+    {
+        return $this->hasMany(UserRole::class);
+    }
+
+    // هل المستخدم له دور معين في مركز طبي محدد؟
+    public function hasRoleInCenter(string $roleName, int $medicalCenterId): bool
+    {
+        return $this->userRoles()
+            ->whereHas('role', fn($q) => $q->where('name', $roleName))
+            ->where('medical_center_id', $medicalCenterId)
+            ->exists();
+    }
+
+    // هل لديه صلاحية في مركز طبي محدد؟
+    public function hasPermissionInCenter(string $permissionName, int $medicalCenterId): bool
+    {
+        // Admin عام يمر دايمًا
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->userRoles()
+            ->where('medical_center_id', $medicalCenterId)
+            ->whereHas('role.permissions', fn($q) => $q->where('name', $permissionName))
+            ->exists();
+    }
+
+    // لإرجاع كل الصلاحيات في مركز معين (مفيد للـ frontend)
+    public function getPermissionsForCenter(int $medicalCenterId): array
+    {
+        return $this->userRoles()
+            ->where('medical_center_id', $medicalCenterId)
+            ->with('role.permissions')
+            ->get()
+            ->pluck('role.permissions')
+            ->flatten()
+            ->pluck('name')
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+
 
     public function hasMedicalProfile(): bool
     {
@@ -436,6 +606,11 @@ class User extends Authenticatable
         return $this->hasMany(DoctorService::class, 'doctor_id');
     }
 
+    public function doctorSocialMedia()
+    {
+        return $this->hasMany(DoctorSocialMedia::class, 'doctor_id');
+    }
+
     public function specialties()
     {
         return $this->belongsToMany(Specialty::class, 'doctor_specialties', 'doctor_id', 'specialty_id')
@@ -493,7 +668,14 @@ class User extends Authenticatable
         return $this->hasMany(DoctorClinic::class, 'doctor_id')->ordered();
     }
 
+    // العلاقة مع العيادة الرئيسية (MedicalCenter)
     public function primaryClinic()
+    {
+        return $this->belongsTo(MedicalCenter::class, 'primary_clinic_id');
+    }
+
+    // العلاقة القديمة مع DoctorClinic
+    public function primaryDoctorClinic()
     {
         return $this->hasOne(DoctorClinic::class, 'doctor_id')->where('is_primary', true);
     }
@@ -570,7 +752,7 @@ class User extends Authenticatable
         if (!$this->defaultWallet) {
             $wallet = $this->wallets()->create([
                 'type' => 'personal',
-                'currency' => 'SAR',
+                'currency' => 'AED',
                 'is_default' => true
             ]);
 
@@ -599,12 +781,15 @@ class User extends Authenticatable
         return $this->loyaltyPoints?->monetary_value ?? 0;
     }
 
-    public function initializeLoyaltyPoints()
+    public function initializeLoyaltyPoints($grantWelcome = true)
     {
         if (!$this->loyaltyPoints) {
             $loyaltyPoints = LoyaltyPoint::create([
                 'user_id' => $this->id,
-                'points_value_rate' => 0.01, // كل نقطة = 0.01 ريال
+                'points' => 0,
+                'available_points' => 0,
+                'total_earned' => 0,
+                'points_value_rate' => LoyaltySetting::get('points_value_rate', 0.01),
                 'next_evaluation_date' => now()->addMonth()
             ]);
 
@@ -617,15 +802,27 @@ class User extends Authenticatable
                 ]);
             }
 
-            return $loyaltyPoints;
+            // Sync relation locally to avoid recursive calls
+            $this->setRelation('loyaltyPoints', $loyaltyPoints);
+        } else {
+            $loyaltyPoints = $this->loyaltyPoints;
         }
 
-        return $this->loyaltyPoints;
+        // Grant welcome points if configured and not already granted
+        if ($grantWelcome) {
+            $welcomePoints = LoyaltySetting::get('loyalty_welcome_points', 0);
+            if ($welcomePoints > 0 && !$this->pointTransactions()->where('type', 'welcome_bonus')->exists()) {
+                $this->earnPoints($welcomePoints, 'welcome_bonus');
+                $loyaltyPoints->refresh();
+            }
+        }
+
+        return $loyaltyPoints;
     }
 
     public function earnPoints($points, $type, $source = null)
     {
-        $loyaltyPoints = $this->initializeLoyaltyPoints();
+        $loyaltyPoints = $this->initializeLoyaltyPoints(false);
 
         // تطبيق مضاعف المستوى
         $multiplier = $loyaltyPoints->tier?->points_earning_rate ?? 1.0;
@@ -738,5 +935,19 @@ class User extends Authenticatable
     {
         // Placeholder for achievements logic
         return [];
+    }
+
+
+
+
+
+    public function medicalCenterAdmins()
+    {
+        return $this->hasMany(MedicalCenterAdmin::class);
+    }
+
+    public function isMedicalCenterAdmin(): bool
+    {
+        return $this->role === 'medical_center_admin' || $this->medicalCenterAdmins()->exists();
     }
 }

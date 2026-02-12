@@ -17,6 +17,7 @@ class CreateMedicalCentersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('logo')->nullable();
             $table->enum('type', ['clinic', 'medical_center', 'hospital', 'lab']);
 
             // معلومات الاتصال
@@ -51,6 +52,8 @@ class CreateMedicalCentersTable extends Migration
             // الحالة
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_featured')->default(false);
+            $table->boolean('is_virtual')->default(false);
+            $table->boolean('accepts_appointments')->default(true);
             $table->enum('status', ['active', 'inactive', 'pending'])->default('active');
 
             $table->timestamps();
@@ -59,16 +62,14 @@ class CreateMedicalCentersTable extends Migration
             $table->index(['type', 'status']);
             $table->index('city');
             $table->index('is_verified');
-
-
-            $table->string('logo')->nullable()->after('slug');
-            $table->boolean('is_virtual')->default(false)->after('is_featured');
-            $table->boolean('accepts_appointments')->default(true)->after('is_virtual');
-
-            // إضافة فهارس جديدة
             $table->index('is_virtual');
             $table->index('accepts_appointments');
+
+            $table->index(['name', 'address', 'city'], 'medical_centers_search_index');
         });
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE medical_centers ADD FULLTEXT medical_centers_fulltext_idx (name, address, city)');
+        }
     }
 
     /**

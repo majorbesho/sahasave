@@ -18,7 +18,7 @@ class CreateUserRewardProgramsTable extends Migration
 
             // المفاتيح الخارجية
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('reward_program_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('reward_program_id');
 
             // معلومات الانضمام
             $table->timestamp('joined_at')->useCurrent();

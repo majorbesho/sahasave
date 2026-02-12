@@ -49,8 +49,9 @@
         @elseif($appointment->status == 'pending')
             <li class="appointment-start">
                 {{-- Form to confirm appointment --}}
-                <form action="#" method="POST">
+                <form action="{{ route('doctor.appointments.update-status', $appointment->id) }}" method="POST">
                     @csrf
+                    <input type="hidden" name="status" value="confirmed">
                     <button type="submit" class="btn btn-sm btn-success">Confirm</button>
                 </form>
             </li>

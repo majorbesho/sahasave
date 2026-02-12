@@ -44,7 +44,7 @@ class CreateReferralTransactionsTable extends Migration
 
             // المعلومات المرجعية
             $table->foreignId('appointment_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('reward_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('reward_id')->nullable();
 
             // بيانات إضافية
             $table->text('notes')->nullable();

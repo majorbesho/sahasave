@@ -3,6 +3,9 @@
 
 <head>
     @include('frontend.layouts.head')
+    @stack('styles')
+    @stack('head')
+
 </head>
 
 <body class="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
@@ -28,6 +31,9 @@
 
 
     </div>
+
+    @stack('scripts')
+
 </body>
 
 </html>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class DoctorProfile extends Model
 {
@@ -11,6 +12,7 @@ class DoctorProfile extends Model
 
     protected $fillable = [
         'doctor_id',
+        'slug',
         'medical_license_number',
         'specialty_id',
         'specialization',
@@ -245,6 +247,35 @@ class DoctorProfile extends Model
 
     public function primarySpecialty()
     {
-        return $this->specialties()->wherePivot('is_primary', true)->first();
+        return $this->specialties()->wherePivot('is_primary', true);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($profile) {
+            if (empty($profile->slug) || $profile->isDirty('specialty_id')) {
+                $profile->slug = $profile->generateSlug();
+            }
+        });
+    }
+
+    public function generateSlug()
+    {
+        $doctorName = $this->doctor ? $this->doctor->name : 'doctor';
+        $specialtyName = $this->specialty ? $this->specialty->name_en : ($this->specialization ?? '');
+
+        $baseSlug = Str::slug("dr-{$doctorName}-{$specialtyName}");
+
+        $slug = $baseSlug;
+        $count = 1;
+
+        while (static::where('slug', $slug)->where('id', '!=', $this->id)->exists()) {
+            $slug = "{$baseSlug}-{$count}";
+            $count++;
+        }
+
+        return $slug;
     }
 }

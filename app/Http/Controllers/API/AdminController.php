@@ -8,57 +8,46 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get simplified system stats for mobile admin
      */
-    public function index()
+    public function stats()
     {
-        //
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'total_users' => \App\Models\User::count(),
+                'total_doctors' => \App\Models\User::where('role', 'doctor')->count(),
+                'total_patients' => \App\Models\User::where('role', 'patient')->count(),
+                'total_appointments' => \App\Models\Appointment::count(),
+                'pending_appointments' => \App\Models\Appointment::where('status', 'pending')->count(),
+            ]
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * List all users
      */
-    public function store(Request $request)
+    public function users()
     {
-        //
+        $users = \App\Models\User::paginate(20);
+        return \App\Http\Resources\UserResource::collection($users)->additional(['success' => true]);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * List all doctors
      */
-    public function show($id)
+    public function doctors()
     {
-        //
+        $doctors = \App\Models\User::where('role', 'doctor')->with('doctorProfile')->paginate(20);
+        return \App\Http\Resources\DoctorResource::collection($doctors)->additional(['success' => true]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * List all appointments
      */
-    public function update(Request $request, $id)
+    public function appointments()
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $appointments = \App\Models\Appointment::with(['patient', 'doctor'])->orderBy('created_at', 'desc')->paginate(20);
+        return \App\Http\Resources\AppointmentResource::collection($appointments)->additional(['success' => true]);
     }
 }

@@ -16,8 +16,8 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('medical-centers.index') }}">المراكز الطبية</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('medical-centers.show', $medicalCenter->id) }}">{{ $medicalCenter->name }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.medical-centers.index') }}">المراكز الطبية</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.medical-centers.show', $medicalCenter->id) }}">{{ $medicalCenter->name }}</a></li>
                         <li class="breadcrumb-item active">إدارة الأطباء</li>
                     </ol>
                 </div>
@@ -32,7 +32,7 @@
                     <div class="card-header">
                         <h3 class="card-title">إدارة أطباء المركز: {{ $medicalCenter->name }}</h3>
                         <div class="card-tools">
-                            <a href="{{ route('medical-centers.show', $medicalCenter->id) }}" class="btn btn-secondary">
+                            <a href="{{ route('admin.medical-centers.show', $medicalCenter->id) }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-right"></i> العودة للمركز
                             </a>
                         </div>
@@ -91,7 +91,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <form action="{{ route('medical-centers.update-doctor-status', $medicalCenter->id) }}" method="POST" class="d-inline">
+                                                        <form action="{{ route('admin.medical-centers.update-doctor-status', $medicalCenter->id) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
                                                             <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
@@ -102,7 +102,7 @@
                                                             </button>
                                                         </form>
                                                         
-                                                        <form action="{{ route('medical-centers.remove-doctor', $medicalCenter->id) }}" method="POST" class="d-inline">
+                                                        <form action="{{ route('admin.medical-centers.remove-doctor', $medicalCenter->id) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
                                                             <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
@@ -131,7 +131,7 @@
                                 <h4>إضافة طبيب جديد للمركز</h4>
                                 
                                 @if($availableDoctors && $availableDoctors->count() > 0)
-                                <form action="{{ route('medical-centers.add-doctor', $medicalCenter->id) }}" method="POST">
+                                <form action="{{ route('admin.medical-centers.add-doctor', $medicalCenter->id) }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">

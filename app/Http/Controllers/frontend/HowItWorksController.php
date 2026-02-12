@@ -137,15 +137,17 @@ class HowItWorksController extends Controller
             [
                 'icon' => 'fas fa-money-bill-alt',
                 'value' => '5M+',
-                'label' => 'ريال وفرها المستخدمون'
+                'label' => 'درهم وفرها المستخدمون'
             ]
         ];
 
         // الأسئلة الشائعة المتعلقة بكيفية العمل
         $faqs = Faq::where('status', 'active')
-            ->where('title', 'like', '%كيف%')
-            ->orWhere('title', 'like', '%عمل%')
-            ->orWhere('qu', 'like', '%كيف%')
+            ->whereHas('translations', function ($q) {
+                $q->where('title', 'like', '%كيف%')
+                    ->orWhere('title', 'like', '%عمل%')
+                    ->orWhere('question', 'like', '%كيف%');
+            })
             ->limit(6)
             ->get();
 

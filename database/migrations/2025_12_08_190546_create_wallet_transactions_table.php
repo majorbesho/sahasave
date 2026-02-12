@@ -27,7 +27,7 @@ class CreateWalletTransactionsTable extends Migration
             $table->decimal('amount', 15, 2);
             $table->decimal('balance_before', 15, 2);
             $table->decimal('balance_after', 15, 2);
-            $table->string('currency', 3)->default('SAR');
+            $table->string('currency', 3)->default('AED');
             $table->enum('status', ['pending', 'completed', 'failed', 'cancelled', 'reversed'])->default('pending');
             $table->string('payment_method')->nullable();
             $table->string('payment_reference')->nullable();

@@ -13,7 +13,7 @@ class CreateWalletsTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('wallet_number')->unique();
             $table->enum('type', ['personal', 'medical', 'savings', 'referral'])->default('personal');
-            $table->enum('currency', ['SAR', 'USD', 'EUR'])->default('SAR');
+            $table->enum('currency', ['AED', 'USD', 'EUR'])->default('AED');
             $table->decimal('balance', 15, 2)->default(0);
             $table->decimal('pending_balance', 15, 2)->default(0);
             $table->decimal('hold_balance', 15, 2)->default(0);

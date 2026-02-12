@@ -16,7 +16,7 @@
                             <li class="breadcrumb-item">@lang('specialties.breadcrumb.specialties')</li>
                             <li class="breadcrumb-item active">{{ $specialty->name }}</li>
                         </ol>
-                        <h2 class="breadcrumb-title">{{ $specialty->name }}</h2>
+                        <h1 class="breadcrumb-title">{{ $specialty->name }}</h1>
                         <p class="text-muted">@lang('specialties.breadcrumb.doctors_count', ['count' => $specialty->doctors_count])</p>
                     </nav>
                 </div>
@@ -309,8 +309,8 @@
                                 data-price="{{ $doctor->doctorProfile->consultation_fee ?? 0 }}">
                                 <div class="card h-100">
                                     <div class="card-img card-img-hover">
-                                        <a href="{{ route('doctorshome.show', $doctor->id) }}">
-                                            <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg') }}"
+                                        <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">
+                                            <img src="{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg')) }}"
                                                 alt="{{ $doctor->name }}" class="img-fluid">
                                         </a>
                                         <div class="grid-overlay-item d-flex align-items-center justify-content-between">
@@ -337,7 +337,7 @@
                                         <div class="p-3 pt-0 flex-grow-1">
                                             <div class="pb-3 mb-3 doctor-info-detail">
                                                 <h3 class="mb-1">
-                                                    <a href="{{ route('doctorshome.show', $doctor->id) }}">
+                                                    <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">
                                                         د. {{ $doctor->name }}
                                                     </a>
                                                 </h3>
@@ -372,7 +372,7 @@
                                                         AED {{ $doctor->doctorProfile->consultation_fee ?? '100' }}
                                                     </h3>
                                                 </div>
-                                                <a href="{{ route('doctorshomex.booking.create', $doctor->id) }}"
+                                                <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.book', $doctor->doctorProfile->slug) : '#' }}"
                                                     class="btn btn-md btn-dark d-inline-flex align-items-center rounded-pill">
                                                     <i class="isax isax-calendar-1 me-2"></i>
                                                     @lang('specialties.doctors.card.book_appointment')

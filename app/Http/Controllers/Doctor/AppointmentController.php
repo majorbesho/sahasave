@@ -52,35 +52,15 @@ class AppointmentController extends Controller
     }
 
 
-    public function confirmation($id)
+    public function confirmation(Appointment $appointment)
     {
-
-
-
-        // تحقق من صحة الـ ID
-        if (!is_numeric($id)) {
-            \Log::error('Invalid appointment ID: ' . $id);
-            return redirect()->route('patient.appointments')->with('error', 'معرف الموعد غير صحيح');
-        }
-
-        // البحث بدون شرط patient_id أولاً للتحقق
-        $appointment = Appointment::with(['doctor', 'medicalCenter'])->find($id);
-
-        if (!$appointment) {
-            \Log::error('Appointment not found in database. ID: ' . $id);
-            return redirect()->route('patient.appointments')->with('error', 'الموعد غير موجود في النظام');
-        }
-
-        \Log::info('Appointment found. Patient ID: ' . $appointment->patient_id);
-        \Log::info('Current user ID: ' . auth()->id());
-
         // التحقق من أن الموعد يخص المستخدم الحالي
         if ($appointment->patient_id != auth()->id()) {
             \Log::error('Appointment does not belong to user. Appointment patient: ' . $appointment->patient_id . ', Current user: ' . auth()->id());
             return redirect()->route('patient.appointments')->with('error', 'هذا الموعد لا ينتمي لك');
         }
-        \Log::info('=== Confirmation Success ===');
 
+        $appointment->load(['doctor', 'medicalCenter']);
 
         return view('patient.bookingsuccess', compact('appointment'));
     }
@@ -125,10 +105,19 @@ class AppointmentController extends Controller
             $duration = 180; // 3 ساعات افتراضياً للنطاقات
             $scheduledUntil = $scheduledFor->copy()->addMinutes($duration);
 
+            // الحصول على الرسوم من المركز الطبي الملحق بالجدول
+            $medicalCenterId = $schedule->medical_center_id;
+            $doctorFee = $schedule->doctor->medicalCenters()
+                ->where('medical_centers.id', $medicalCenterId)
+                ->first()
+                ->pivot
+                ->consultation_fee ?? 0;
+
             // إنشاء الموعد
             $appointment = Appointment::create([
                 'patient_id' => auth()->id(),
                 'doctor_id' => $validated['doctor_id'],
+                'medical_center_id' => $medicalCenterId,
                 'schedule_id' => $validated['schedule_id'],
                 'scheduled_for' => $scheduledFor,
                 'scheduled_until' => $scheduledUntil,
@@ -136,15 +125,15 @@ class AppointmentController extends Controller
                 'appointment_for' => $validated['appointment_for'],
                 'dependent_id' => $validated['dependent_id'] ?? null,
                 'reason' => $validated['reason'],
-                'symptoms' => $validated['symptoms'],
+                'symptoms' => $validated['symptoms'] ?? null,
                 'insurance_covered' => $validated['has_insurance'],
                 'insurance_details' => $validated['has_insurance'] ? [
-                    'company' => $validated['insurance_company'],
-                    'number' => $validated['insurance_number']
+                    'company' => $validated['insurance_company'] ?? null,
+                    'number' => $validated['insurance_number'] ?? null
                 ] : null,
                 'status' => 'pending',
-                'original_fee' => $request->consultation_fee,
-                'final_fee' => $request->consultation_fee,
+                'original_fee' => $doctorFee,
+                'final_fee' => $doctorFee,
                 'type' => 'direct_visit',
                 'mode' => 'online',
             ]);
@@ -152,12 +141,43 @@ class AppointmentController extends Controller
             \Log::info('Appointment created successfully. ID: ' . $appointment->id);
 
             // التوجيه إلى صفحة التأكيد
-            return redirect()->route('appointments.confirmation', $appointment->id)
+            return redirect()->route('appointments.confirmation', $appointment->slug)
                 ->with('success', 'تم حجز الموعد بنجاح');
         } catch (\Exception $e) {
             \Log::error('Appointment creation error: ' . $e->getMessage());
             return back()->with('error', 'حدث خطأ أثناء الحجز: ' . $e->getMessage())->withInput();
         }
+    }
+    public function show($id)
+    {
+        $appointment = auth()->user()->doctorAppointments()
+            ->with(['patient', 'medicalCenter', 'attachments'])
+            ->findOrFail($id);
+
+        return view('doctor.appointments.show', compact('appointment'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:confirmed,cancelled,completed'
+        ]);
+
+        $appointment = auth()->user()->doctorAppointments()->findOrFail($id);
+        $appointment->update([
+            'status' => $request->status,
+            'confirmed_at' => $request->status == 'confirmed' ? now() : $appointment->confirmed_at
+        ]);
+
+        $message = $request->status == 'confirmed' ? 'Appointment confirmed successfully.' : 'Appointment status updated.';
+
+        return back()->with('success', $message);
+    }
+
+    public function reschedule(Request $request, $id)
+    {
+        // Placeholder for future implementation
+        return back()->with('error', 'Reschedule feature coming soon.');
     }
 
 

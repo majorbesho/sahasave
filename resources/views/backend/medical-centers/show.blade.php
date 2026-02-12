@@ -17,7 +17,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('medical-centers.index') }}">المراكز
+                            <li class="breadcrumb-item"><a href="{{ route('admin.medical-centers.index') }}">المراكز
                                     الطبية</a></li>
                             <li class="breadcrumb-item active">تفاصيل المركز</li>
                         </ol>
@@ -91,7 +91,7 @@
                         </div>
                         <div class="card-body">
                             @if (!$medicalCenter->is_verified)
-                                <form action="{{ route('medical-centers.verify', $medicalCenter->id) }}" method="POST"
+                                <form action="{{ route('admin.medical-centers.verify', $medicalCenter->id) }}" method="POST"
                                     class="mb-2">
                                     @csrf
                                     <button type="submit" class="btn btn-success btn-block">
@@ -99,7 +99,7 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('medical-centers.unverify', $medicalCenter->id) }}" method="POST"
+                                <form action="{{ route('admin.medical-centers.unverify', $medicalCenter->id) }}" method="POST"
                                     class="mb-2">
                                     @csrf
                                     <button type="submit" class="btn btn-warning btn-block">
@@ -109,7 +109,7 @@
                             @endif
 
                             @if (!$medicalCenter->is_featured)
-                                <form action="{{ route('medical-centers.feature', $medicalCenter->id) }}" method="POST"
+                                <form action="{{ route('admin.medical-centers.feature', $medicalCenter->id) }}" method="POST"
                                     class="mb-2">
                                     @csrf
                                     <button type="submit" class="btn btn-info btn-block">
@@ -117,7 +117,7 @@
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('medical-centers.unfeature', $medicalCenter->id) }}" method="POST"
+                                <form action="{{ route('admin.medical-centers.unfeature', $medicalCenter->id) }}" method="POST"
                                     class="mb-2">
                                     @csrf
                                     <button type="submit" class="btn btn-secondary btn-block">
@@ -126,11 +126,11 @@
                                 </form>
                             @endif
 
-                           <a href="{{ route('medical-centers.manage-doctors', $medicalCenter->id) }}" class="btn btn-primary btn-block">
+                           <a href="{{ route('admin.medical-centers.manage-doctors', $medicalCenter->id) }}" class="btn btn-primary btn-block">
     <i class="fas fa-user-md"></i> إدارة الأطباء
 </a>
 
-                            <a href="{{ route('medical-centers.edit', $medicalCenter->id) }}"
+                            <a href="{{ route('admin.medical-centers.edit', $medicalCenter->id) }}"
                                 class="btn btn-outline-primary btn-block">
                                 <i class="fas fa-edit"></i> تعديل البيانات
                             </a>

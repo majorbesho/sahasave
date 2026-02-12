@@ -23,6 +23,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\locale::class,
         \Fruitcake\Cors\HandleCors::class,
         \App\Http\Middleware\FileUploadSecurity::class,
+        \App\Http\Middleware\TrustHosts::class,
+
 
     ];
 
@@ -42,6 +44,9 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // \App\Http\Middleware\locale::class,
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\SecurityHeaders::class,
+            \App\Http\Middleware\CheckGoogleUser::class, // إضافة middleware الخاص بالجوجل
+
 
 
 
@@ -50,11 +55,22 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequest
+
+
+
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\localization::class,
 
+        ],
+        'auth' => [
+
+            \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+            \App\Http\Middleware\Authenticate::class,
+            //\App\Http\Middleware\CheckUserStatus::class,
         ],
     ];
 
@@ -87,12 +103,13 @@ class Kernel extends HttpKernel
 
         'role' => \App\Http\Middleware\CheckUserRole::class,
 
+        'google.user' => \App\Http\Middleware\CheckGoogleUser::class,
+        'throttle.login' => \App\Http\Middleware\ThrottleLoginAttempts::class,
+        // 'throttle.register' => \App\Http\Middleware\ThrottleRegisterAttempts::class,
+        'throttle.google' => \App\Http\Middleware\ThrottleGoogleAuth::class,
+        'medical.center.admin' => \App\Http\Middleware\MedicalCenterAdminMiddleware::class,
+
 
 
     ];
-
-
-
-
-    
 }

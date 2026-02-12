@@ -31,12 +31,12 @@
                         <div class="card-header">
                             <h3 class="card-title">إضافة مركز طبي جديد</h3>
                             <div class="card-tools">
-                                <a href="{{ route('medical-centers.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('admin.medical-centers.index') }}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-right"></i> العودة للقائمة
                                 </a>
                             </div>
                         </div>
-                        <form action="{{ route('medical-centers.store') }}" method="POST">
+                        <form action="{{ route('admin.medical-centers.store') }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 @include('backend.medical-centers.partials.form')
@@ -45,7 +45,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i> حفظ المركز الطبي
                                 </button>
-                                <a href="{{ route('medical-centers.index') }}" class="btn btn-secondary">إلغاء</a>
+                                <a href="{{ route('admin.medical-centers.index') }}" class="btn btn-secondary">إلغاء</a>
                             </div>
                         </form>
                     </div>

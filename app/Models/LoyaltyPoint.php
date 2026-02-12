@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Events\TierUpgraded;
 
 class LoyaltyPoint extends Model
 {
@@ -92,6 +93,7 @@ class LoyaltyPoint extends Model
             ->first();
 
         if ($newTier && $newTier->code !== $this->loyalty_tier) {
+            $oldTier = $this->loyalty_tier;
             $this->update([
                 'loyalty_tier' => $newTier->code,
                 'tier_expires_at' => now()->addYear(),
@@ -99,7 +101,7 @@ class LoyaltyPoint extends Model
             ]);
 
             // إرسال إشعار ترقية
-            event(new LoyaltyTierUpgraded($this->user, $newTier));
+            event(new TierUpgraded($this->user, $oldTier, $newTier, 0));
         }
     }
 }

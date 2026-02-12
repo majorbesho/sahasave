@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'title' => 'تفاصيل الموعد',
+    'breadcrumb_home' => 'الرئيسية',
+    'breadcrumb_details' => 'تفاصيل الموعد',
+    'booking_info' => 'معلومات الحجز',
+    'appointment_number' => 'رقم الموعد',
+    'appointment_date' => 'تاريخ الموعد',
+    'appointment_time' => 'وقت الموعد',
+    'visit_type' => 'نوع الزيارة',
+    'booking_date' => 'تاريخ الحجز',
+    'amount' => 'المبلغ',
+    'medical_center' => 'المركز الطبي',
+    'status' => 'الحالة',
+    'reason' => 'سبب الزيارة',
+    'symptoms' => 'الأعراض',
+    'edit_appointment' => 'تعديل الموعد',
+    'cancel_appointment' => 'إلغاء الموعد',
+    'back_to_dashboard' => 'العودة للوحة التحكم',
+    'address_not_available' => 'العنوان غير متوفر',
+    'general_visit' => 'زيارة عامة',
+    'currency' => 'درهم',
+    'minutes' => 'دقيقة',
+    'statuses' => [
+        'confirmed' => 'مؤكد',
+        'cancelled' => 'ملغي',
+        'pending' => 'قيد الانتظار',
+        'completed' => 'مكتمل',
+    ],
+];

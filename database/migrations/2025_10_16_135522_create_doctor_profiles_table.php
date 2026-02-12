@@ -78,7 +78,14 @@ class CreateDoctorProfilesTable extends Migration
             $table->index('specialty_id');
             $table->index('medical_license_number');
             $table->index(['accepting_new_patients', 'is_verified']);
+
+
+            $table->index('specialization', 'doctor_profiles_specialization_index');
+            $table->index('medical_school', 'doctor_profiles_medical_school_index');
         });
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE doctor_profiles ADD FULLTEXT doctor_profiles_fulltext_idx (specialization, medical_school)');
+        }
     }
 
     /**

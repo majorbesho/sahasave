@@ -124,7 +124,7 @@ class DoctorBookingController extends Controller
         // إرسال إشعارات
         $this->sendNotifications($appointment);
 
-        return redirect()->route('appointments.confirmation', $appointment->id)
+        return redirect()->route('appointments.confirmation', $appointment)
             ->with('success', 'تم حجز الموعد بنجاح!');
     }
 

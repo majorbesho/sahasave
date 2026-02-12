@@ -75,21 +75,30 @@ class MedicalCenterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'name_ar' => 'nullable|string|max:255',
             'type' => 'required|in:clinic,medical_center,hospital,lab',
-            'email' => 'nullable|email|unique:medical_center,email',
+            'email' => 'nullable|email|unique:medical_centers,email',
             'phone' => 'required|string|max:20',
             'website' => 'nullable|url',
             'address' => 'required|string',
+            'address_ar' => 'nullable|string',
             'city' => 'required|string|max:100',
+            'city_ar' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
+            'state_ar' => 'nullable|string|max:100',
             'country' => 'required|string|max:2',
+            'country_ar' => 'nullable|string|max:2',
             'postal_code' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'description' => 'nullable|string',
+            'description_ar' => 'nullable|string',
             'services' => 'nullable|array',
+            'services_ar' => 'nullable|array',
             'facilities' => 'nullable|array',
+            'facilities_ar' => 'nullable|array',
             'insurance_providers' => 'nullable|array',
+            'insurance_providers_ar' => 'nullable|array',
             'specialties' => 'nullable|array',
             'working_hours' => 'nullable|array',
             'is_verified' => 'boolean',
@@ -109,22 +118,31 @@ class MedicalCenterController extends Controller
 
         $medicalCenter = MedicalCenter::create([
             'name' => $request->name,
+            'name_ar' => $request->name_ar,
             'slug' => $slug,
             'type' => $request->type,
             'email' => $request->email,
             'phone' => $request->phone,
             'website' => $request->website,
             'address' => $request->address,
+            'address_ar' => $request->address_ar,
             'city' => $request->city,
+            'city_ar' => $request->city_ar,
             'state' => $request->state,
+            'state_ar' => $request->state_ar,
             'country' => $request->country,
+            'country_ar' => $request->country_ar,
             'postal_code' => $request->postal_code,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'description' => $request->description,
+            'description_ar' => $request->description_ar,
             'services' => $request->services,
+            'services_ar' => $request->services_ar,
             'facilities' => $request->facilities,
+            'facilities_ar' => $request->facilities_ar,
             'insurance_providers' => $request->insurance_providers,
+            'insurance_providers_ar' => $request->insurance_providers_ar,
             'specialties' => $request->specialties,
             'working_hours' => $request->working_hours,
             'is_verified' => $request->is_verified ?? false,
@@ -132,7 +150,7 @@ class MedicalCenterController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('medical-centers.show', $medicalCenter->id)
+        return redirect()->route('admin.medical-centers.show', $medicalCenter->id)
             ->with('success', 'تم إنشاء المركز الطبي بنجاح');
     }
 
@@ -176,21 +194,30 @@ class MedicalCenterController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'name_ar' => 'nullable|string|max:255',
             'type' => 'required|in:clinic,medical_center,hospital,lab',
             'email' => 'nullable|email|unique:medical_centers,email,' . $id,
             'phone' => 'required|string|max:20',
             'website' => 'nullable|url',
             'address' => 'required|string',
+            'address_ar' => 'nullable|string',
             'city' => 'required|string|max:100',
+            'city_ar' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
+            'state_ar' => 'nullable|string|max:100',
             'country' => 'required|string|max:2',
+            'country_ar' => 'nullable|string|max:2',
             'postal_code' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'description' => 'nullable|string',
+            'description_ar' => 'nullable|string',
             'services' => 'nullable|array',
+            'services_ar' => 'nullable|array',
             'facilities' => 'nullable|array',
+            'facilities_ar' => 'nullable|array',
             'insurance_providers' => 'nullable|array',
+            'insurance_providers_ar' => 'nullable|array',
             'specialties' => 'nullable|array',
             'working_hours' => 'nullable|array',
             'is_verified' => 'boolean',
@@ -200,21 +227,30 @@ class MedicalCenterController extends Controller
 
         $medicalCenter->update([
             'name' => $request->name,
+            'name_ar' => $request->name_ar,
             'type' => $request->type,
             'email' => $request->email,
             'phone' => $request->phone,
             'website' => $request->website,
             'address' => $request->address,
+            'address_ar' => $request->address_ar,
             'city' => $request->city,
+            'city_ar' => $request->city_ar,
             'state' => $request->state,
+            'state_ar' => $request->state_ar,
             'country' => $request->country,
+            'country_ar' => $request->country_ar,
             'postal_code' => $request->postal_code,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'description' => $request->description,
+            'description_ar' => $request->description_ar,
             'services' => $request->services,
+            'services_ar' => $request->services_ar,
             'facilities' => $request->facilities,
+            'facilities_ar' => $request->facilities_ar,
             'insurance_providers' => $request->insurance_providers,
+            'insurance_providers_ar' => $request->insurance_providers_ar,
             'specialties' => $request->specialties,
             'working_hours' => $request->working_hours,
             'is_verified' => $request->is_verified ?? $medicalCenter->is_verified,
@@ -222,7 +258,7 @@ class MedicalCenterController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('medical-centers.show', $medicalCenter->id)
+        return redirect()->route('admin.medical-centers.show', $medicalCenter->id)
             ->with('success', 'تم تحديث بيانات المركز الطبي بنجاح');
     }
 
@@ -300,24 +336,24 @@ class MedicalCenterController extends Controller
     /**
      * إدارة الأطباء في المركز الطبي
      */
-// في MedicalCenterController - تحديث دالة manageDoctors
-public function manageDoctors($id)
-{
-    $medicalCenter = MedicalCenter::with(['doctors.doctorProfile'])->findOrFail($id);
-    
-    // الأطباء المتاحين للإضافة (ليسوا مضافين بالفعل و status = active)
-    $availableDoctors = User::where('role', 'doctor')
-                          ->where('status', 'active')
-                          ->whereDoesntHave('medicalCenters', function($query) use ($id) {
-                              $query->where('medical_center_id', $id);
-                          })
-                          ->with(['doctorProfile'])
-                          ->get();
+    // في MedicalCenterController - تحديث دالة manageDoctors
+    public function manageDoctors($id)
+    {
+        $medicalCenter = MedicalCenter::with(['doctors.doctorProfile'])->findOrFail($id);
 
-    $specialties = Specialty::active()->get();
+        // الأطباء المتاحين للإضافة (ليسوا مضافين بالفعل و status = active)
+        $availableDoctors = User::where('role', 'doctor')
+            ->where('status', 'active')
+            ->whereDoesntHave('medicalCenters', function ($query) use ($id) {
+                $query->where('medical_center_id', $id);
+            })
+            ->with(['doctorProfile'])
+            ->get();
 
-    return view('backend.medical-centers.manage-doctors', compact('medicalCenter', 'availableDoctors', 'specialties'));
-}
+        $specialties = Specialty::active()->get();
+
+        return view('backend.medical-centers.manage-doctors', compact('medicalCenter', 'availableDoctors', 'specialties'));
+    }
 
     /**
      * إضافة طبيب إلى المركز الطبي

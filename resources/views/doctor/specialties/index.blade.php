@@ -20,12 +20,12 @@
                                 <div class="profile-det-info">
                                     <h3><a href="{{ route('doctor.profile') }}">Dr. {{ auth()->user()->full_name }}</a></h3>
                                     <div class="patient-details">
-                                        <h5 class="mb-0">{{ $doctorProfile->qualifications ?? 'Medical Doctor' }}</h5>
+                                        <h5 class="mb-0">{{ $doctorProfile->qualifications_display ?? 'Medical Doctor' }}</h5>
                                     </div>
-                                    @if ($doctorProfile->primarySpecialty)
+                                    @if ($doctorProfile->primarySpecialty && ($primarySpecialty = $doctorProfile->primarySpecialty->first()))
                                         <span class="badge doctor-role-badge">
                                             <i class="fa-solid fa-circle"></i>
-                                            {{ $doctorProfile->primarySpecialty->name }}
+                                            {{ $primarySpecialty->name }}
                                         </span>
                                     @endif
                                 </div>

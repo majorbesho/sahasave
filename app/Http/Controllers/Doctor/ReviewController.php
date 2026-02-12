@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $reviews = $user->reviewsReceived()->with('patient')->latest()->get();
+        return view('doctor.reviews.index', compact('reviews'));
     }
 
     /**

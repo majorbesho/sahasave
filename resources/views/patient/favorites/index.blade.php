@@ -65,13 +65,13 @@
                                     <span class="favourite-icon favourite"><i class="isax isax-heart5"></i></span>
                                 </a>
                                 <div class="doc-img">
-                                    <a href="{{ route('doctorshome.show', $doctor->id) }}">
+                                    <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">
                                         <img class="img-fluid" alt="User Image" src="{{ $doctor->photo ? asset('storage/profiles/' . $doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg') }}">
                                     </a>
                                 </div>
                                 <div class="pro-content">
                                     <h3 class="title">
-                                        <a href="{{ route('doctorshome.show', $doctor->id) }}">{{ $doctor->name }}</a> 
+                                        <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">{{ $doctor->name }}</a> 
                                         @if($doctor->is_verified)
                                         <i class="isax isax-tick-circle5 verified"></i>
                                         @endif
@@ -115,9 +115,9 @@
                                 <div class="row row-sm">
                                     <div class="col-6">
                                         {{-- route('doctors.showxx', $doctor->id) --}}
-<a href="{{ route('doctorshome.show', $doctor->id) }}" class="btn btn-md btn-light w-100">View Profile</a>                                    </div>
+<a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}" class="btn btn-md btn-light w-100">View Profile</a>                                    </div>
                                     <div class="col-6">
-                                        <a href="{{ route('doctorshomex.booking.create', $doctor->id) }}" class="btn btn-md btn-outline-primary w-100">Book Now</a>
+                                        <a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.book', $doctor->doctorProfile->slug) : '#' }}" class="btn btn-md btn-outline-primary w-100">Book Now</a>
                                     </div>
                                 </div>
                             </div>

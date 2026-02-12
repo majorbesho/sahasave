@@ -38,7 +38,17 @@ class DoctorRegisterController extends Controller
             'license_document' => ['required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'terms' => ['accepted'],
+            'referral_code' => ['nullable', 'string', 'exists:users,referral_code'],
         ]);
+
+        $referredBy = null;
+        if ($request->filled('referral_code')) {
+            $referrer = User::where('referral_code', $request->referral_code)->first();
+            if ($referrer) {
+                $referredBy = $referrer->id;
+                $referrer->increment('referral_count');
+            }
+        }
 
         // حفظ ملف الرخصة
         $path = $request->file('license_document')->store('licenses', 'public');
@@ -51,6 +61,7 @@ class DoctorRegisterController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'doctor',
             'status' => 'pending',
+            'referred_by' => $referredBy,
         ]);
 
         // الحصول على اسم التخصص

@@ -16,7 +16,7 @@
                                     <li><a href="{{ url('/how-it-works') }}">{{ __('footer.how_it_works') }}</a></li>
                                     <li><a href="{{ route('blog.index') }}">{{ __('footer.medical_blog') }}</a></li>
                                     <li><a href="{{ route('careers.index') }}">{{ __('footer.careers') }}</a></li>
-                                    <li><a href="{{ url('/press') }}">{{ __('footer.media_center') }}</a></li>
+                                    {{-- <li><a href="{{ url('/media') }}">{{ __('footer.media_center') }}</a></li> --}}
                                 </ul>
                             </div>
                         </div>
@@ -122,7 +122,14 @@
                             @endif
                         </div>
 
-                        <!-- باقي المحتوى -->
+
+                        <div class="mt-4 footer-about-widget">
+                            <h6 class="footer-title">{{ __('about.footer_about_title') }}</h6>
+                            <p class="mb-2 text-white-50 small">{{ __('about.footer_team') }}</p>
+                            <p class="mb-1 text-white-50 small"><strong>{{ __('about.footer_vision') }}</strong></p>
+                            <p class="mb-0 text-white-50 small">{{ __('about.footer_values') }}</p>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -131,15 +138,15 @@
         <!-- الخلفيات -->
         <div class="footer-bg">
             <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-01.png') }}" alt="{{ __('global.decoration') }}"
-                class="footer-bg-01" />
+                class="footer-bg-01" width="100" height="100" />
             <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-02.png') }}" alt="{{ __('global.design') }}"
-                class="footer-bg-02" />
+                class="footer-bg-02" width="100" height="100" />
             <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-03.png') }}" alt="{{ __('global.background') }}"
-                class="footer-bg-03" />
+                class="footer-bg-03" width="100" height="100" />
             <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-04.png') }}" alt="{{ __('global.elements') }}"
-                class="footer-bg-04" />
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-05.png') }}" alt="{{ __('global.graphics') }}"
-                class="footer-bg-05" />
+                class="footer-bg-04" width="100" height="100" />
+            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-05.png') }}" aria-hidden="true" alt="{{ __('global.graphics') }}"
+                class="footer-bg-05" width="100" height="100" />
         </div>
     </div>
 
@@ -167,244 +174,26 @@
 
                 <!-- وسائل الدفع -->
                 <ul class="payment-method">
-                    <li><a href="javascript:void(0);"><img
+                    <li><a href="javascript:void(0);" aria-label="Visa Card"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-01.svg') }}"
-                                alt="{{ __('footer.visa') }}" /></a></li>
-                    <li><a href="javascript:void(0);"><img
+                                alt="{{ __('footer.visa') }}" width="40" height="25" /></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Mastercard"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-02.svg') }}"
-                                alt="{{ __('footer.mastercard') }}" /></a></li>
-                    <li><a href="javascript:void(0);"><img
+                                alt="{{ __('footer.mastercard') }}" width="40" height="25" /></a></li>
+                    <li><a href="javascript:void(0);" aria-label="American Express"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-03.svg') }}"
-                                alt="{{ __('footer.american_express') }}" /></a></li>
-                    <li><a href="javascript:void(0);"><img
+                                alt="{{ __('footer.american_express') }}" width="40" height="25" /></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Apple Pay"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-04.svg') }}"
-                                alt="{{ __('footer.apple_pay') }}" /></a></li>
-                    <li><a href="javascript:void(0);"><img
+                                alt="{{ __('footer.apple_pay') }}" width="40" height="25" /></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Mada"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-05.svg') }}"
-                                alt="{{ __('footer.mada') }}" /></a></li>
-                    <li><a href="javascript:void(0);"><img
+                                alt="{{ __('footer.mada') }}" width="40" height="25" /></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Credit Cards"><img
                                 src="{{ asset('frontend/xx/assets/img/icons/card-06.svg') }}"
-                                alt="{{ __('footer.credit_cards') }}" /></a></li>
+                                alt="{{ __('footer.credit_cards') }}" width="40" height="25" /></a></li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
-
-{{-- @include('frontend.layouts.notify')
-
-
-
-
-
-<footer class="footer inner-footer">
-    <div class="footer-top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3">
-                            <div class="footer-widget footer-menu">
-                                <h6 class="footer-title">
-                                    Company
-                                </h6>
-                                <ul>
-                                    <li>
-                                        <a href="about-us.html">About</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Features</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Works</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Careers</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Locations</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3">
-                            <div class="footer-widget footer-menu">
-                                <h6 class="footer-title">
-                                    Treatments
-                                </h6>
-                                <ul>
-                                    <li>
-                                        <a href="search.html">Dental</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Cardiac</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Spinal Cord</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Hair Growth</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Anemia & Disorder</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3">
-                            <div class="footer-widget footer-menu">
-                                <h6 class="footer-title">
-                                    Specialities
-                                </h6>
-                                <ul>
-                                    <li>
-                                        <a href="search.html">Transplant</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Cardiologist</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Oncology</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Pediatrics</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html">Gynacology</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3">
-                            <div class="footer-widget footer-menu">
-                                <h6 class="footer-title">
-                                    Utilites
-                                </h6>
-                                <ul>
-                                    <li>
-                                        <a href="pricing.html">Pricing</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Contact</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Request A Quote</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Premium Membership</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Integrations</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-7">
-                    <div class="footer-widget">
-                        <h6 class="footer-title">Newsletter</h6>
-                        <p class="mb-2">
-                            Subscribe & Stay Updated from the
-                            SehaSave.com
-                        </p>
-                        <div class="subscribe-input">
-                            <form action="#">
-                                <input type="email" class="form-control" placeholder="Enter Email Address" />
-                                <button type="submit"
-                                    class="inline-flex btn btn-md btn-primary-gradient align-items-center">
-                                    <i class="isax isax-send-25 me-1"></i>Send
-                                </button>
-                            </form>
-                        </div>
-                        <div class="social-icon">
-                            <h6 class="mb-3">Connect With Us</h6>
-                            <ul>
-                                <li>
-                                    <a href="javascript:void(0);"><i class="fa-brands fa-facebook"></i></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);"><i class="fa-brands fa-x-twitter"></i></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);"><i class="fa-brands fa-instagram"></i></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);"><i class="fa-brands fa-linkedin"></i></a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);"><i class="fa-brands fa-pinterest"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bg">
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-01.png') }}" alt="img" class="footer-bg-01" />
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-02.png') }}" alt="img" class="footer-bg-02" />
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-03.png') }}" alt="img" class="footer-bg-03" />
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-04.png') }}" alt="img" class="footer-bg-04" />
-            <img src="{{ asset('frontend/xx/assets/img/bg/footer-bg-05.png') }}" alt="img" class="footer-bg-05" />
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <div class="container">
-            <!-- Copyright -->
-            <div class="copyright">
-                <div class="copyright-text">
-                    <p class="mb-0">
-                        Copyright © 2025 SehaSave.com. All Rights
-                        Reserved
-                    </p>
-                </div>
-                <!-- Copyright Menu -->
-                <div class="copyright-menu">
-                    <ul class="policy-menu">
-                        <li>
-                            <a href="javascript:void(0);">Legal Notice</a>
-                        </li>
-                        <li>
-                            <a href="privacy-policy.html">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">Refund Policy</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /Copyright Menu -->
-                <ul class="payment-method">
-                    <li>
-                        <a href="javascript:void(0);"><img src="{{ asset('frontend/xx/assets/img/icons/card-01.svg') }}"
-                                alt="Img" /></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="{{ asset('frontend/xx/assets/img/icons/card-02.svg') }}"
-                                alt="Img" /></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="{{ asset('frontend/xx/assets/img/icons/card-03.svg') }}"
-                                alt="Img" /></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img src="{{ asset('frontend/xx/assets/img/icons/card-04.svg') }}"
-                                alt="Img" /></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img
-                                src="{{ asset('frontend/xx/assets/img/icons/card-05.svg') }}" alt="Img" /></a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);"><img
-                                src="{{ asset('frontend/xx/assets/img/icons/card-06.svg') }}" alt="Img" /></a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /Copyright -->
-        </div>
-    </div>
-</footer>
-<!-- /Footer Section -->
-
-<!-- Cursor --> --}}

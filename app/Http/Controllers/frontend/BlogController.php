@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend;
+namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
@@ -42,7 +42,9 @@ class BlogController extends Controller
                         $q->where('title', 'like', "%{$search}%")
                             ->orWhere('content', 'like', "%{$search}%")
                             ->orWhere('excerpt', 'like', "%{$search}%")
-                            ->orWhere('meta_keywords', 'like', "%{$search}%");
+                            ->orWhere('meta_keywords', 'like', "%{$search}%")
+                            ->orWhere('ls_keyword', 'like', "%{$search}%")
+                            ->orWhere('target_keywords', 'like', "%{$search}%");
                     });
                 })
                 ->orderBy('published_at', 'desc')
@@ -99,6 +101,18 @@ class BlogController extends Controller
         ]));
     }
 
+    public function category(Request $request, $slug)
+    {
+        $request->merge(['category' => $slug]);
+        return $this->index($request);
+    }
+
+    public function tag(Request $request, $slug)
+    {
+        $request->merge(['tag' => $slug]);
+        return $this->index($request);
+    }
+
     public function show($slug)
     {
         $blog = Blog::where('slug', $slug)
@@ -119,7 +133,7 @@ class BlogController extends Controller
                 ->orWhere(function ($query) use ($blog) {
                     $tagIds = $blog->relatedTags->pluck('id');
                     $query->whereHas('relatedTags', function ($q) use ($tagIds) {
-                        $q->whereIn('id', $tagIds);
+                        $q->whereIn('blog_tags.id', $tagIds);
                     });
                 })
                 ->with(['author', 'category'])
@@ -131,19 +145,24 @@ class BlogController extends Controller
         $structuredData = $blog->generateStructuredData();
 
         // Add FAQ schema if exists
-        if ($blog->faq_json) {
+        $faqs = $blog->faq_json;
+        if (is_string($faqs)) {
+            $faqs = json_decode($faqs, true);
+        }
+
+        if (is_array($faqs) && !empty($faqs)) {
             $structuredData['mainEntity'] = [
                 '@type' => 'FAQPage',
                 'mainEntity' => array_map(function ($faq) {
                     return [
                         '@type' => 'Question',
-                        'name' => $faq['question'],
+                        'name' => $faq['question'] ?? '',
                         'acceptedAnswer' => [
                             '@type' => 'Answer',
-                            'text' => $faq['answer']
+                            'text' => $faq['answer'] ?? ''
                         ]
                     ];
-                }, $blog->faq_json)
+                }, $faqs)
             ];
         }
 

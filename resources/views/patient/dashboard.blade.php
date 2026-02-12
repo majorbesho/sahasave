@@ -111,8 +111,7 @@
                 <div class="col-lg-4 col-xl-3 theiaStickySidebar">
                     @include('patient.sidebar')
                 </div>
-                <!-- / Profile Sidebar -->
-                <!-- / Profile Sidebar -->
+           
 
                 <div class="col-lg-8 col-xl-9">
                     <div class="dashboard-header">
@@ -121,7 +120,6 @@
                     </div>
 
                     <div class="row">
-                        <!-- قسم الإحصائيات السريعة -->
                         <div class="mb-4 col-xl-12">
                             <div class="row">
                                 <div class="col-md-3 col-6">
@@ -144,13 +142,18 @@
                                 </div>
                                 <div class="col-md-3 col-6">
                                     <div class="stat-box">
+                                        <h3>{{ $loyaltyPoints->available_points ?? 0 }}</h3>
+                                        <span>Loyalty Points</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <div class="stat-box">
                                         <h3>{{ Auth::user()->referral_count }}</h3>
                                         <span>Successful Referrals</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- قسم الملخص الطبي -->
                         <div class="col-xl-8 d-flex">
                             <div class="dashboard-card w-100">
                                 <div class="dashboard-card-head">
@@ -160,7 +163,7 @@
                                 </div>
                                 <div class="dashboard-card-body">
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        {{-- <div class="col-sm-6">
                                             <div class="medical-summary">
                                                 <h6>Recent Medical Records</h6>
                                                 @forelse (Auth::user()->medicalRecords()->latest()->take(3)->get() as $record)
@@ -178,7 +181,7 @@
                                                 <a href="{{ route('patient.medical-records') }}"
                                                     class="mt-2 btn btn-sm btn-outline-primary">View All Records</a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-sm-6">
                                             <div class="vital-stats">
                                                 <h6>profile Statistics</h6>
@@ -213,7 +216,6 @@
                             </div>
                         </div>
 
-                        <!-- قسم الإحالة والمكافآت -->
                         <div class="col-xl-4 d-flex">
                             <div class="dashboard-card w-100">
                                 <div class="dashboard-card-head">
@@ -233,7 +235,7 @@
                                         <div class="stat-item">
                                             <i class="fa-solid fa-coins text-warning"></i>
                                             <div>
-                                                <h4 class="mb-0">SAR
+                                                <h4 class="mb-0">AED
                                                     {{ number_format(Auth::user()->total_referral_earnings, 2) }}</h4>
                                                 <span>Total Earnings</span>
                                             </div>
@@ -257,7 +259,7 @@
                                         @forelse(Auth::user()->activeRewards as $reward)
                                             <div class="reward-item">
                                                 <i class="fa-solid fa-gift text-success"></i>
-                                                <span>{{ $reward->title }} - SAR
+                                                <span>{{ $reward->title }} - AED
                                                     {{ number_format($reward->amount, 2) }}</span>
                                             </div>
                                         @empty
@@ -268,7 +270,6 @@
                             </div>
                         </div>
 
-                        <!-- قسم المواعيد القادمة -->
                         <div class="col-xl-6 d-flex">
                             <div class="dashboard-card w-100">
                                 <div class="dashboard-card-head">
@@ -311,7 +312,7 @@
                                                     class="btn btn-gray">
                                                     <i class="fa-solid fa-comment-dots"></i> Chat
                                                 </a>
-                                                <a href="{{ route('patient.appointmentsslide.show', $appointment->id) }}"
+                                                <a href="{{ route('patient.appointments.show', $appointment->slug) }}"
                                                     class="btn btn-outline-primary">
                                                     <i class="fa-solid fa-calendar-check"></i> Details
                                                 </a>
@@ -322,7 +323,7 @@
                                         <div class="py-4 text-center">
                                             <i class="mb-3 fa-solid fa-calendar-xmark fa-2x text-muted"></i>
                                             <p class="text-muted">No upcoming appointments</p>
-                                            <a href="{{ route('doctorshome.search') }}" class="btn btn-primary">Book
+                                            <a href="{{ route('doctors.search') }}" class="btn btn-primary">Book
                                                 Appointment</a>
                                         </div>
                                     @endforelse
@@ -330,7 +331,6 @@
                             </div>
                         </div>
 
-                        <!-- قسم الأطباء المفضلين -->
                         <div class="col-xl-6 d-flex">
                             <div class="dashboard-card w-100">
                                 <div class="dashboard-card-head">
@@ -361,7 +361,7 @@
                                                         years experience</span>
                                                 </div>
                                             </div>
-                                            <a href="{{ route('doctor.book', $doctor->id) }}" class="cal-plus-icon"
+                                            <a href="{{ route('doctors.book', $doctor->id) }}" class="cal-plus-icon"
                                                 title="Book Appointment">
                                                 <i class="fa-solid fa-calendar-plus"></i>
                                             </a>
@@ -370,7 +370,7 @@
                                         <div class="py-4 text-center">
                                             <i class="mb-3 fa-solid fa-heart fa-2x text-muted"></i>
                                             <p class="text-muted">No favorite doctors yet</p>
-                                            <a href="{{ route('doctorshome.search') }}" class="btn btn-primary">Find
+                                            <a href="{{ route('doctors.search') }}" class="btn btn-primary">Find
                                                 Doctors</a>
                                         </div>
                                     @endforelse
@@ -378,7 +378,6 @@
                             </div>
                         </div>
 
-                        <!-- قسم التقارير والإحصائيات -->
                         <div class="col-xl-12 d-flex">
                             <div class="dashboard-card w-100">
                                 <div class="dashboard-card-head">
@@ -436,12 +435,10 @@
 
                                             <!-- Prescriptions Tab -->
                                             <div class="tab-pane fade" id="prescriptions-tab">
-                                                <!-- محتوى الوصفات الطبية -->
                                             </div>
 
                                             <!-- Lab Results Tab -->
                                             <div class="tab-pane fade" id="lab-tab">
-                                                <!-- محتوى نتائج المختبر -->
                                             </div>
                                         </div>
                                     </div>

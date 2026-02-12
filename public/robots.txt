@@ -1,2 +1,44 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Block private/admin pages
+Disallow: /admin/
+Disallow: /doctor/dashboard/
+Disallow: /patient/dashboard/
+Disallow: /medical-center/dashboard/
+Disallow: /restaurant/dashboard/
+Disallow: /api/
+Disallow: /login
+Disallow: /register
+Disallow: /password/
+Disallow: /verify-email
+Disallow: /two-factor
+Disallow: /_debugbar/
+Disallow: /telescope/
+Disallow: /horizon/
+
+# Block utility pages
+Disallow: /payment/
+Disallow: /checkout/
+Disallow: /cart
+Disallow: /broadcasting/
+
+# Sitemaps
+Sitemap: https://sehasave.com/sitemap.xml
+Sitemap: https://sehasave.com/sitemap-pages.xml
+Sitemap: https://sehasave.com/sitemap-blog.xml
+Sitemap: https://sehasave.com/sitemap-providers.xml
+Sitemap: https://sehasave.com/sitemap-careers.xml
+
+# Crawl-delay for aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 30
+
+User-agent: DotBot
+Disallow: /

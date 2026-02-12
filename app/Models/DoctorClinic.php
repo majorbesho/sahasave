@@ -95,6 +95,9 @@ class DoctorClinic extends Model
     public function getClinicLogoUrlAttribute()
     {
         if ($this->clinic_logo) {
+            if (filter_var($this->clinic_logo, FILTER_VALIDATE_URL)) {
+                return $this->clinic_logo;
+            }
             return Storage::url($this->clinic_logo);
         }
         return asset('frontend/xx/assets/img/clinic-default.png');
@@ -126,9 +129,13 @@ class DoctorClinic extends Model
     public function getGalleryImagesAttribute()
     {
         return $this->gallery->map(function ($image) {
+            $url = $image->image_path;
+            if ($url && !filter_var($url, FILTER_VALIDATE_URL)) {
+                $url = Storage::url($url);
+            }
             return [
                 'id' => $image->id,
-                'url' => Storage::url($image->image_path),
+                'url' => $url,
                 'caption' => $image->caption,
                 'type' => $image->image_type,
             ];

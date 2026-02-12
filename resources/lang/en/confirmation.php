@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Booking Confirmation',
+    'success_message' => 'Appointment Booked Successfully',
+    'email_notice' => 'The booking confirmation will be sent to your email',
+    'doctor_specialization_default' => 'Doctor',
+    'address_not_specified' => 'Address not specified',
+    'booking_number' => 'Booking ID',
+    'booking_date' => 'Booking Date',
+    'booking_time' => 'Booking Time',
+    'unconfirmed_notice' => 'Appointment is unconfirmed ... Please wait for confirmation within 24 hours',
+    'consultation_type' => 'Consultation Type',
+    'video_consultation' => 'Video Consultation',
+    'audio_consultation' => 'Audio Consultation',
+    'direct_visit' => 'Direct Visit',
+    'status' => 'Status',
+    'amount_paid' => 'Amount Paid',
+    'currency' => 'AED',
+    'add_to_google_calendar' => 'Add to Google Calendar',
+    'view_appointment_details' => 'View Appointment Details',
+    'note' => 'Note',
+    'confirmation_notice_details' => 'You will receive a confirmation message 24 hours before the appointment. Please ensure you are available at the specified time.',
+    'back_to_home' => 'Back to Home',
+    'my_appointments' => 'My Appointments',
+];

@@ -47,13 +47,13 @@ class APIController extends Controller
                 'status' => 'active',
             ])) {
                 $user =  $this->userModel->where('email', $request->email)->first();
-    
+
                 if (array_key_exists("onesignal_device_id", $params)) {
                     if (!empty($params['onesignal_device_id']) && $params['onesignal_device_id'] != "null") :
                         $user->update(['onesignal_device_id' => str_replace('"', '', $params['onesignal_device_id'])]);
                     endif;
                 }
-    
+
                 return response()->json([
                     'status' => true,
                     'message' => 'User Logged In Successfully',
@@ -67,7 +67,6 @@ class APIController extends Controller
             logger()->debug($th->getMessage());
             return response()->json(["message" => "invalid login"], 401);
         }
-        
     }
 
 
@@ -133,31 +132,8 @@ class APIController extends Controller
             $levelinnetwork4 = networks::with('user')->whereNotNull('level4')->get();
             $levelinnetwork5 = networks::with('user')->whereNotNull('level5')->get();
 
-            // return $levelinnetwork1;
-            // return $levelinnetwork2;
-            // return $levelinnetwork3;
-            // return $levelinnetwork4;
-            // return $levelinnetwork5;
 
 
-
-            // $level1 =  networks::where('level1',$request->level1)->get();
-            // $level2 =  networks::where('level1',$request->level2)->get();
-            // $level3 =  networks::where('level1',$request->level3)->get();
-            // $level4 =  networks::where('level1',$request->level4)->get();
-            // $level5 =  networks::where('level1',$request->level5)->get();
-
-
-            // return $request->referral_code;
-            // if ($level1) {
-
-            // }
-            // else if ($userData) {
-
-            // }
-            // else {
-
-            // }
 
             //return $userData;
             if (count($userData) > 0) {
@@ -173,7 +149,7 @@ class APIController extends Controller
                     'dateOfbarth' => $request->dateOfbarth,
                     'phone' => $request->phone,
                     'referral_code' => $referral_code,
-                    'remember_token'=>$remember_token
+                    'remember_token' => $remember_token
                 ]);
 
                 networks::create([
@@ -214,28 +190,13 @@ class APIController extends Controller
                 'dateOfbarth' => $request->dateOfbarth,
                 'phone' => $request->phone,
                 'referral_code' => $referral_code,
-                'remember_token'=>$remember_token
+                'remember_token' => $remember_token
             ]);
-            //$domain = URL::to('/');
-            //$url = $domain . '/referral-register?ref=' . $referral_code;
-            //$newData['url'] = $url;
-            //$newData['name'] = $request->phone;
-            //$newData['email'] = $request->email;
-            //$newData['title'] = 'Register';
-            // Mail::send('referralRegister', $newData, function ($message) use($newData) {
 
-            //     $message->to ($newData['email'])->subject($newData['title']);
 
-            // });
 
-            //$newData['pasword'] = $request->password;
-            //return $referral_code;
-            //$data = $request->all();
             $userid = User::orderBy('id', 'DESC')->first();
-            //return $userid;
-            //Session::put('user', $data['email']);
 
-            //Auth::login($userid);
 
             if ($userId) {
                 return response()->json([
@@ -248,7 +209,6 @@ class APIController extends Controller
                 return response()->json(["message" => "invalid registration"], 400);
             }
         }
-
     }
 
 
@@ -269,7 +229,7 @@ class APIController extends Controller
             ["status", '!=', "deleted"],
         ];
 
-        
+
         $result = $this->userModel->where($condition)->first();
         //logger()->info($result);
         if ($result) {

@@ -23,7 +23,7 @@ class CreateReferralsTable extends Migration
             $table->foreignId('referred_id')->constrained('users')->onDelete('cascade');
 
             // البرنامج والإعدادات
-            $table->foreignId('reward_program_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('reward_program_id')->nullable();
             $table->string('referral_code_used');
             $table->enum('referral_type', ['patient', 'doctor', 'both'])->default('patient');
 

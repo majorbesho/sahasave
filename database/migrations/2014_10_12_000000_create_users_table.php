@@ -36,13 +36,21 @@ class CreateUsersTable extends Migration
             $table->string('referral_code')->unique()->nullable();
             $table->foreignId('referred_by')->nullable()->constrained('users');
             $table->integer('referral_count')->default(0);
+            $table->integer('total_appointments')->default(0);
+            $table->integer('completed_appointments')->default(0);
+            $table->integer('cancelled_appointments')->default(0);
             $table->decimal('total_referral_earnings', 10, 2)->default(0);
             $table->integer('total_bonus_points')->default(0);
             $table->integer('available_bonus_points')->default(0);
             $table->decimal('lifetime_savings', 10, 2)->default(0);
+            $table->decimal('lifetime_spent', 15, 2)->default(0);
             $table->decimal('total_cashback_earned', 10, 2)->default(0);
+            $table->decimal('average_rating', 3, 2)->nullable();
+            $table->integer('total_reviews')->default(0);
             $table->string('referral_tier')->default('bronze');
             $table->timestamp('last_referral_at')->nullable();
+            $table->date('member_since')->nullable();
+            $table->json('achievements')->nullable();
 
             // بيانات إضافية
             $table->json('meta')->nullable();
@@ -65,29 +73,16 @@ class CreateUsersTable extends Migration
 
             // فهارس
             $table->index(['role', 'status']);
-            $table->index('referral_code');
-            $table->index('referred_by');
-            $table->index('referral_tier');
-            $table->index('last_referral_at');
+
             $table->index(['status', 'created_at']);
-
-
-
-
-
-            $table->decimal('lifetime_spent', 15, 2)->default(0)->after('lifetime_savings');
-            $table->integer('total_appointments')->default(0)->after('referral_count');
-            $table->integer('completed_appointments')->default(0)->after('total_appointments');
-            $table->integer('cancelled_appointments')->default(0)->after('completed_appointments');
-            $table->decimal('average_rating', 3, 2)->nullable()->after('total_cashback_earned');
-            $table->integer('total_reviews')->default(0)->after('average_rating');
-            $table->date('member_since')->nullable()->after('total_reviews');
-            $table->json('achievements')->nullable()->after('member_since');
-
-            // فهارس إضافية
-            $table->index(['loyalty_tier', 'available_bonus_points']);
             $table->index(['total_appointments', 'completed_appointments']);
+            $table->index('name', 'users_name_index');
+            $table->index('address', 'users_address_index');
         });
+
+        if (DB::connection()->getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE users ADD FULLTEXT users_fulltext_idx (name, email)');
+        }
     }
 
     public function down()

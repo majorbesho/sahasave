@@ -14,7 +14,7 @@ use App\Models\order;
 use App\Models\product;
 use App\Models\setting;
 use App\Models\team;
-use App\Models\faq;
+use App\Models\Faq;
 use App\Models\testim;
 use App\Models\User;
 use App\Models\winner;
@@ -132,26 +132,41 @@ class IndexController extends Controller
         $testim = testim::orderBy('id', 'DESC')->limit('8')->get();
         $branch = Branch::orderBy('id', 'DESC')->limit('8')->get();
         $user = User::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
-        $featuredDoctors = User::with(['doctorProfile', 'schedules'])
-            ->where('role', 'doctor')
-            ->where('status', 'active')
-            ->whereHas('doctorProfile', function ($query) {
-                $query->where('is_featured', true)
-                    ->where('is_verified', true)
-                    ->where('accepting_new_patients', true);
-            })
-            ->withCount(['doctorAppointments as total_appointments'])
-            ->join('doctor_profiles', 'users.id', '=', 'doctor_profiles.doctor_id')
-            ->orderByDesc('doctor_profiles.average_rating')
-            ->select('users.*') // تأكد من تحديد أعمدة users فقط
-            ->limit(10)
-            ->get();
+        $featuredDoctors = Cache::remember('home_featured_doctors', 3600, function () {
+            return User::with(['doctorProfile', 'schedules'])
+                ->where('role', 'doctor')
+                ->where('status', 'active')
+                ->whereHas('doctorProfile', function ($query) {
+                    $query->where('is_featured', true)
+                        ->where('is_verified', true)
+                        ->where('accepting_new_patients', true);
+                })
+                ->withCount(['doctorAppointments as total_appointments'])
+                ->join('doctor_profiles', 'users.id', '=', 'doctor_profiles.doctor_id')
+                ->orderByDesc('doctor_profiles.average_rating')
+                ->select('users.*') // تأكد من تحديد أعمدة users فقط
+                ->limit(10)
+                ->get();
+        });
 
         $recentBlogs = Blog::with(['category'])
             ->published()
             ->orderBy('published_at', 'desc')
             ->take(4)
             ->get();
+
+        // الحصول على الأسئلة الشائعة النشطة
+        $locale = app()->getLocale(); // 'ar' أو 'en'
+
+        // الحصول على الـ FAQs مع الترجمات
+        $faqs = Faq::with(['translations' => function ($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])
+            ->active()
+            ->ordered()
+            ->take(6)
+            ->get();
+
 
 
         // popular
@@ -174,7 +189,8 @@ class IndexController extends Controller
                     'specialties',
                     'specialties',
                     'featuredDoctors',
-                    'recentBlogs'
+                    'recentBlogs',
+                    'faqs'
                     //'upcoming',
                     // 'banner',
                     //'bannePromo',
@@ -197,6 +213,7 @@ class IndexController extends Controller
 
                 'featuredDoctors',
                 'recentBlogs',
+                'faqs',
                 //'upcoming',
                 //'banner',
                 //'countOfOrder',
@@ -429,7 +446,7 @@ class IndexController extends Controller
                 ->get();
             //return $request->all();
             if (count($userData) > 0) {
-                $userId  = user::create([
+                $userId  = User::create([
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'name' => $request->name,
@@ -437,18 +454,11 @@ class IndexController extends Controller
                     'dateOfbarth' => $request->dateOfbarth,
                     'phone' => $request->phone,
                     'referral_code' => $referral_code,
-                    'ref_by' => $userData[0]['id'],
+                    'referred_by' => $userData[0]['id'],
                 ]);
 
-
-
-                $nodex = User::where('referral_code', $request->referral_code);
-
-                $node = User::find($userId->ref_by);
-
-                $node->appendNode($userId);
-
-
+                // Increment referral count for the referrer
+                $userData[0]->increment('referral_count');
 
                 $data = $request->all();
                 $userid = User::orderBy('id', 'DESC')->first();
@@ -456,11 +466,8 @@ class IndexController extends Controller
 
                 Auth::login($userid);
 
-
-
                 if ($userId) {
-                    //return redirect()->route('verification', $userId);
-                    return redirect()->route('home')->with('success', 'success  Welcome toSehaSave.com ');
+                    return redirect()->route('home')->with('success', 'success  Welcome to SehaSave.com ');
                 } else {
                     return back()->with('error', 'check your data Please ');
                 }
@@ -477,7 +484,7 @@ class IndexController extends Controller
                 'dateOfbarth' => $request->dateOfbarth,
                 'phone' => $request->phone,
                 'referral_code' => $referral_code,
-                'ref_by' => 0,
+                'referred_by' => null,
 
             ]);
             //return $request->all();
@@ -502,11 +509,7 @@ class IndexController extends Controller
 
             Auth::login($userid);
 
-            // if ($userId) {
-            //     return redirect()->route('verification', $userId);
-            // } else {
-            //     return back()->with('error', 'check your data Please ');
-            // }
+
 
             if ($userId) {
                 //return redirect()->route('verification', $userId);
@@ -547,138 +550,6 @@ class IndexController extends Controller
     //new-userreferral
 
 
-    // public function new_userreferral(Request $request)
-    // {
-    //     $user = Auth::user();
-    //     // return  $user_id;
-    //     $domain = URL::to('/');
-
-    //     $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
-    //     // /refs/{user_id}/{ref_cat_id}
-    //     $url = $domain . '/referral-register?ref=' . $user->referral_code;
-    //     $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $user->referral_code;
-    //     return view('frontend.user.newuserreferral', compact(['user', 'userref']));
-    // }
-
-    // public function refs(Request $request,  $ref_category_id)
-    // {
-    //     $user = Auth::user();
-    //     // return  $user_id;
-    //     $domain = URL::to('/');
-
-    //     $userref = networks::with('user')->where('referral_code', $user->referral_code)->get();
-    //     // /refs/{user_id}/{ref_cat_id}
-    //     $url = $domain . '/referral-register?ref=' . $referral_code;
-    //     $newurl =  $domain . 'refs' . $user->id . '/referral-register?ref=' . $referral_code;
-    //     return view('frontend.user.newuserreferral', compact(['user', 'userref']));
-    // }
-    // private function create(array $data)
-    // {
-    //     return User::create([
-    //         'email' => $data['email'],
-    //         'password' => Hash::make($data['password']),
-    //         'name' => $data['name'],
-    //         // 'photo'=>$data['photo'],
-    //         'phone' => $data['phone'],
-    //         'nationality' => $data['nationality'],
-    //         'dateOfbarth' => $data['dateOfbarth'],
-    //         'referral_code' => $data['referral_code'],
-
-    //         // 'address'=>$data['address'],
-    //     ]);
-    // }
-
-    // public function cachview()
-    // {
-    //     $user = Auth::user();
-
-
-    //     return view('frontend.cach', compact('user'));
-    // }
-    // //cachpost
-
-
-    // public function cachpost(Request $request)
-    // {
-
-    //     $user = Auth::user();
-    //     // $emp = Emp::where('repcode', $request->empid)->get();
-
-    //     //return $request->empid;
-
-    //     $emp = Emp::where('repcode', $request->empid)->get();
-    //     // return $emp;
-    //     if ($emp->isEmpty()) {
-    //         //return $emp;
-    //         return redirect()->route('home')->with('error', 'check emp rep ');
-    //     } else {
-
-
-    //         foreach (Cart::instance('shopping')->content() as $item) {
-    //             $cart_array[] = $item->id;
-    //         }
-    //         $totale = Cart::subtotal();
-    //         $totale = (float) str_replace(',', '', Cart::subtotal());
-
-    //         $qty  = $request->qty;
-
-
-    //         $order = new order();
-
-
-    //         $order['user_id'] = auth()->user()->id;
-    //         $order['order_number'] = Str::upper('SB-' . Str::random(8));
-    //         $order['total_amount'] = $totale;
-    //         $order['user_name'] = auth()->user()->name;
-    //         $order['email'] = auth()->user()->email;
-    //         $order['address'] = auth()->user()->address;
-    //         $order['phone'] =  auth()->user()->phone;
-    //         $order['condition'] = 'complete';
-    //         $order['payment_status'] = 'paid';
-    //         $order['payment_method'] = 'cash';
-    //         $order['empid'] = $request->empid;
-    //         //empid
-    //         //  $order['condition']= 'complete';
-    //         //quantity
-    //         //$order['quantity']= $qty;
-
-    //         //return $order;
-
-    //         $status = $order->save();
-    //         foreach (Cart::instance('shopping')->content() as $item) {
-    //             $gop_id[] = $item->id;
-    //             $qty = $item->qty;
-    //             //return $qty;
-    //             $order->gproduct()->attach($gproduct, ['qty' => $qty]);
-
-    //             //return $order;//
-    //         }
-
-    //         if ($status) {
-    //             Mail::to($order['email'])
-    //                 // ->bcc('SehaSave.commarketing@gmail.com')
-    //                 ->cc('beshog32@gmail.com')
-    //                 ->send(new OrderMail($order));
-
-    //             Cart::instance('shopping')->destroy();
-    //             Session::forget('checkout1');
-    //             return redirect()->route('dashboard')->with('Success');
-    //         }
-
-    //         return redirect()->route('dashboard')->with('Success');
-    //     }
-    // }
-
-
-
-
-
-
-    // otp
-    // public function searchRes($request)
-    // {
-    //     return $request->all();
-    // }
 
 
     public function verification($id)
@@ -751,24 +622,6 @@ class IndexController extends Controller
         return redirect()->route('home')->with('success', 'success Logout See you soon ');
     }
 
-    //UserdashBoard
-    // public function getDashboard(Request $request)
-    // {
-    //     //return $request->all();
-    //     $user = Auth::user();
-    //     $userbil = DB::table('orders')
-    //         ->join('users', 'orders.user_id', '=', 'users.id')
-    //         ->join('gop_orders', 'orders.id', '=', 'gop_orders.order_id')
-
-
-    //         // ->where('orders.user_id','=',auth()->user()->id)
-    //         ->get();
-    //     return $userbil;
-
-    //     // $arts=art::where(['status'=>'active'])->orderBy('id','DESC')->limit('8')->get();
-    //     //return $user;
-    //     return view('frontend.user.transaction', compact('user', 'userbil'));
-    // }
 
 
 
@@ -790,38 +643,6 @@ class IndexController extends Controller
     }
 
 
-
-    public function editaccount(Request $request, $id)
-    {
-        //return $request->all();
-        // $hashpassword = Auth::user()->passwor;
-        // if ($request->oldpassword==null && $request->newpassword==null) {
-        //     user::where('id',$id)->update([
-        //         'name'=>$request->name,
-        //          'dateOfbarth'=>$request->dateOfbarth,
-        //          'address'=>$request->address,
-        //          'nationality'=>$request->nationality,
-        //          'phone'=>$request-> phone,
-        //      ]);
-        // }
-        // else{
-        //         if (\Hash::check($request->oldpassword, $hashedValue)) {
-        //             # code...
-        //         }
-        //     $user = user::where('id',$id)->update([
-        //         'name'=>$request->name,
-        //          'dateOfbarth'=>$request->dateOfbarth,
-        //          'address'=>$request->address,
-        //          'nationality'=>$request->nationality,
-        //          'phone'=>$request-> phone,
-        //      ]);
-        //      if ($user) {
-        //          return back()->with('sussecc','your personal data has ben updated ');
-        //      }else{
-        //          return back()->with('error','somthoing wrong ');
-        //      }
-        // }
-    }
 
 
 
@@ -888,93 +709,15 @@ class IndexController extends Controller
 
                 ->where('orders.user_id', '=', auth()->user()->id)->get();
             //return $userbil;
-            $userbilx = DB::table('orders')
-                ->join('users', 'orders.user_id', '=', 'users.id')
-                ->join('gop_orders', 'orders.id', '=', 'gop_orders.order_id')
-                ->join('group_products', 'group_products.id', '=', 'gop_orders.gop_id')
-
-                ->where('orders.user_id', '=', auth()->user()->id)
-                ->select(
-
-                    'orders.created_at as orderDatelast',
-
-                    'orders.order_number',
-                    'orders.gop_id',
-                    'orders.user_name',
-                    'users.address',
-                    'orders.note',
-                    'orders.payment_method',
-                    'orders.payment_status',
-                    'orders.condition',
-                    'orders.empid',
-                    'orders.total_amount',
-                    'orders.coupon',
-                    'orders.delivery_charge',
-                    'orders.quantity',
-                    'orders.email',
-                    'orders.phone',
-                    'orders.startdate',
-                    'orders.enddate',
-                    'orders.sessoin_id',
-
-                    'orders.product_type',
-                    'orders.updated_at',
-                    'users.name',
-                    'users.email_verified_at',
-                    'users.photo',
-                    'users.phoneOtp_verified_at',
-                    'users.nationality',
-                    'users.dateOfbarth',
-                    'users.password',
-                    'users.provider',
-                    'users.provider_id',
-                    'users.referral_code',
-                    'users.ref_by',
-                    'users.no_of_refs',
-                    'users.ref_level_id',
-                    'users.phone_verfiy',
-                    'users.is_verified',
-                    'users.status',
-                    'users.onesignal_device_id',
-                    'users.remember_token',
-                    'emp_code',
-                    '_lft',
-                    '_rgt',
-                    'parent_id',
-                    'order_id',
-                    'qty',
-                    'title',
-                    'slug',
-                    'discreption',
-                    'Caturl',
-                    'sdate',
-                    'edate',
-                    'stock',
-                    'price',
-                    'showPrice',
-                    'periodID',
-                    'showx',
-                    // 'supplier',
-                    'conditaion',
-                    // 'offer_price',
-                    'discount',
-
-                    'type',
-                    'chk',
-                    'dose',
-                    'Directions',
-                    'Ingredients',
-                )
-                ->get();
-            //return $userbilx;
 
 
-            $result = json_decode($userbilx, true);
+
+
             //    $empidcheck= DB::table('emps')
             //    ->get();
 
             //return $empidcheck;
-            return view('frontend.user.personalInformation', compact('user', 'userbil', 'result', 'userbilx'));
+            return view('frontend.user.personalInformation', compact('user', 'result'));
         } else {
             return redirect()->route('home')->with('Login first Please and Acive your account   ');
         }
@@ -1182,7 +925,7 @@ class IndexController extends Controller
             ->limit(10)
             ->get();
 
-        $faqs = faq::where(['status' => 'active'])->orderBy('id', 'DESC')->get();
+        $faqs = faq::where(['status' => 'active'])->orderBy('id', 'DESC')->limit(5)->get();
 
         $setting = setting::orderBy('id', 'DESC')->limit('1')->get();
 
@@ -1255,10 +998,7 @@ class IndexController extends Controller
         $banners = Banner::where(['status' => 'active'])->orderBy('id', 'DESC')->limit('15')->get();
         $client = client::where(['status' => 'active'])->orderBy('id', 'DESC')->limit('10')->get();
 
-
-
-
-        return view('frontend.media', compact(['banners', 'client', 'media', 'lastmedia']));
+        return view('frontend.media', compact(['banners', 'client']));
     }
 
     public function Gallery()

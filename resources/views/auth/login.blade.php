@@ -12,7 +12,7 @@
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
                                 <div class="login-header">
-                                    <h3>{{ __('messages.login_title') }} <span>{{ config('app.name') }}</span></h3>
+                                    <h1 class="h3">{{ __('messages.login_title') }} <span>{{ config('app.name') }}</span></h1>
                                 </div>
 
                                 <!-- عرض رسائل الخطأ العامة -->
@@ -79,7 +79,7 @@
                                     </div>
 
                                     <div class="social-login-btn">
-                                        <a href="#" class="btn w-100">
+                                        <a href="{{ route('auth.google') }}" class="btn w-100">
                                             <img src="{{ asset('frontend/xx/assets/img/icons/google-icon.svg') }}"
                                                 alt="google-icon">
                                             {{ __('messages.sign_in_with_google') }}

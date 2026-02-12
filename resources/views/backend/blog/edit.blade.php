@@ -511,11 +511,12 @@
                                 <div class="form-group">
                                     <label for="update_frequency">Update Frequency</label>
                                     <select name="update_frequency" id="update_frequency" class="form-control select2">
-                                        @foreach($updateFrequencies as $frequency)
-                                            <option value="{{ $frequency }}" {{ old('update_frequency', $blog->update_frequency) == $frequency ? 'selected' : '' }}>
-                                                {{ ucfirst($frequency) }}
-                                            </option>
-                                        @endforeach
+                                        <option value="never" {{ old('update_frequency', $blog->update_frequency) == 'never' ? 'selected' : '' }}>Never</option>
+                                        <option value="daily" {{ old('update_frequency', $blog->update_frequency) == 'daily' ? 'selected' : '' }}>Daily</option>
+                                        <option value="weekly" {{ old('update_frequency', $blog->update_frequency) == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                        <option value="monthly" {{ old('update_frequency', $blog->update_frequency) == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                        <option value="quarterly" {{ old('update_frequency', $blog->update_frequency) == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                                        <option value="yearly" {{ old('update_frequency', $blog->update_frequency) == 'yearly' ? 'selected' : '' }}>Yearly</option>
                                     </select>
                                 </div>
 
@@ -525,6 +526,86 @@
                                     <div class="url">{{ url('/blog') }}/<span id="previewSlug">{{ $blog->slug }}</span></div>
                                     <p class="description" id="previewDescription">{{ $blog->meta_description ?: $blog->excerpt }}</p>
                                 </div>
+                            </div>
+                        </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Trust & Authorship Card -->
+                        <div class="card card-dark card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Trust & Authorship (E-E-A-T)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="author_credentials">Author Credentials</label>
+                                    <input type="text" name="author_credentials" id="author_credentials" class="form-control" 
+                                           value="{{ old('author_credentials', $blog->author_credentials) }}" 
+                                           placeholder="e.g., MD, PhD, Senior Medical Consultant">
+                                    <small class="form-text text-muted">
+                                        Displays professional titles to build authority.
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="author_bio">Author Brief Bio</label>
+                                    <textarea name="author_bio" id="author_bio" class="form-control" 
+                                              rows="3" placeholder="Short bio highlighting expertise...">{{ old('author_bio', $blog->author_bio) }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sources & References Card -->
+                        <div class="card card-secondary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Sources & References</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="sourceContainer">
+                                    @if(!empty($blog->sources_references))
+                                        @foreach($blog->sources_references as $index => $source)
+                                        <div class="source-item card mb-2 bg-light">
+                                            <div class="card-body py-2">
+                                                <div class="row">
+                                                    <div class="col-11">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="small">Source Title</label>
+                                                                    <input type="text" name="sources_references[{{ $index }}][title]" 
+                                                                           class="form-control form-control-sm" 
+                                                                           value="{{ $source['title'] }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mb-0">
+                                                                    <label class="small">Source URL</label>
+                                                                    <input type="url" name="sources_references[{{ $index }}][url]" 
+                                                                           class="form-control form-control-sm" 
+                                                                           value="{{ $source['url'] }}" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-1 text-right">
+                                                        <button type="button" class="btn btn-danger btn-xs mt-4" onclick="removeSource(this)">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @else
+                                        <div class="alert alert-light border">
+                                            <i class="fas fa-link"></i> Add authoritative sources to increase trustworthiness.
+                                        </div>
+                                    @endif
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addSource()">
+                                    <i class="fas fa-plus"></i> Add Source
+                                </button>
                             </div>
                         </div>
 
@@ -877,7 +958,64 @@ function removeFAQ(button) {
         faqIndex = 0;
     }
 }
-</script>
+<!-- Source Template (hidden) -->
+<template id="sourceTemplate">
+    <div class="source-item card mb-2 bg-light">
+        <div class="card-body py-2">
+            <div class="row">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="small">Source Title</label>
+                                <input type="text" name="sources_references[@{{index}}][title]" class="form-control form-control-sm" placeholder="e.g. WHO Report" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="small">Source URL</label>
+                                <input type="url" name="sources_references[@{{index}}][url]" class="form-control form-control-sm" placeholder="https://..." required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 text-right">
+                    <button type="button" class="btn btn-danger btn-xs mt-4" onclick="removeSource(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
 
 @endsection
+
+@push('scripts')
+<script>
+// Function to add Source item
+let sourceIndex = {{ count($blog->sources_references ?? []) }};
+function addSource() {
+    const template = $('#sourceTemplate').html();
+    const html = template.replace(/@{{index}}/g, sourceIndex);
+    
+    if ($('#sourceContainer .alert').length) {
+        $('#sourceContainer').html('');
+    }
+    
+    $('#sourceContainer').append(html);
+    sourceIndex++;
+}
+
+// Function to remove Source item
+function removeSource(button) {
+    $(button).closest('.source-item').remove();
+    
+    if ($('#sourceContainer .source-item').length === 0) {
+        $('#sourceContainer').html('<div class="alert alert-light border"><i class="fas fa-link"></i> Add authoritative sources to increase trustworthiness.</div>');
+        sourceIndex = 0;
+    }
+}
+</script>
+@endpush
 

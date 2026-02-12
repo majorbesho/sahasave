@@ -19,8 +19,8 @@ class CheckAttachmentPermission
 
         $user = $request->user();
 
-        // التحقق من أن المستخدم مسجل دخول ومن نوع مسموح له
-        if (!$user || !in_array(class_basename($user), ['Broker', 'Carrier', 'Shipper', 'User'])) {
+        // التحقق من أن المستخدم مسجل دخول ومن نوع مسموح له بناءً على الأدوار
+        if (!$user || !in_array($user->role, ['patient', 'doctor', 'admin', 'medical_center_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

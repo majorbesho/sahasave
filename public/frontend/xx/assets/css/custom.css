@@ -1,4 +1,27 @@
 ﻿@charset "UTF-8";
+
+/* ========================================
+   CRITICAL FIX: Tailwind/Bootstrap Conflict
+   ======================================== */
+/* Tailwind uses .collapse with visibility:collapse which breaks Bootstrap accordion.
+   This override ensures Bootstrap's .collapse works correctly for accordions. */
+.accordion-collapse.collapse:not(.show) {
+  display: none !important;
+  visibility: visible !important;
+}
+
+.accordion-collapse.collapse.show {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.accordion-collapse.collapsing {
+  display: block !important;
+  visibility: visible !important;
+  transition: height 0.35s ease;
+  overflow: hidden;
+}
+
 /****** UTILS ******/
 /*** default values ***/
 /***** custom values *****/

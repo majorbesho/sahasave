@@ -22,37 +22,47 @@ class PatientDashboardController extends Controller
 {
     public function index()
     {
-        /** @var \App\Models\User $patient */
-        $patient = Auth::user();
-        $appointments = $patient->patientAppointments()
+        $user = Auth::user();
+
+        $upcomingAppointments = $user->patientAppointments()
             ->with(['doctor', 'medicalCenter'])
+            ->where('scheduled_for', '>', now())
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('scheduled_for', 'asc')
+            ->paginate(5, ['*'], 'upcoming_page');
+
+        $cancelledAppointments = $user->patientAppointments()
+            ->with(['doctor', 'medicalCenter'])
+            ->where('status', 'cancelled')
             ->orderBy('scheduled_for', 'desc')
-            ->get();
+            ->paginate(5, ['*'], 'cancelled_page');
 
-        // تجميع المواعيد حسب الحالة
-        $upcomingCount = $appointments->where('scheduled_for', '>', now())
-            ->whereIn('status', ['pending', 'confirmed'])->count();
-        $cancelledCount = $appointments->where('status', 'cancelled')->count();
-        $completedCount = $appointments->where('status', 'completed')->count();
+        $completedAppointments = $user->patientAppointments()
+            ->with(['doctor', 'medicalCenter'])
+            ->where('status', 'completed')
+            ->orderBy('scheduled_for', 'desc')
+            ->paginate(5, ['*'], 'completed_page');
 
-        return view('patient.appointments', compact('appointments', 'upcomingCount', 'cancelledCount', 'completedCount'));
+        return view('patient.appointments', compact('upcomingAppointments', 'cancelledAppointments', 'completedAppointments'));
     }
 
 
 
-    public function show($id)
+    public function show(Appointment $appointment)
     {
-        $appointment = Appointment::with(['doctor', 'medicalCenter'])
-            ->where('patient_id', Auth::id())
-            ->findOrFail($id);
-        //return $appointment;
+        if ($appointment->patient_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $appointment->load(['doctor', 'medicalCenter']);
         return view('patient.appointment-details', compact('appointment'));
     }
 
-    public function cancel(Request $request, $id)
+    public function cancel(Request $request, Appointment $appointment)
     {
-        $appointment = Appointment::where('patient_id', Auth::id())
-            ->findOrFail($id);
+        if ($appointment->patient_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
 
         if (!$appointment->canBeCancelled()) {
             return response()->json([
@@ -69,16 +79,20 @@ class PatientDashboardController extends Controller
         ]);
     }
 
-    public function addReview(Request $request, $id)
+    public function addReview(Request $request, Appointment $appointment)
     {
+        if ($appointment->patient_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string|max:1000'
         ]);
 
-        $appointment = Appointment::where('patient_id', Auth::id())
-            ->where('status', 'completed')
-            ->findOrFail($id);
+        if ($appointment->status !== 'completed') {
+            return response()->json(['success' => false, 'message' => 'Only completed appointments can be reviewed'], 400);
+        }
 
         $appointment->addReview($request->rating, $request->review);
 
@@ -91,40 +105,54 @@ class PatientDashboardController extends Controller
 
     public function appointments()
     {
-        $patient = Auth::user();
-        $appointments = $patient->patientAppointments()
+        $user = Auth::user();
+
+        $upcomingAppointments = $user->patientAppointments()
             ->with(['doctor', 'medicalCenter'])
+            ->where('scheduled_for', '>', now())
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('scheduled_for', 'asc')
+            ->paginate(5, ['*'], 'upcoming_page');
+
+        $cancelledAppointments = $user->patientAppointments()
+            ->with(['doctor', 'medicalCenter'])
+            ->where('status', 'cancelled')
             ->orderBy('scheduled_for', 'desc')
-            ->get();
+            ->paginate(5, ['*'], 'cancelled_page');
 
-        // تجميع المواعيد حسب الحالة
-        $upcomingCount = $appointments->where('scheduled_for', '>', now())
-            ->whereIn('status', ['pending', 'confirmed'])->count();
-        $cancelledCount = $appointments->where('status', 'cancelled')->count();
-        $completedCount = $appointments->where('status', 'completed')->count();
+        $completedAppointments = $user->patientAppointments()
+            ->with(['doctor', 'medicalCenter'])
+            ->where('status', 'completed')
+            ->orderBy('scheduled_for', 'desc')
+            ->paginate(5, ['*'], 'completed_page');
 
-        return view('patient.appointments', compact('appointments', 'upcomingCount', 'cancelledCount', 'completedCount'));
+        return view('patient.appointments', compact('upcomingAppointments', 'cancelledAppointments', 'completedAppointments'));
     }
 
     public function dashboard()
     {
         $user = Auth::user();
 
+        // Ensure loyalty points are initialized
+        $loyaltyPoints = $user->initializeLoyaltyPoints();
+
         $data = [
             'unreadMessages' => 0,
             'recentActivities' => $this->getRecentActivities($user),
+            'loyaltyPoints' => $loyaltyPoints,
+            'loyaltyStats' => $user->getLoyaltyDashboardStats(),
         ];
 
         return view('patient.dashboard', $data);
     }
 
-    public function showAppointment($id)
+    public function showAppointment(Appointment $appointment)
     {
-        /** @var User $patient */
-        $patient = Auth::user();
-        $appointment = $patient->patientAppointments()
-            ->with(['doctor', 'medicalCenter', 'medicalRecord'])
-            ->findOrFail($id);
+        if ($appointment->patient_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $appointment->load(['doctor', 'medicalCenter', 'medicalRecord']);
 
         return view('patient.appointment-details', compact('appointment'));
     }
@@ -174,6 +202,13 @@ class PatientDashboardController extends Controller
     {
         /** @var User $patient */
         $patient = Auth::user();
+
+        // Ensure user has a referral code
+        $patient->generateReferralCode();
+
+        // Fetch 3-level referral tree
+        $referralTree = $patient->getReferralTree();
+
         $referrals = $patient->referralsMade()
             ->with('referred')
             ->orderBy('created_at', 'desc')
@@ -183,7 +218,7 @@ class PatientDashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('patient.referrals', compact('referrals', 'rewards'));
+        return view('patient.referrals', compact('referrals', 'rewards', 'referralTree'));
     }
 
     public function messages()

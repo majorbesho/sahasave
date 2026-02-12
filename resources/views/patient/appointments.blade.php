@@ -79,21 +79,21 @@
                                       <button class="nav-link active" id="pills-upcoming-tab" data-bs-toggle="pill"
                                           data-bs-target="#pills-upcoming" type="button" role="tab"
                                           aria-controls="pills-upcoming" aria-selected="false">
-                                          Upcoming<span>21</span>
+                                          Upcoming<span>{{ $upcomingAppointments->total() }}</span>
                                       </button>
                                   </li>
                                   <li class="nav-item" role="presentation">
                                       <button class="nav-link" id="pills-cancel-tab" data-bs-toggle="pill"
                                           data-bs-target="#pills-cancel" type="button" role="tab"
                                           aria-controls="pills-cancel" aria-selected="true">
-                                          Cancelled<span>16</span>
+                                          Cancelled<span>{{ $cancelledAppointments->total() }}</span>
                                       </button>
                                   </li>
                                   <li class="nav-item" role="presentation">
                                       <button class="nav-link" id="pills-complete-tab" data-bs-toggle="pill"
                                           data-bs-target="#pills-complete" type="button" role="tab"
                                           aria-controls="pills-complete" aria-selected="true">
-                                          Completed<span>214</span>
+                                          Completed<span>{{ $completedAppointments->total() }}</span>
                                       </button>
                                   </li>
                               </ul>
@@ -272,10 +272,6 @@
                     <div class="tab-content appointment-tab-content">
     <!-- Upcoming Appointments Tab -->
                         <div class="tab-pane fade show active" id="pills-upcoming" role="tabpanel" aria-labelledby="pills-upcoming-tab">
-                            @php
-                                $upcomingAppointments = $appointments->where('scheduled_for', '>', now())
-                                    ->whereIn('status', ['pending', 'confirmed']);
-                            @endphp
                             
                             @if($upcomingAppointments->count() > 0)
                                 @foreach($upcomingAppointments as $appointment)
@@ -283,14 +279,25 @@
                                     <ul>
                                         <li>
                                             <div class="patinet-information">
-                                                <a href="{{ route('patient.appointment.details', $appointment->id) }}">
-                                                    <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
-                                                        alt="{{ $appointment->doctor->name }}" />
+                                                <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                    @if($appointment->doctor)
+                                                        <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
+                                                            alt="{{ $appointment->doctor->name }}" />
+                                                    @else
+                                                        <img src="{{ $appointment->medicalCenter->logo_url ?? asset('frontend/xx/assets/img/medical-center-placeholder.png') }}" 
+                                                            alt="{{ $appointment->medicalCenter->name ?? '' }}" />
+                                                    @endif
                                                 </a>
                                                 <div class="patient-info">
                                                     <p>#{{ $appointment->appointment_number }}</p>
                                                     <h6>
-                                                        <a href="{{ route('patient.appointment.details', $appointment->id) }}">{{ $appointment->doctor->name }}</a>
+                                                        <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                            @if($appointment->doctor)
+                                                                {{ $appointment->doctor->name }}
+                                                            @else
+                                                                {{ $appointment->medicalCenter->name ?? '' }}
+                                                            @endif
+                                                        </a>
                                                         @if($appointment->status === 'pending')
                                                             <span class="badge new-tag">New</span>
                                                         @endif
@@ -312,17 +319,21 @@
                                             <ul>
                                                 <li>
                                                     <i class="isax isax-sms5"></i>
-                                                    <a href="mailto:{{ $appointment->doctor->email }}">{{ $appointment->doctor->email }}</a>
+                                                    @if($appointment->doctor)
+                                                        <a href="mailto:{{ $appointment->doctor->email }}">{{ $appointment->doctor->email }}</a>
+                                                    @else
+                                                        <a href="mailto:{{ $appointment->medicalCenter->email ?? '' }}">{{ $appointment->medicalCenter->email ?? '' }}</a>
+                                                    @endif
                                                 </li>
                                                 <li>
-                                                    <i class="isax isax-call5"></i>{{ $appointment->doctor->phone }}
+                                                    <i class="isax isax-call5"></i>{{ $appointment->doctor->phone ?? $appointment->medicalCenter->phone ?? '' }}
                                                 </li>
                                             </ul>
                                         </li>
                                         <li class="appointment-action">
                                             <ul>
                                                 <li>
-                                                    <a href="{{ route('patient.appointment.details', $appointment->id) }}"><i class="isax isax-eye4"></i></a>
+                                                    <a href="{{ route('patient.appointment.details', $appointment->slug) }}"><i class="isax isax-eye4"></i></a>
                                                 </li>
                                                 <li>
                                                     <a href="#"><i class="isax isax-messages-25"></i></a>
@@ -344,7 +355,7 @@
                                                     <i class="isax isax-calendar-tick5 me-1"></i>Join Call
                                                 </a>
                                             @else
-                                                <a href="{{ route('patient.appointment.details', $appointment->id) }}" class="btn btn-md btn-primary-gradient">
+                                                <a href="{{ route('patient.appointment.details', $appointment->slug) }}" class="btn btn-md btn-primary-gradient">
                                                     <i class="isax isax-calendar-tick5 me-1"></i>View Details
                                                 </a>
                                             @endif
@@ -356,14 +367,15 @@
                                 <div class="text-center py-4">
                                     <p>No upcoming appointments found.</p>
                                 </div>
-                            @endif
+                                    @endif
+                                    <div class="mt-3">
+                                        {{ $upcomingAppointments->appends(request()->query())->links() }}
+                                    </div>
+
                         </div>
 
                         <!-- Cancelled Appointments Tab -->
                         <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
-                            @php
-                                $cancelledAppointments = $appointments->where('status', 'cancelled');
-                            @endphp
                             
                             @if($cancelledAppointments->count() > 0)
                                 @foreach($cancelledAppointments as $appointment)
@@ -371,14 +383,25 @@
                                     <ul>
                                         <li>
                                             <div class="patinet-information">
-                                                <a href="{{ route('patient.appointment.details', $appointment->id) }}">
-                                                    <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
-                                                        alt="{{ $appointment->doctor->name }}" />
+                                                <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                    @if($appointment->doctor)
+                                                        <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
+                                                            alt="{{ $appointment->doctor->name }}" />
+                                                    @else
+                                                        <img src="{{ $appointment->medicalCenter->logo_url ?? asset('frontend/xx/assets/img/medical-center-placeholder.png') }}" 
+                                                            alt="{{ $appointment->medicalCenter->name ?? '' }}" />
+                                                    @endif
                                                 </a>
                                                 <div class="patient-info">
                                                     <p>#{{ $appointment->appointment_number }}</p>
                                                     <h6>
-                                                        <a href="{{ route('patient.appointment.details', $appointment->id) }}">{{ $appointment->doctor->name }}</a>
+                                                        <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                            @if($appointment->doctor)
+                                                                {{ $appointment->doctor->name }}
+                                                            @else
+                                                                {{ $appointment->medicalCenter->name ?? '' }}
+                                                            @endif
+                                                        </a>
                                                     </h6>
                                                 </div>
                                             </div>
@@ -397,18 +420,29 @@
                                             <ul>
                                                 <li>
                                                     <i class="isax isax-sms5"></i>
-                                                    <a href="mailto:{{ $appointment->doctor->email }}">{{ $appointment->doctor->email }}</a>
+                                                    @if($appointment->doctor)
+                                                        <a href="mailto:{{ $appointment->doctor->email }}">{{ $appointment->doctor->email }}</a>
+                                                    @else
+                                                        <a href="mailto:{{ $appointment->medicalCenter->email ?? '' }}">{{ $appointment->medicalCenter->email ?? '' }}</a>
+                                                    @endif
                                                 </li>
                                                 <li>
-                                                    <i class="isax isax-call5"></i>{{ $appointment->doctor->phone }}
+                                                    <i class="isax isax-call5"></i>{{ $appointment->doctor->phone ?? $appointment->medicalCenter->phone ?? '' }}
                                                 </li>
                                             </ul>
                                         </li>
                                         <li class="appointment-detail-btn">
-                                            <a href="{{ route('patient.book.appointment', ['doctor' => $appointment->doctor_id]) }}" 
-                                            class="btn btn-md btn-primary-gradient">
-                                                <i class="isax isax-calendar-tick5 me-1"></i>Book Again
-                                            </a>
+                                            @if($appointment->doctor_id)
+                                                <a href="{{ route('patient.book.appointment', ['doctor' => $appointment->doctor_id]) }}" 
+                                                class="btn btn-md btn-primary-gradient">
+                                                    <i class="isax isax-calendar-tick5 me-1"></i>Book Again
+                                                </a>
+                                            @else
+                                                <a href="{{ route('medical-centershome.book-general', $appointment->medicalCenter->slug) }}" 
+                                                class="btn btn-md btn-primary-gradient">
+                                                    <i class="isax isax-calendar-tick5 me-1"></i>Book Again
+                                                </a>
+                                            @endif
                                         </li>
                                     </ul>
                                 </div>
@@ -418,13 +452,14 @@
                                     <p>No cancelled appointments found.</p>
                                 </div>
                             @endif
+                                <div class="mt-3">
+                                    {{ $cancelledAppointments->appends(request()->query())->links() }}
+                                </div>
+
                         </div>
 
                         <!-- Completed Appointments Tab -->
                         <div class="tab-pane fade" id="pills-complete" role="tabpanel" aria-labelledby="pills-complete-tab">
-                            @php
-                                $completedAppointments = $appointments->where('status', 'completed');
-                            @endphp
                             
                             @if($completedAppointments->count() > 0)
                                 @foreach($completedAppointments as $appointment)
@@ -432,14 +467,25 @@
                                     <ul>
                                         <li>
                                             <div class="patinet-information">
-                                                <a href="{{ route('patient.appointment.details', $appointment->id) }}">
-                                                    <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
-                                                        alt="{{ $appointment->doctor->name }}" />
+                                                <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                    @if($appointment->doctor)
+                                                        <img src="{{ $appointment->doctor->photo ? asset('storage/'.$appointment->doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-21.jpg') }}" 
+                                                            alt="{{ $appointment->doctor->name }}" />
+                                                    @else
+                                                        <img src="{{ $appointment->medicalCenter->logo_url ?? asset('frontend/xx/assets/img/medical-center-placeholder.png') }}" 
+                                                            alt="{{ $appointment->medicalCenter->name ?? '' }}" />
+                                                    @endif
                                                 </a>
                                                 <div class="patient-info">
                                                     <p>#{{ $appointment->appointment_number }}</p>
                                                     <h6>
-                                                        <a href="{{ route('patient.appointment.details', $appointment->id) }}">{{ $appointment->doctor->name }}</a>
+                                                        <a href="{{ route('patient.appointment.details', $appointment->slug) }}">
+                                                            @if($appointment->doctor)
+                                                                {{ $appointment->doctor->name }}
+                                                            @else
+                                                                {{ $appointment->medicalCenter->name ?? '' }}
+                                                            @endif
+                                                        </a>
                                                     </h6>
                                                 </div>
                                             </div>
@@ -462,8 +508,12 @@
                                             @endif
                                         </li>
                                         <li class="flex-wrap gap-3 appointment-detail-btn d-flex align-items-center">
-                                            <a href="{{ route('patient.book.appointment', ['doctor' => $appointment->doctor_id]) }}" class="btn btn-md btn-dark">Book Again<i class="isax isax-arrow-right-3 ms-1"></i></a>
-                                            <a href="{{ route('patient.appointment.details', $appointment->id) }}" class="btn btn-md btn-primary-gradient">View Details<i class="isax isax-arrow-right-3 ms-1"></i></a>
+                                            @if($appointment->doctor_id)
+                                                <a href="{{ route('patient.book.appointment', ['doctor' => $appointment->doctor_id]) }}" class="btn btn-md btn-dark">Book Again<i class="isax isax-arrow-right-3 ms-1"></i></a>
+                                            @else
+                                                <a href="{{ route('medical-centershome.book-general', $appointment->medicalCenter->slug) }}" class="btn btn-md btn-dark">Book Again<i class="isax isax-arrow-right-3 ms-1"></i></a>
+                                            @endif
+                                            <a href="{{ route('patient.appointment.details', $appointment->slug) }}" class="btn btn-md btn-primary-gradient">View Details<i class="isax isax-arrow-right-3 ms-1"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -473,6 +523,10 @@
                                     <p>No completed appointments found.</p>
                                 </div>
                             @endif
+                                <div class="mt-3">
+                                    {{ $completedAppointments->appends(request()->query())->links() }}
+                                </div>
+
                         </div>
                     </div>
 

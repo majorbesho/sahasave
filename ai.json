@@ -1,0 +1,24 @@
+{
+  "models": [
+    {
+      "id": "deepseek-r1",
+      "name": "DeepSeek-R1 (Code Optimized)",
+      "provider": "openai-compatible",
+      "baseUrl": "https://api.deepseek.com/v1",
+      "apiKeyEnv": "DEEPSEEK_API_KEY",
+      "model": "deepseek-chat",
+      "contextWindow": 128000,
+      "supportsTools": true,
+      "default": false
+    }
+  ],
+  "agents": [
+    {
+      "id": "deepseek-coder",
+      "name": "DeepSeek Coder Assistant",
+      "model": "deepseek-r1",
+      "systemPrompt": "أنت مساعد برمجي خبير. تعمل في بيئة طبية، وتتعامل مع بيانات أطباء ومرضى. استخدم الأدوات بدقة، وافترض أن الملفات مثل `doctors.json` و `patients.csv` موجودة. ركّز على الأمان، الدقة، وسرعة التنفيذ.",
+      "tools": ["builtin:editFile", "builtin:readFile", "builtin:terminal", "builtin:searchFiles"]
+    }
+  ]
+}

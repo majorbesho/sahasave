@@ -1,5 +1,6 @@
 @extends('frontend.layouts.master')
-
+@section('title', __('seo.blogs.title'))
+@section('meta_description', __('seo.blogs.description'))
 
 @section('content')
 
@@ -18,7 +19,7 @@
                 alt=""></div>
         <div class="container">
             <div class="page-header__inner">
-                <h2>Blog & News</h2>
+                <h1>Blog & News</h1>
                 <ul class="thm-breadcrumb">
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><span class="icon-right-arrow21"></span></li>

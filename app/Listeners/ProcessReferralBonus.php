@@ -65,5 +65,8 @@ class ProcessReferralBonus
             'Referral Bonus for ID #' . $referral->id,
             $referral
         );
+
+        // Update user total referral earnings
+        $user->increment('total_referral_earnings', $amount);
     }
 }

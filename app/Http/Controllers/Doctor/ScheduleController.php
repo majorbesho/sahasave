@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
-    
+
 
     public function bookedSlots(Request $request)
     {
@@ -124,7 +124,7 @@ class ScheduleController extends Controller
     {
         $request->validate([
             'medical_center_id' => 'nullable|exists:medical_centers,id',
-            'clinic_name' => 'required_if:medical_center_id,null|string|max:255',
+            'clinic_name' => 'nullable|required_if:medical_center_id,null|string|max:255',
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',

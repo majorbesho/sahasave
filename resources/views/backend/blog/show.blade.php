@@ -177,41 +177,78 @@
                             </div>
                             @endif
 
-                            <!-- FAQ Section -->
-                            @if($blog->faq_json)
-                            <div class="card card-info mb-4">
-                                <div class="card-header">
-                                    <h4 class="card-title mb-0">
-                                        <i class="fas fa-question-circle"></i> FAQ Section
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="accordion" id="faqAccordion">
-                                        @foreach($blog->faq_json as $index => $faq)
-                                        <div class="card">
-                                            <div class="card-header" id="faqHeading{{ $index }}">
-                                                <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-toggle="collapse" 
-                                                            data-target="#faqCollapse{{ $index }}" 
-                                                            aria-expanded="false" 
-                                                            aria-controls="faqCollapse{{ $index }}">
-                                                        {{ $faq['question'] }}
-                                                    </button>
-                                                </h5>
-                                            </div>
-                                            <div id="faqCollapse{{ $index }}" class="collapse" 
-                                                 aria-labelledby="faqHeading{{ $index }}" 
-                                                 data-parent="#faqAccordion">
-                                                <div class="card-body">
-                                                    {{ $faq['answer'] }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
+                             <!-- FAQ Section -->
+                             @if($blog->faq_json)
+                             <div class="card card-info mb-4">
+                                 <div class="card-header">
+                                     <h4 class="card-title mb-0">
+                                         <i class="fas fa-question-circle"></i> FAQ Section
+                                     </h4>
+                                 </div>
+                                 <div class="card-body">
+                                     <div class="accordion" id="faqAccordion">
+                                         @foreach($blog->faq_json as $index => $faq)
+                                         <div class="card">
+                                             <div class="card-header" id="faqHeading{{ $index }}">
+                                                 <h5 class="mb-0">
+                                                     <button class="btn btn-link" type="button" data-toggle="collapse" 
+                                                             data-target="#faqCollapse{{ $index }}" 
+                                                             aria-expanded="false" 
+                                                             aria-controls="faqCollapse{{ $index }}">
+                                                         {{ $faq['question'] }}
+                                                     </button>
+                                                 </h5>
+                                             </div>
+                                             <div id="faqCollapse{{ $index }}" class="collapse" 
+                                                  aria-labelledby="faqHeading{{ $index }}" 
+                                                  data-parent="#faqAccordion">
+                                                 <div class="card-body">
+                                                     {{ $faq['answer'] }}
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         @endforeach
+                                     </div>
+                                 </div>
+                             </div>
+                             @endif
+
+                             <!-- Trust & Authority Section -->
+                             <div class="card card-dark mb-4">
+                                 <div class="card-header">
+                                     <h4 class="card-title mb-0">
+                                         <i class="fas fa-certificate"></i> Trust & Authority (E-E-A-T)
+                                     </h4>
+                                 </div>
+                                 <div class="card-body">
+                                     <div class="row">
+                                         <div class="col-md-12 mb-3">
+                                             <strong>Author Credentials:</strong>
+                                             <p class="text-muted">{{ $blog->author_credentials ?: 'N/A' }}</p>
+                                         </div>
+                                         <div class="col-md-12 mb-3">
+                                             <strong>Author Bio:</strong>
+                                             <p class="text-muted small">{{ $blog->author_bio ?: 'N/A' }}</p>
+                                         </div>
+                                     </div>
+
+                                     <hr>
+
+                                     <h5>Sources & References</h5>
+                                     @if(!empty($blog->sources_references))
+                                         <ul class="list-unstyled">
+                                             @foreach($blog->sources_references as $source)
+                                                 <li class="mb-2">
+                                                     <i class="fas fa-external-link-alt text-primary mr-2"></i>
+                                                     <a href="{{ $source['url'] }}" target="_blank">{{ $source['title'] }}</a>
+                                                 </li>
+                                             @endforeach
+                                         </ul>
+                                     @else
+                                         <p class="text-muted italic small">No sources cited.</p>
+                                     @endif
+                                 </div>
+                             </div>
                         </div>
                     </div>
 
@@ -459,16 +496,34 @@
 
                             <div class="small">
                                 <div class="d-flex justify-content-between mb-1">
+                                    <span>CTR:</span>
+                                    <span class="text-{{ $blog->ctr > 5 ? 'success' : 'warning' }}">{{ $blog->ctr }}%</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Dwell Time:</span>
+                                    <span>{{ $blog->dwell_time }}s</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Bounce Rate:</span>
+                                    <span class="text-{{ $blog->bounce_rate < 40 ? 'success' : 'danger' }}">{{ $blog->bounce_rate }}%</span>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Backlinks:</span>
+                                    <span class="badge badge-info">{{ $blog->backlinks_count }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Ref. Domains:</span>
+                                    <span class="badge badge-info">{{ $blog->referring_domains }}</span>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex justify-content-between mb-1">
                                     <span>Reading Time:</span>
                                     <span>{{ $blog->reading_time }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-1">
                                     <span>Word Count:</span>
                                     <span>{{ $blog->word_count ?? str_word_count(strip_tags($blog->content)) }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Characters:</span>
-                                    <span>{{ strlen(strip_tags($blog->content)) }}</span>
                                 </div>
                             </div>
                         </div>

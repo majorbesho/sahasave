@@ -32,15 +32,15 @@
                         <div class="card-header">
                             <h3 class="card-title">تعديل مركز طبي</h3>
                             <div class="card-tools">
-                                <a href="{{ route('medical-centers.show', $medicalCenter->id) }}" class="btn btn-info">
+                                <a href="{{ route('admin.medical-centers.show', $medicalCenter->id) }}" class="btn btn-info">
                                     <i class="fas fa-eye"></i> عرض التفاصيل
                                 </a>
-                                <a href="{{ route('medical-centers.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('admin.medical-centers.index') }}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-right"></i> العودة للقائمة
                                 </a>
                             </div>
                         </div>
-                        <form action="{{ route('medical-centers.update', $medicalCenter->id) }}" method="POST">
+                        <form action="{{ route('admin.medical-centers.update', $medicalCenter->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="card-body">
@@ -50,7 +50,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i> حفظ التغييرات
                                 </button>
-                                <a href="{{ route('medical-centers.index') }}" class="btn btn-secondary">إلغاء</a>
+                                <a href="{{ route('admin.medical-centers.index') }}" class="btn btn-secondary">إلغاء</a>
                             </div>
                         </form>
                     </div>

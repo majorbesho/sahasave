@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'title' => 'Appointment Details',
+    'breadcrumb_home' => 'Home',
+    'breadcrumb_details' => 'Appointment Details',
+    'booking_info' => 'Booking Information',
+    'appointment_number' => 'Appointment Number',
+    'appointment_date' => 'Appointment Date',
+    'appointment_time' => 'Appointment Time',
+    'visit_type' => 'Visit Type',
+    'booking_date' => 'Booking Date',
+    'amount' => 'Amount',
+    'medical_center' => 'Medical Center',
+    'status' => 'Status',
+    'reason' => 'Reason for Visit',
+    'symptoms' => 'Symptoms',
+    'edit_appointment' => 'Edit Appointment',
+    'cancel_appointment' => 'Cancel Appointment',
+    'back_to_dashboard' => 'Back to Dashboard',
+    'address_not_available' => 'Address not available',
+    'general_visit' => 'General Visit',
+    'currency' => 'AED',
+    'minutes' => 'minutes',
+    'statuses' => [
+        'confirmed' => 'Confirmed',
+        'cancelled' => 'Cancelled',
+        'pending' => 'Pending',
+        'completed' => 'Completed',
+    ],
+];

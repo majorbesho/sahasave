@@ -9,35 +9,32 @@ use Illuminate\Support\Facades\Session;
 
 class SetLocale
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
     public function handle(Request $request, Closure $next)
     {
-        // الأولوية: اللغة من الرابط
-        if ($request->has('lang')) {
-            $locale = $request->get('lang');
-            if (in_array($locale, ['en', 'ar', 'fr'])) {
-                Session::put('locale', $locale);
+        $locale = $request->route('locale')
+            ?: Session::get('locale')
+            ?: $this->getBrowserLocale($request)
+            ?: config('app.locale');
+
+        App::setLocale($locale);
+        Session::put('locale', $locale);
+
+        return $next($request);
+    }
+
+    private function getBrowserLocale(Request $request)
+    {
+        $acceptLanguage = $request->header('Accept-Language');
+        if ($acceptLanguage) {
+            $languages = explode(',', $acceptLanguage);
+            $primary = explode(';', $languages[0])[0];
+
+            // دعم العربية
+            if (str_contains($primary, 'ar')) {
+                return 'ar';
             }
         }
 
-        // الثاني: اللغة من الجلسة
-        if (Session::has('locale')) {
-            $locale = Session::get('locale');
-        }
-        // الثالث: اللغة الافتراضية من التكوين
-        else {
-            $locale = config('app.locale', 'en');
-        }
-
-        // تعيين اللغة للتطبيق
-        App::setLocale($locale);
-
-        return $next($request);
+        return null;
     }
 }

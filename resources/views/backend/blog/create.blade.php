@@ -261,12 +261,75 @@
                                     </small>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="ls_keyword">LSI Keywords</label>
+                                    <input type="text" name="ls_keyword" id="ls_keyword" class="form-control" 
+                                           value="{{ old('ls_keyword') }}" 
+                                           placeholder="related terms, synonyms">
+                                    <small class="form-text text-muted">
+                                        Latent Semantic Indexing keywords for better contextual relevance.
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_frequency">Update Frequency</label>
+                                    <select name="update_frequency" id="update_frequency" class="form-control select2">
+                                        <option value="never" {{ old('update_frequency') == 'never' ? 'selected' : '' }}>Never</option>
+                                        <option value="daily" {{ old('update_frequency') == 'daily' ? 'selected' : '' }}>Daily</option>
+                                        <option value="weekly" {{ old('update_frequency') == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                        <option value="monthly" {{ old('update_frequency') == 'monthly' ? 'selected' : '' }}>Monthly</option>
+                                        <option value="quarterly" {{ old('update_frequency') == 'quarterly' ? 'selected' : '' }}>Quarterly</option>
+                                        <option value="yearly" {{ old('update_frequency') == 'yearly' ? 'selected' : '' }}>Yearly</option>
+                                    </select>
+                                </div>
+
                                 <!-- SEO Preview -->
                                 <div class="seo-preview" id="seoPreview">
                                     <h3 id="previewTitle">Your title will appear here</h3>
                                     <div class="url" id="previewUrl">{{ url('/blog') }}/<span id="previewSlug">your-slug</span></div>
                                     <p class="description" id="previewDescription">Your meta description will appear here.</p>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Trust & Authorship Card -->
+                        <div class="card card-dark card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Trust & Authorship (E-E-A-T)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="author_credentials">Author Credentials</label>
+                                    <input type="text" name="author_credentials" id="author_credentials" class="form-control" 
+                                           value="{{ old('author_credentials') }}" 
+                                           placeholder="e.g., MD, PhD, Senior Medical Consultant">
+                                    <small class="form-text text-muted">
+                                        Displays professional titles to build authority.
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="author_bio">Author Brief Bio</label>
+                                    <textarea name="author_bio" id="author_bio" class="form-control" 
+                                              rows="3" placeholder="Short bio highlighting expertise...">{{ old('author_bio') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sources & References Card -->
+                        <div class="card card-secondary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">Sources & References</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="sourceContainer">
+                                    <div class="alert alert-light border">
+                                        <i class="fas fa-link"></i> Add authoritative sources to increase trustworthiness.
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addSource()">
+                                    <i class="fas fa-plus"></i> Add Source
+                                </button>
                             </div>
                         </div>
 
@@ -494,6 +557,38 @@
         </div>
     </div>
 </template>
+
+<!-- Source Template (hidden) -->
+<template id="sourceTemplate">
+    <div class="source-item card mb-2 bg-light">
+        <div class="card-body py-2">
+            <div class="row">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="small">Source Title</label>
+                                <input type="text" name="sources_references[@{{index}}][title]" class="form-control form-control-sm" placeholder="e.g. WHO Report" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-0">
+                                <label class="small">Source URL</label>
+                                <input type="url" name="sources_references[@{{index}}][url]" class="form-control form-control-sm" placeholder="https://..." required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 text-right">
+                    <button type="button" class="btn btn-danger btn-xs mt-4" onclick="removeSource(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
 @endsection
 
 @push('scripts')

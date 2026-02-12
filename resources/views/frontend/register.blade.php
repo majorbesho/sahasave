@@ -51,7 +51,7 @@
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4 text-center">
                 <div class="loginHeading">
-                    <h2 class="mainHeader">Create your free account</h2>
+                    <h1 class="mainHeader">Create your free account</h1>
                     <p>100% free. No credit card needed.</p>
                     <hr>
                 </div>

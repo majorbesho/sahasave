@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accordion Test</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            padding: 50px;
+            background: #1a1a2e;
+            color: white;
+        }
+        
+        .test-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* نفس الستايل من custom.css */
+        .faq-info .accordion-item {
+            border: 1px solid #183458;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(1, 32, 71, 0.2);
+            margin-bottom: 16px;
+        }
+        
+        .faq-info .accordion-item .accordion-button {
+            font-size: 18px;
+            color: #FFF;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        
+        .faq-info .accordion-item .accordion-button::after {
+            background: #183458;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .faq-info .accordion-item .accordion-button:not(.collapsed) {
+            color: #0E82FD;
+            background: transparent;
+        }
+        
+        .faq-info .accordion-item .accordion-button:not(.collapsed)::after {
+            background: #0E82FD;
+        }
+        
+        .faq-info .accordion-item .accordion-body {
+            margin: 0;
+            padding-top: 8px;
+            border: 0;
+        }
+        
+        .faq-info .accordion-item .accordion-content p {
+            color: #E2EDFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1 class="text-center mb-4">اختبار Accordion</h1>
+        
+        <div class="faq-info">
+            <div class="accordion" id="why-choose-accordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="whyHeadingOne">
+                        <a href="javascript:void(0);" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#whyCollapseOne" aria-expanded="true" aria-controls="whyCollapseOne">
+                            01 . كيف يعمل الكاش باك؟
+                        </a>
+                    </h2>
+                    <div id="whyCollapseOne" class="accordion-collapse collapse show" aria-labelledby="whyHeadingOne" data-bs-parent="#why-choose-accordion">
+                        <div class="accordion-body">
+                            <div class="accordion-content">
+                                <p>هذا هو محتوى السؤال الأول. عند حجز موعد مع أحد الأطباء المشاركين، ستحصل على نسبة من قيمة الحجز كاش باك نقدي يمكنك استخدامه في حجوزاتك القادمة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="whyHeadingTwo">
+                        <a href="javascript:void(0);" class="accordion-button collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#whyCollapseTwo" aria-expanded="false" aria-controls="whyCollapseTwo">
+                            02 . هل الأطباء معتمدون؟
+                        </a>
+                    </h2>
+                    <div id="whyCollapseTwo" class="accordion-collapse collapse" aria-labelledby="whyHeadingTwo" data-bs-parent="#why-choose-accordion">
+                        <div class="accordion-body">
+                            <div class="accordion-content">
+                                <p>نعم، جميع الأطباء على المنصة معتمدون ومرخصون من وزارة الصحة. نحن نتحقق من جميع الشهادات والتراخيص قبل قبول أي طبيب على المنصة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="whyHeadingThree">
+                        <a href="javascript:void(0);" class="accordion-button collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#whyCollapseThree" aria-expanded="false" aria-controls="whyCollapseThree">
+                            03 . هل هناك أي مخاطر؟
+                        </a>
+                    </h2>
+                    <div id="whyCollapseThree" class="accordion-collapse collapse" aria-labelledby="whyHeadingThree" data-bs-parent="#why-choose-accordion">
+                        <div class="accordion-body">
+                            <div class="accordion-content">
+                                <p>لا توجد أي مخاطر. المنصة آمنة تماماً ومعلوماتك محمية. جميع المعاملات المالية تتم عبر بوابات دفع آمنة ومشفرة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-5">
+            <h5>تعليمات الاختبار:</h5>
+            <ol>
+                <li>افتح Developer Tools (F12)</li>
+                <li>اذهب إلى Console</li>
+                <li>اكتب: <code>typeof bootstrap</code> - يجب أن يظهر "object"</li>
+                <li>جرب الضغط على العناوين لفتح/إغلاق المحتوى</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // تأكد من تحميل Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Bootstrap loaded:', typeof bootstrap !== 'undefined');
+            console.log('✅ Bootstrap version:', bootstrap.Collapse.VERSION);
+        });
+    </script>
+</body>
+</html>

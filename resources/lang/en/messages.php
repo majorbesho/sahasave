@@ -29,6 +29,8 @@ return [
 
     // عام
     'logout' => 'Logout',
+    'points' => 'Points',
+    'admin_dashboard' => 'Admin Dashboard',
 
     // المدونة (معلق حالياً لكن موجود في الكود)
     'blog' => 'Blog',

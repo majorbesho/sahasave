@@ -45,13 +45,13 @@
                         <span>Favourites</span>
                     </a>
                 </li>
-                <li class="{{ $route == 'patient.medical-records' ? 'active' : '' }}">
+                {{-- <li class="{{ $route == 'patient.medical-records' ? 'active' : '' }}">
                     <a href="{{ route('patient.medical-records') }}">
                         <i class="isax isax-note-21"></i>
                         <span>Medical Records</span>
                     </a>
-                </li>
-                <li class="{{ $route == 'patient.prescriptions' ? 'active' : '' }}">
+                </li> --}}
+                {{-- <li class="{{ $route == 'patient.prescriptions' ? 'active' : '' }}">
                     <a href="{{ route('patient.prescriptions') }}">
                         <i class="fa-solid fa-prescription"></i>
                         <span>Prescriptions</span>
@@ -62,7 +62,7 @@
                         <i class="fa-solid fa-flask"></i>
                         <span>Lab Orders</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="{{ $route == 'patient.referrals' ? 'active' : '' }}">
                     <a href="{{ route('patient.referrals') }}">
                         <i class="fa-solid fa-share-nodes"></i>

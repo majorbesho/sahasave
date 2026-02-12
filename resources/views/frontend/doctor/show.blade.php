@@ -1,7 +1,96 @@
 @extends('frontend.layouts.master')
 
-@section('title', 'حجز موعد مع د. ' . $doctor->name)
+@section('title', 'حجز موعد مع ' . $doctor->name . ' | SehaSave')
 
+@section('meta_description', 'احجز موعدك مع ' . $doctor->name . ' - ' . ($doctor->doctorProfile->specialty->name ?? 'أخصائي') . '. ' . ($doctor->doctorProfile->experience_years ?? 0) . ' سنة خبرة. ' . ($doctor->address ?? 'دبي'))
+
+@section('og_title', ' ' . $doctor->name . ' - ' . ($doctor->doctorProfile->specialty->name ?? 'طبيب') . ' | SehaSave')
+@section('og_description', 'احجز موعدك مع ' . $doctor->name . ' - ' . ($doctor->doctorProfile->specialty->name ?? 'أخصائي') . ' في دبي')
+@section('og_image', $doctor->photoUrl(asset('frontend/xx/assets/img/og-image.jpg')))
+@section('og_type', 'profile')
+
+@push('head')
+{{-- Physician Schema for SEO --}}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Physician",
+    "name": "Dr. {{ $doctor->name }}",
+    "image": "{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctors/doc-profile-02.jpg')) }}",
+    "url": "{{ url()->current() }}",
+    "description": "{{ $doctor->doctorProfile->bio ?? 'طبيب متخصص في ' . ($doctor->doctorProfile->specialty->name ?? 'الطب العام') }}",
+    "medicalSpecialty": "{{ $doctor->doctorProfile->specialty->name ?? 'General Practice' }}",
+    "telephone": "{{ $doctor->phone ?? '' }}",
+    "email": "{{ $doctor->email ?? '' }}",
+    @if($doctor->address)
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ $doctor->address }}",
+        "addressLocality": "Dubai",
+        "addressCountry": "AE"
+    },
+    @endif
+    "availableService": {
+        "@type": "MedicalProcedure",
+        "name": "Medical Consultation",
+        "procedureType": "{{ $doctor->doctorProfile->specialty->name ?? 'General' }}"
+    },
+    @if($doctor->doctorProfile && $doctor->doctorProfile->average_rating)
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ number_format($doctor->doctorProfile->average_rating, 1) }}",
+        "reviewCount": "{{ $doctor->doctorProfile->rating_count ?? 0 }}",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    @endif
+    "priceRange": "${{ number_format($doctor->doctorProfile->consultation_fee ?? 0, 0) }}",
+    "openingHoursSpecification": [
+        @php
+            $scheduleSpecs = [];
+            foreach ($doctor->schedules ?? [] as $schedule) {
+                $dayName = \App\Models\Schedule::DAYS_OF_WEEK[$schedule->day_of_week] ?? 'Monday';
+                $scheduleSpecs[] = '{
+                    "@type": "OpeningHoursSpecification",
+                    "dayOfWeek": "' . $dayName . '",
+                    "opens": "' . \Carbon\Carbon::parse($schedule->start_time)->format('H:i') . '",
+                    "closes": "' . \Carbon\Carbon::parse($schedule->end_time)->format('H:i') . '"
+                }';
+            }
+        @endphp
+        {!! implode(',', $scheduleSpecs) !!}
+    ]
+}
+</script>
+
+{{-- BreadcrumbList Schema --}}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Doctors",
+            "item": "{{ route('doctors.index') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Dr. {{ $doctor->name }}",
+            "item": "{{ url()->current() }}"
+        }
+    ]
+}
+</script>
+@endpush
 
 @section('content')
     <!-- Breadcrumb -->
@@ -16,7 +105,7 @@
                             <li class="breadcrumb-item" aria-current="page">Patient</li>
                             <li class="breadcrumb-item active">{{ $doctor->name }}'s Profile</li>
                         </ol>
-                        <h2 class="breadcrumb-title">{{ $doctor->name }}'s Profile</h2>
+                        <h1 class="breadcrumb-title">{{ $doctor->name }}'s Profile</h1>
                     </nav>
                 </div>
             </div>
@@ -42,7 +131,7 @@
                     <div class="doctor-widget doctor-profile-two">
                         <div class="doc-info-left">
                             <div class="doctor-img">
-                                <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctors/doc-profile-02.jpg') }}"
+                                <img src="{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctors/doc-profile-02.jpg')) }}"
                                     class="img-fluid" alt="{{ $doctor->name }}">
                             </div>
                             <div class="doc-info-cont">
@@ -169,7 +258,7 @@
                             <p><span>Price : ${{ number_format($doctor->doctorProfile->consultation_fee ?? 0, 0) }} </span>
                                 for a Session</p>
                             <div class="clinic-booking">
-                                <a class="apt-btn" href="{{ route('doctorshomex.booking.create', $doctor->id) }}"> Book
+                                <a class="apt-btn" href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.book', $doctor->doctorProfile->slug) : '#' }}"> Book
                                     Appointment</a>
                             </div>
 
@@ -431,7 +520,7 @@
                             <div class="row">
                                 @foreach($clinic->gallery->take(3) as $image)
                                     <div class="col-4">
-                                        <img src="{{ Storage::url($image->image_path) }}" 
+                                        <img src="{{ $image->image_url }}" 
                                              alt="Clinic Image"
                                              class="img-fluid rounded"
                                              style="height: 80px; object-fit: cover;">
@@ -638,144 +727,113 @@
                         </div>
                     </div>
 
+                    @php
+                        $reviewableAppointment = null;
+                        if(auth()->check() && auth()->user()->isPatient()) {
+                            $reviewableAppointment = \App\Models\Appointment::where('patient_id', auth()->id())
+                                ->where('doctor_id', $doctor->id)
+                                ->where('status', 'completed')
+                                ->whereDoesntHave('review')
+                                ->first();
+                        }
+                    @endphp
+
                     <div class="doc-information-details" id="review">
                         <div class="detail-title">
-                            <h4>Reviews (Static for now - requires a Review Model)</h4>
+                            <h4>Reviews ({{ $doctor->reviewsReceived->count() }})</h4>
                         </div>
-                        {{-- Reviews are static as no 'Review' model was provided. --}}
-                        <div class="doc-review-card">
-                            <div class="user-info-review">
-                                <div class="reviewer-img">
-                                    <a href="#" class="avatar-img"><img
-                                            src="{{ asset('frontend/xx/assets/img/clients/client-13.jpg') }}"
-                                            alt="Img"></a>
-                                    <div class="review-star">
-                                        <a href="#">kadajsalamander</a>
-                                        <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <span>5.0 | 2 days ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="thumb-icon"><i class="fa-regular fa-thumbs-up"></i>Yes,Recommend for
-                                    Appointment</span>
+                        
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                            <p>Thank you for this informative article! I've had a couple of hit-and-miss experiences with
-                                freelancers in the past, and I realize now that I wasn't vetting them properly. Your
-                                checklist
-                                for choosing the right freelancer is going to be my go-to from now on
-                            </p>
-                            <a href="#" class="reply d-flex align-items-center"><i
-                                    class="fa-solid fa-reply me-2"></i>Reply</a>
-                        </div>
-                        <div class="doc-review-card">
-                            <div class="user-info-review">
-                                <div class="reviewer-img">
-                                    <a href="#" class="avatar-img"><img
-                                            src="{{ asset('frontend/xx/assets/img/clients/client-14.jpg') }}"
-                                            alt="Img"></a>
-                                    <div class="review-star">
-                                        <a href="#">Dane jose</a>
-                                        <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <span>5.0 | 1 Months ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="thumb-icon"><i class="fa-regular fa-thumbs-up"></i>Yes,Recommend for
-                                    Appointment</span>
+                        @endif
+                         @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                            <p>As a freelancer myself, I find this article spot on! It's important for clients to
-                                understand what to look for in a freelancer and how to foster a good working relationship.
-                                The point about mutual respect
-                                and clear communication is key in my experience. Well done
-                            </p>
-                            <a href="#" class="reply d-flex align-items-center"><i
-                                    class="fa-solid fa-reply me-2"></i>Reply</a>
-                        </div>
-                        <div class="mb-0 doc-review-card">
-                            <div class="user-info-review">
-                                <div class="reviewer-img">
-                                    <a href="#" class="avatar-img"><img
-                                            src="{{ asset('frontend/xx/assets/img/clients/client-15.jpg') }}"
-                                            alt="Img"></a>
-                                    <div class="review-star">
-                                        <a href="#">Dane jose</a>
-                                        <div class="rating">
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <i class="fas fa-star filled"></i>
-                                            <span>5.0 | 15 days ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="thumb-icon"><i class="fa-regular fa-thumbs-up"></i>Yes,Recommend for
-                                    Appointment</span>
-                            </div>
-                            <p>Great article! I've bookmarked it for future reference. I'd love to read more about managing
-                                long-term relationships with freelancers, if you have any tips on that.
-                            </p>
-                            <a href="#" class="reply d-flex align-items-center"><i
-                                    class="fa-solid fa-reply me-2"></i>Reply</a>
-                            <div class="replied-info">
+                        @endif
+
+                        @forelse($doctor->reviewsReceived as $review)
+                             <div class="doc-review-card">
                                 <div class="user-info-review">
                                     <div class="reviewer-img">
-                                        <a href="#" class="avatar-img"><img
-                                                src="{{ asset('frontend/xx/assets/img/clients/client-16.jpg') }}"
-                                                alt="Img"></a>
+                                        <a href="#" class="avatar-img">
+                                            <img src="{{ $review->patient->photo_url }}" alt="Img">
+                                        </a>
                                         <div class="review-star">
-                                            <a href="#">Robert Hollenbeck</a>
+                                            <a href="#">{{ $review->patient->name }}</a>
+                                            <div class="rating">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <i class="fas fa-star {{ $i <= $review->rating ? 'filled' : '' }}"></i>
+                                                @endfor
+                                                <span>{{ $review->rating }}.0 | {{ $review->created_at->diffForHumans() }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <p>Thank you for your comment and I will try to make a another post on that topic.
-                                </p>
-                                <a href="#" class="reply d-flex align-items-center"><i
-                                        class="fa-solid fa-reply me-2"></i>Reply</a>
+                                <p>{{ $review->comment }}</p>
                             </div>
-                            <!-- Pagination -->
-                            <div class="pagination dashboard-pagination">
-                                <ul>
-                                    <li>
-                                        <a href="#" class="page-link prev-link"><i
-                                                class="fa-solid fa-chevron-left me-2"></i>Prev</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link active">1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link">2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link">3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link">4</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link">5</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link">6</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="page-link next-link">Next<i
-                                                class="fa-solid fa-chevron-right ms-2"></i></a>
-                                    </li>
-                                </ul>
+                        @empty
+                             <div class="text-center py-5">
+                                <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
+                                <h5>No reviews yet</h5>
+                                <p class="text-muted">Be the first to review this doctor after your visit!</p>
                             </div>
-                            <!-- /Pagination -->
-                        </div>
+                        @endforelse
+
+                        @if($reviewableAppointment)
+                            <div class="card mt-4 border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Rate your visit ({{ $reviewableAppointment->scheduled_for ? $reviewableAppointment->scheduled_for->format('Y-m-d') : 'Recent' }})</h5>
+                                    <form action="{{ route('reviews.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="doctor_id" value="{{ $doctor->id }}">
+                                        <input type="hidden" name="appointment_id" value="{{ $reviewableAppointment->id }}">
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Your Rating</label>
+                                            <div class="star-rating">
+                                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Your Comment</label>
+                                            <textarea class="form-control" name="comment" rows="3" placeholder="Share your experience..." required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                    </form>
+                                </div>
+                            </div>
+                             <style>
+                                .star-rating {
+                                    direction: rtl;
+                                    display: inline-flex;
+                                }
+                                .star-rating input {
+                                    display: none;
+                                }
+                                .star-rating label {
+                                    font-size: 24px;
+                                    color: #ddd;
+                                    cursor: pointer;
+                                    padding: 0 5px;
+                                }
+                                .star-rating input:checked ~ label,
+                                .star-rating label:hover,
+                                .star-rating label:hover ~ label {
+                                    color: #fce24b;
+                                }
+                            </style>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -1,14 +1,20 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAppointmentController;
 use App\Http\Controllers\Admin\DoctorManagementController;
 use App\Http\Controllers\Admin\MedicalCenterController;
 use App\Http\Controllers\admin\SpecialtyController as AdminSpecialtyController;
+use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Doctor\SpecialtyController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\Admin\LoyaltyTierController;
+use App\Http\Controllers\Admin\LoyaltyPointController;
+use App\Http\Controllers\Admin\LoyaltySettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ==================== ADMIN AUTH ROUTES ====================
@@ -44,8 +50,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         'ref_level' => App\Http\Controllers\ref_levelController::class,
         'ref_category' => App\Http\Controllers\ref_categoryController::class,
         'emp' => App\Http\Controllers\EmpController::class,
-        'faq' => App\Http\Controllers\FaqController::class,
+        // 'faq' => App\Http\Controllers\FaqController::class,
         'coupon' => App\Http\Controllers\CouponController::class,
+
+
 
     ];
 
@@ -68,6 +76,21 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/{id}/suspend', [DoctorManagementController::class, 'suspend'])->name('suspend');
         Route::delete('/{id}', [DoctorManagementController::class, 'destroy'])->name('destroy');
     });
+
+    // Appointments Management Routes
+    Route::prefix('appointments')->name('admin.appointments.')->group(function () {
+        Route::get('/', [AdminAppointmentController::class, 'index'])->name('index');
+        Route::get('/{id}', [AdminAppointmentController::class, 'show'])->name('show');
+        Route::put('/{id}/status', [AdminAppointmentController::class, 'updateStatus'])->name('updateStatus');
+    });
+
+    // Reviews Management
+    Route::prefix('reviews')->name('admin.reviews.')->group(function () {
+        Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+        Route::put('/{id}/status', [AdminReviewController::class, 'updateStatus'])->name('updateStatus');
+        Route::delete('/{id}', [AdminReviewController::class, 'destroy'])->name('destroy');
+    });
+
     Route::prefix('specialties')->name('admin.specialties.')->group(function () {
         Route::get('/', [AdminSpecialtyController::class, 'index'])->name('index');
         Route::get('/create', [AdminSpecialtyController::class, 'create'])->name('create');
@@ -102,7 +125,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 
     // في routes/admin.php
-    Route::prefix('medical-centers')->name('medical-centers.')->group(function () {
+    Route::prefix('medical-centers')->name('admin.medical-centers.')->group(function () {
         Route::get('/', [MedicalCenterController::class, 'index'])->name('index');
         Route::get('/create', [MedicalCenterController::class, 'create'])->name('create');
         Route::post('/', [MedicalCenterController::class, 'store'])->name('store');
@@ -163,6 +186,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/{id}/clone', [AdminBlogController::class, 'clone'])->name('clone');
         Route::get('/{id}/seo-analysis', [AdminBlogController::class, 'seoAnalysis'])->name('seo-analysis');
         Route::get('/export', [AdminBlogController::class, 'export'])->name('export');
+        Route::get('create-with-ai', [AdminBlogController::class, 'createWithAI'])->name('create-with-ai');
+        Route::post('generate-with-ai', [AdminBlogController::class, 'generateWithAI'])->name('generate-ai');
+        Route::post('store-ai-generated', [AdminBlogController::class, 'storeAIGenerated'])->name('store-ai');
+        Route::get('{id}/improve-with-ai', [AdminBlogController::class, 'improveWithAI'])->name('improve-with-ai');
     });
 
 
@@ -173,12 +200,49 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('/careers/{id}', [CareerController::class, 'update'])->name('admin.careers.update');
     Route::delete('/careers/{id}', [CareerController::class, 'destroy'])->name('admin.careers.destroy');
     Route::post('/careers/{id}/toggle-status', [CareerController::class, 'toggleStatus'])->name('admin.careers.toggle-status');
+
+
+    Route::resource('faq', FaqController::class);
+
+    // Additional routes
+    Route::post('faq/{id}/status', [FaqController::class, 'status'])->name('faq.status');
+    Route::post('faq/{id}/sort', [FaqController::class, 'sort'])->name('faq.sort');
+    Route::post('faq/bulk-action', [FaqController::class, 'bulkAction'])->name('faq.bulk.action');
+
+    // Category routes (Commented out as controllers are missing)
+    // Route::resource('faq-category', 'FaqCategoryController');
+    // Route::post('faq-category/{id}/status', 'FaqCategoryController@status')->name('faq-category.status');
+
+
+    // Tag routes
+    // Route::resource('faq-tag', 'FaqTagController');
+    // Loyalty Management
+    Route::prefix('loyalty')->name('admin.loyalty.')->group(function () {
+        Route::resource('tiers', LoyaltyTierController::class)->names('tiers');
+        Route::get('points', [LoyaltyPointController::class, 'index'])->name('points.index');
+        Route::get('points/{id}/edit', [LoyaltyPointController::class, 'edit'])->name('points.edit');
+        Route::put('points/{id}', [LoyaltyPointController::class, 'update'])->name('points.update');
+
+        Route::get('settings', [LoyaltySettingsController::class, 'index'])->name('settings.index');
+        Route::post('settings', [LoyaltySettingsController::class, 'update'])->name('settings.update');
+    });
+
+    // Rewards Management
+    Route::prefix('rewards')->name('admin.rewards.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\RewardController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\RewardController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\RewardController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\RewardController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\RewardController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\RewardController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/toggle-status', [\App\Http\Controllers\Admin\RewardController::class, 'toggleStatus'])->name('toggle-status');
+    });
 });
 
 
 
 
-
+Route::prefix('admin')->middleware('admin')->group(function () {});
 
 
     

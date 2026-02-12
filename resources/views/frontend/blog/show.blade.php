@@ -1,4 +1,9 @@
 @extends('frontend.layouts.master')
+@section('title', $blog->title . ' | SehaSave Blog')
+@section('meta_description', Str::limit(strip_tags($blog->description), 155))
+@section('og_title', $blog->title)
+@section('og_description', Str::limit(strip_tags($blog->description), 155))
+@section('og_image', $blog->featured_image_url)
 
 @section('content')
 <!-- Breadcrumb -->
@@ -39,11 +44,7 @@
                     <div class="blog blog-single-post">
                         <div class="blog-image">
                             <a href="javascript:void(0);">
-                                @if($blog->featured_image)
-                                    <img alt="{{ $blog->title }}" src="{{ asset('storage/' . $blog->featured_image) }}" class="img-fluid">
-                                @else
-                                    <img alt="Default Image" src="{{ asset('assets/img/blog/blog-list-01.jpg') }}" class="img-fluid">
-                                @endif
+                                <img alt="{{ $blog->title }}" src="{{ $blog->featured_image_url }}" class="img-fluid">
                             </a>
                         </div>
                         <div class="blog-info d-md-flex align-items-center justify-content-between flex-wrap">
@@ -56,11 +57,7 @@
                                     <li>
                                         <div class="post-author">
                                             <a href="#">
-                                                @if($blog->author && $blog->author->photo)
-                                                    <img src="{{ asset('storage/' . $blog->author->photo) }}" alt="Post Author">
-                                                @else
-                                                    <img src="{{ asset('assets/img/patients/patient21.jpg') }}" alt="Default Author">
-                                                @endif
+                                                <img src="{{ $blog->author ? $blog->author->photoUrl(asset('frontend/xx/assets/img/patients/patient21.jpg')) : asset('frontend/xx/assets/img/patients/patient21.jpg') }}" alt="Post Author">
                                                 <span>{{ $blog->author ? $blog->author->name : 'Admin' }}</span>
                                             </a>
                                         </div>
@@ -83,10 +80,10 @@
                         <div class="about-author-img">
                             <div class="author-img-wrap">
                                 <a href="#">
-                                     @if($blog->author->photo)
-                                        <img class="img-fluid" alt="{{ $blog->author->name }}" src="{{ asset('storage/' . $blog->author->photo) }}">
+                                     @if($blog->author)
+                                        <img class="img-fluid" alt="{{ $blog->author->name }}" src="{{ $blog->author->photoUrl(asset('frontend/xx/assets/img/logo/logo.png')) }}">
                                     @else
-                                        <img class="img-fluid" alt="" src="{{ asset('frontend/xx/assets/img/logo.png') }}">
+                                        <img class="img-fluid" alt="" src="{{ asset('frontend/xx/assets/img/logo/logo.png') }}">
                                     @endif
                                 </a>
                             </div>
@@ -148,11 +145,7 @@
                             <li>
                                 <div class="post-thumb">
                                     <a href="{{ route('blog.show', $related->slug) }}">
-                                        @if($related->featured_image)
-                                            <img class="img-fluid" src="{{ asset('storage/' . $related->featured_image) }}" alt="">
-                                        @else
-                                            <img class="img-fluid" src="{{ asset('assets/img/blog/blog-thumb-01.jpg') }}" alt="">
-                                        @endif
+                                        <img class="img-fluid" src="{{ $related->featured_image_url }}" alt="">
                                     </a>
                                 </div>
                                 <div class="post-info">

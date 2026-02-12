@@ -9,7 +9,7 @@
                 <div class="col-md-12 text-center">
                     <div class="section-title">
                         <h2 class="ec-bg-title">Terms & Condition</h2>
-                        <h2 class="ec-title">Terms & Condition</h2>
+                        <h1 class="ec-title">Terms & Condition</h1>
                         <p class="sub-title mb-3">Welcome to theSehaSave.com </p>
                     </div>
                 </div>

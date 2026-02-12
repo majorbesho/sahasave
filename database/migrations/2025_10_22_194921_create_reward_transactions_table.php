@@ -17,7 +17,7 @@ class CreateRewardTransactionsTable extends Migration
             $table->id();
 
             // المفاتيح الخارجية
-            $table->foreignId('reward_id')->constrained()->onDelete('cascade');
+            $table->foreignId('reward_id')->constrained('reward_programs')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('appointment_id')->nullable()->constrained()->onDelete('set null');
 

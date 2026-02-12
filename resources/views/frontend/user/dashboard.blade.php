@@ -200,8 +200,7 @@
                                             <i class="ion ion-logo-google text-google"></i>
                                             You are connected to Google:
                                         </h5>
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                            data-cfemail="f9979498818e9c9595b994989095d79a9694">[email&#160;protected]</a>
+                                        <a href="mailto:info@savesaha.com">info@savesaha.com</a>
                                     </div>
                                     <hr class="border-light m-0">
                                     <div class="card-body">

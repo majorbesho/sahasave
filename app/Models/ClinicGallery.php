@@ -54,11 +54,17 @@ class ClinicGallery extends Model
     // Attributes
     public function getImageUrlAttribute()
     {
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
         return Storage::url($this->image_path);
     }
 
     public function getThumbnailUrlAttribute()
     {
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
         $path = str_replace('.', '_thumb.', $this->image_path);
         if (Storage::exists($path)) {
             return Storage::url($path);

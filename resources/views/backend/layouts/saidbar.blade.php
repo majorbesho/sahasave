@@ -9,6 +9,11 @@
 @endphp
 <!-- Sidebar -->
 <div class="sidebar">
+    <div class="mt-3">
+        <a href="{{ route('admin') }}" class="btn btn-primary btn-block">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+    </div>
     <!-- Sidebar user panel (optional) -->
     <div class="pb-3 mt-3 mb-3 user-panel d-flex">
         <div class="image">
@@ -34,8 +39,6 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-
             <li class="nav-item menu-open">
                 <a href="#" class="nav-link active">
                     <i class="nav-icon fas fa-copy"></i>
@@ -68,7 +71,7 @@
 
 
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-copy"></i>
                     <p>
@@ -90,10 +93,63 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
 
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-medal"></i>
+        <p>
+            Loyalty Management
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.loyalty.tiers.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Loyalty Tiers</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.loyalty.points.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>User Points</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.loyalty.settings.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Loyalty Settings</p>
+            </a>
+        </li>
+    </ul>
+</li>
 
+<!-- Rewards Management -->
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-gift"></i>
+        <p>
+            إدارة المكافآت
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.rewards.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>جميع المكافآت</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.rewards.create') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>إصدار مكافأة</p>
+            </a>
+        </li>
+    </ul>
+</li>
 
 
 
@@ -156,6 +212,27 @@
                 </ul>
             </li>
 
+            <!-- Appointments Management -->
+            <li class="nav-item">
+                <a href="{{ route('admin.appointments.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-calendar-check"></i>
+                    <p>
+                        المواعيد
+                        <span class="badge badge-info right">جديد</span>
+                    </p>
+                </a>
+            </li>
+
+            <!-- Reviews Management -->
+            <li class="nav-item">
+                <a href="{{ route('admin.reviews.index') }}" class="nav-link">
+                    <i class="nav-icon fas fa-star"></i>
+                    <p>
+                        التقييمات
+                    </p>
+                </a>
+            </li>
+
 
 
 
@@ -187,7 +264,7 @@
 
 
 
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-copy"></i>
                     <p>
@@ -209,7 +286,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
 
 
@@ -223,13 +300,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="{{ route('medical-centers.index') }}" class="nav-link">
+                        <a href="{{ route('admin.medical-centers.index') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>medical-centers </p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('medical-centers.create') }}" class="nav-link">
+                        <a href="{{ route('admin.medical-centers.create') }}" class="nav-link">
                             <i class="far fa-circle nav-icon"></i>
                             <p>edical-centers Create </p>
                         </a>

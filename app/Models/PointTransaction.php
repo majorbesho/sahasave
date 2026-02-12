@@ -10,15 +10,23 @@ class PointTransaction extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'loyalty_point_id',
+        'transaction_code',
         'type',
-        'amount',
-        'balance_after',
+        'points',
+        'points_before',
+        'points_after',
+        'monetary_value',
+        'status',
+        'direction',
         'source_type',
         'source_id',
         'description',
-        'expiry_date',
         'metadata',
+        'expires_at',
+        'approved_at',
+        'approved_by',
     ];
 
     protected $casts = [

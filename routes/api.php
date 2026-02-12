@@ -1,43 +1,61 @@
 <?php
 
-use App\Http\Controllers\API\BannerController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::get('/', function () {
-    return 23;
+// Public routes
+Route::post('/register', [API\UserController::class, 'register'])->middleware('throttle:5,1');
+Route::post('/login', [API\UserController::class, 'login'])->middleware('throttle:5,1');
+Route::post('/verify-otp', [API\UserController::class, 'verifyOtp'])->middleware('throttle:5,1');
+
+// Patient routes
+Route::prefix('patient')->group(function () {
+    Route::post('/register', [API\UserController::class, 'register'])->middleware('throttle:5,1');
+    Route::get('/dashboard', [API\PatientController::class, 'dashboard'])->middleware(['auth:sanctum', 'throttle:60,1']);
+    Route::get('/appointments', [API\PatientController::class, 'appointments'])->middleware(['auth:sanctum', 'throttle:60,1']);
+    Route::post('/appointments/book', [API\PatientController::class, 'bookAppointment'])->middleware(['auth:sanctum', 'throttle:60,1']);
 });
-Route::get('/apibanners', [App\Http\Controllers\API\BannerController::class, 'index']);
-Route::get('banners', [App\Http\Controllers\API\BannerController::class, 'index']);
+
+// Doctor routes
+Route::prefix('doctor')->group(function () {
+    Route::get('/dashboard', [API\DoctorController::class, 'dashboard'])->middleware('auth:sanctum');
+    Route::get('/appointments', [API\DoctorController::class, 'appointments'])->middleware('auth:sanctum');
+    Route::put('/appointments/{id}/status', [API\DoctorController::class, 'updateAppointmentStatus'])->middleware('auth:sanctum');
+});
 
 
-//api
+Route::middleware(['auth:sanctum', 'medical.center.admin'])->prefix('medical-center')->group(function () {
+    Route::get('/dashboard/stats', [\App\Http\Controllers\Api\MedicalCenterApiController::class, 'dashboardStats']);
+    Route::get('/appointments/calendar', [\App\Http\Controllers\Api\MedicalCenterApiController::class, 'appointmentsCalendar']);
+});
 
 
-// Route::prefix('shipper')->group(function () {
-//     Route::post('/login', [\App\Http\Controllers\api\ShipperAuthController::class, 'login']);
-//     Route::post('/register', [\App\Http\Controllers\api\ShipperAuthController::class, 'registerapi'])->withoutMiddleware('auth:api');;
-// });
+// Medical services
+Route::prefix('medical')->group(function () {
+    Route::get('/specialties', [API\MedicalController::class, 'specialties']);
+    Route::get('/centers', [API\MedicalController::class, 'centers']);
+    Route::get('/doctors', [API\MedicalController::class, 'doctors']);
+    Route::get('/doctor/{id}', [API\MedicalController::class, 'doctorDetails']);
+});
 
-// Route::prefix('carrier')->group(function () {
-//     Route::post('/login', [\App\Http\Controllers\api\CarrierController::class, 'cclogin']);
-//     Route::post('/register', [\App\Http\Controllers\api\CarrierController::class, 'ccregisterapi'])->withoutMiddleware('auth:api');;
-// });
-// Route::prefix('broker')->group(function () {
-//     Route::post('/login', [\App\Http\Controllers\api\brokerController::class, 'login']);
-//     Route::post('/register', [\App\Http\Controllers\api\brokerController::class, 'registerapi'])->withoutMiddleware('auth:api');;
-// });
+// Loyalty & Rewards
+Route::prefix('loyalty')->middleware('auth:sanctum')->group(function () {
+    Route::get('/points', [API\LoyaltyController::class, 'points']);
+    Route::get('/tier', [API\LoyaltyController::class, 'tier']);
+    Route::get('/rewards', [API\LoyaltyController::class, 'rewards']);
+    Route::post('/redeem', [API\LoyaltyController::class, 'redeem']);
+});
+
+// Admin routes
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/stats', [API\AdminController::class, 'stats']);
+    Route::get('/users', [API\AdminController::class, 'users']);
+    Route::get('/doctors', [API\AdminController::class, 'doctors']);
+    Route::get('/appointments', [API\AdminController::class, 'appointments']);
+});

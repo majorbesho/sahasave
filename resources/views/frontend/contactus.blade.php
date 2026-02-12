@@ -1,5 +1,6 @@
 @extends('frontend.layouts.master')
-
+@section('title', __('seo.contact.title'))
+@section('meta_description', __('seo.contact.description'))
 
 @section('content')
     <!-- Breadcrumb -->
@@ -13,7 +14,7 @@
                             <li class="breadcrumb-item active">Contact Us</li>
                         </ol>
 
-                        <h2 class="breadcrumb-title">Contact Us</h2>
+                        <h1 class="breadcrumb-title">Contact Us</h1>
 
                     </nav>
                 </div>
@@ -66,8 +67,7 @@
                             </div>
                             <div class="contact-details">
                                 <h4>Email Address</h4>
-                                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                        data-cfemail="60040f0303151205200518010d100c054e030f0d">[email&#160;protected]</a>
+                                <p><a href="mailto:info@savesaha.com">info@savesaha.com</a>
                                 </p>
                             </div>
                         </div>

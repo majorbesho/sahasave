@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class FaqFactory extends Factory
 {
-    protected $model = \App\Models\faq::class;
+    protected $model = \App\Models\Faq::class;
 
     public function definition()
     {

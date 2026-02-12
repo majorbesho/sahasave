@@ -32,10 +32,10 @@
                         <div class="card-header">
                             <h3 class="card-title">قائمة المراكز الطبية</h3>
                             <div class="card-tools">
-                                <a href="{{ route('medical-centers.create') }}" class="btn btn-success">
+                                <a href="{{ route('admin.medical-centers.create') }}" class="btn btn-success">
                                     <i class="fas fa-plus"></i> إضافة مركز طبي
                                 </a>
-                                <a href="{{ route('medical-centers.statistics') }}" class="btn btn-info">
+                                <a href="{{ route('admin.medical-centers.statistics') }}" class="btn btn-info">
                                     <i class="fas fa-chart-bar"></i> الإحصائيات
                                 </a>
                             </div>
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <button type="submit" class="btn btn-primary">بحث</button>
-                                        <a href="{{ route('medical-centers.index') }}" class="btn btn-secondary">إعادة
+                                        <a href="{{ route('admin.medical-centers.index') }}" class="btn btn-secondary">إعادة
                                             تعيين</a>
                                     </div>
                                 </div>
@@ -165,19 +165,19 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="{{ route('medical-centers.show', $center->id) }}"
+                                                        <a href="{{ route('admin.medical-centers.show', $center->id) }}"
                                                             class="btn btn-info btn-sm" title="عرض">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('medical-centers.edit', $center->id) }}"
+                                                        <a href="{{ route('admin.medical-centers.edit', $center->id) }}"
                                                             class="btn btn-primary btn-sm" title="تعديل">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="{{ route('medical-centers.manage-doctors', $center->id) }}"
+                                                        <a href="{{ route('admin.medical-centers.manage-doctors', $center->id) }}"
                                                             class="btn btn-success btn-sm" title="إدارة الأطباء">
                                                             <i class="fas fa-user-md"></i>
                                                         </a>
-                                                        <form action="{{ route('medical-centers.destroy', $center->id) }}"
+                                                        <form action="{{ route('admin.medical-centers.destroy', $center->id) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')

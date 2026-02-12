@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
 
-    // Patient Dashboard
-    Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])
-        ->middleware('verified')
-        ->name('patient.dashboard');
+
 
     // User Dashboard & Profile
     Route::prefix('user')->group(function () {
@@ -49,8 +46,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
 
-    Route::get('/doctors/search', [DoctorController::class, 'search'])->name('doctorshome.search');
-    Route::get('/doctors/{id}', [DoctorController::class, 'show'])->name('doctorshome.show');
+    // Route::get('/doctors/search', [DoctorController::class, 'search'])->name('doctorshome.search');
+    // Route::get('/doctors/{id}', [DoctorController::class, 'show'])->name('doctorshome.show');
 
     //Route::get('/doctors/book/{id}', [DoctorController::class, 'book'])->name('doctorshome.booking.create');
 
@@ -59,7 +56,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
 
-    Route::get('/doctors/{id}/available-times', [DoctorController::class, 'getAvailableTimes'])->name('doctors.available_times');
+    Route::get('/doctors/{slug}/available-times', [DoctorController::class, 'getAvailableTimes'])->name('doctors.available_times');
 
 
 
@@ -67,27 +64,27 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
     Route::get('/appointments/checkout/{scheduleId}', [AppointmentController::class, 'checkout'])->name('appointments.checkout');
-    //Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
-    Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');    // Route::get('/doctors/{doctor}/available-times', [AppointmentController::class, 'getAvailableTimes'])
+    Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointments.store');
+
     //     ->name('api.doctors.available-times');
 
     Route::get('/appointments/{appointment}/confirmation', [AppointmentController::class, 'confirmation'])
         ->name('appointments.confirmation');
 
     Route::get('/appointments', [PatientDashboardController::class, 'index'])->name('patient.appointments');
-    Route::get('/appointments/{id}', [PatientDashboardController::class, 'show'])->name('patient.appointment.details');
-    Route::post('/appointments/{id}/cancel', [PatientDashboardController::class, 'cancel'])->name('patient.appointments.cancel');
-    Route::post('/appointments/{id}/review', [PatientDashboardController::class, 'addReview'])->name('patient.appointments.review');
+    Route::get('/appointments/{appointment}', [PatientDashboardController::class, 'show'])->name('patient.appointment.details');
+    Route::post('/appointments/{appointment}/cancel', [PatientDashboardController::class, 'cancel'])->name('patient.appointments.cancel');
+    Route::post('/appointments/{appointment}/review', [PatientDashboardController::class, 'addReview'])->name('patient.appointments.review');
 });
 
 
 Route::middleware(['auth', 'verified'])->prefix('patient')->name('patient.')->group(function () {
 
-    Route::get('/dashboard', [PatientDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [PatientDashboardController::class, 'dashboard'])->name('dashboard');
 
     // المواعيد
     Route::get('/appointments', [PatientDashboardController::class, 'appointments'])->name('appointmentsslide');
-    Route::get('/appointments/{id}', [PatientDashboardController::class, 'showAppointment'])->name('appointments.show');
+    Route::get('/appointments/{appointment}', [PatientDashboardController::class, 'showAppointment'])->name('appointments.show');
     // المفضلة
     Route::get('/favorites', [PatientDashboardController::class, 'favorites'])->name('favorites');
     Route::post('/favorites/toggle', [PatientDashboardController::class, 'toggleFavorite'])->name('favorites.toggle-global');

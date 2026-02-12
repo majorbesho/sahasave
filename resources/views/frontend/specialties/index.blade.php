@@ -1,7 +1,6 @@
 @extends('frontend.layouts.master')
-
-@section('title', 'Medical Specialties')
-
+@section('title', __('seo.specialties.title'))
+@section('meta_description', __('seo.specialties.description'))
 @section('content')
 <!-- Breadcrumb -->
 <div class="breadcrumb-bar">
@@ -17,7 +16,7 @@
                         </li>
                         <li class="breadcrumb-item active">Medical Specialties</li>
                     </ol>
-                    <h2 class="breadcrumb-title">Medical Specialties</h2>
+                    <h1 class="breadcrumb-title">Medical Specialties</h1>
                 </nav>
             </div>
         </div>

@@ -26,7 +26,7 @@ class PaymentTypeCollection implements IteratorAggregate, Countable
     {
         $zeroDefault = [
             Money::AMOUNT   => 0.0,
-            Money::CURRENCY => 'SAR',
+            Money::CURRENCY => 'AED',
         ];
 
         foreach ($paymentTypes as $paymentType) {
@@ -60,7 +60,7 @@ class PaymentTypeCollection implements IteratorAggregate, Countable
     {
         $zeroDefault = [
             Money::AMOUNT   => 0.0,
-            Money::CURRENCY => 'SAR',
+            Money::CURRENCY => 'AED',
         ];
 
         $result = [];

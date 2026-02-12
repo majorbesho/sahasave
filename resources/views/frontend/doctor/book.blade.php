@@ -1,6 +1,6 @@
 @extends('frontend.layouts.master')
 
-@section('title', 'حجز موعد مع د. ' . $doctor->name)
+@section('title', __('booking.book_appointment_with', ['name' => $doctor->name]))
 
 @section('content')
   <style>
@@ -94,10 +94,10 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="isax isax-home-15"></i></a>
                             </li>
-                            <li class="breadcrumb-item"><a href="{{ route('doctorshome.search') }}">الأطباء</a></li>
-                            <li class="breadcrumb-item active">حجز موعد</li>
+                            <li class="breadcrumb-item"><a href="{{ route('doctors.search') }}">{{ __('booking.doctors') }}</a></li>
+                            <li class="breadcrumb-item active">{{ __('booking.book_appointment') }}</li>
                         </ol>
-                        <h2 class="breadcrumb-title">حجز موعد مع {{ $doctor->name }}</h2>
+                        <h2 class="breadcrumb-title">{{ __('booking.book_appointment_with', ['name' => $doctor->name]) }}</h2>
                     </nav>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                                     </p> --}}
                                 </a>
                                 <div class="booking-info">
-                                    <h4><a href="{{ route('doctorshome.show', $doctor->id) }}">د. {{ $doctor->name }}</a></h4>
+                                    <h4><a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">{{ $doctor->name }}</a></h4>
                                     <div class="rating">
                                         @for ($i = 1; $i <= 5; $i++)
                                             <i
@@ -138,7 +138,7 @@
                                     </div>
                                     <p class="mb-0 text-muted">
                                         <i class="fas fa-map-marker-alt"></i>
-                                        {{ $doctor->doctorProfile->clinic_address ?? 'عنوان غير محدد' }}
+                                        {{ $doctor->doctorProfile->clinic_address ?? __('booking.address_not_specified') }}
                                     </p>
                                 </div>
                             </div>
@@ -166,20 +166,17 @@
                         <div class="col-12 col-sm-8 col-md-6 text-sm-end">
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-outline-primary btn-sm" id="current-week-btn">
-                                    الأسبوع الحالي
+                                    {{ __('booking.current_week') }}
                                 </button>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle"
                                         data-bs-toggle="dropdown">
-                                        اختر أسبوع
+                                        {{ __('booking.choose_week') }}
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item week-option" href="#" data-week="0">الأسبوع
-                                                الحالي</a></li>
-                                        <li><a class="dropdown-item week-option" href="#" data-week="1">الأسبوع
-                                                القادم</a></li>
-                                        <li><a class="dropdown-item week-option" href="#" data-week="2">بعد
-                                                أسبوعين</a></li>
+                                        <li><a class="dropdown-item week-option" href="#" data-week="0">{{ __('booking.current_week') }}</a></li>
+                                        <li><a class="dropdown-item week-option" href="#" data-week="1">{{ __('booking.next_week') }}</a></li>
+                                        <li><a class="dropdown-item week-option" href="#" data-week="2">{{ __('booking.after_two_weeks') }}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -205,14 +202,14 @@
                                                 data-day="{{ $day['day_name'] }}"
                                                 data-day-arabic="{{ $day['day_name_arabic'] }}"
                                                 data-day-of-week="{{ $day['day_of_week'] }}"
-                                                @if($day['is_past']) title="لا يمكن حجز موعد في تاريخ ماضي" @endif>
+                                                @if($day['is_past']) title="{{ __('booking.cannot_book_past_date') }}" @endif>
                                                 <span>{{ $day['day_name_arabic'] }}</span>
                                                 <span class="slot-date">
                                                     {{ $day['display_date'] }}
                                                     <small class="slot-year">{{ $day['display_year'] }}</small>
                                                 </span>
                                                 @if($day['is_past'])
-                                                    <small class="text-muted d-block">(ماضي)</small>
+                                                    <small class="text-muted d-block">({{ __('booking.past') }})</small>
                                                 @endif
                                             </li>
                                         @endforeach
@@ -235,13 +232,13 @@
                                         @if (count($availableDays) > 0)
                                             <div class="py-4 text-center">
                                                 <i class="mb-3 fas fa-clock fa-2x text-muted"></i>
-                                                <p>اختر يومًا لعرض الأوقات المتاحة</p>
+                                                <p>{{ __('booking.select_day_to_view') }}</p>
                                             </div>
                                         @else
                                             <div class="py-4 text-center">
                                                 <i class="mb-3 fas fa-calendar-times fa-2x text-muted"></i>
-                                                <h5>لا توجد أيام متاحة</h5>
-                                                <p class="text-muted">لا توجد مواعيد متاحة في هذا الأسبوع</p>
+                                                <h5>{{ __('booking.no_available_days') }}</h5>
+                                                <p class="text-muted">{{ __('booking.no_appointments_this_week') }}</p>
                                             </div>
                                         @endif
                                     </div>
@@ -253,7 +250,7 @@
                     <!-- زر المتابعة -->
                     <div class="mt-4 mb-0 submit-section proceed-btn text-end">
                         <button type="button" id="proceed-btn" class="btn btn-primary submit-btn" disabled>
-                            المتابعة للدفع
+                            {{ __('booking.proceed_to_payment') }}
                         </button>
                     </div>
                 </div>
@@ -266,12 +263,12 @@
         let selectedDate = null;
         let selectedDay = null;
         let currentWeek = {{ $weekOffset }};
-        const doctorId = {{ $doctor->id }};
+        const doctorSlug = "{{ $doctor->doctorProfile->slug }}";
 
         // دوال التنقل بين الأسابيع
         function navigateWeek(direction) {
             currentWeek += direction;
-            window.location.href = `/doctors/book/{{ $doctor->id }}?week=${currentWeek}`;
+            window.location.href = getBookUrl(currentWeek);
         }
 
 
@@ -281,7 +278,7 @@
             
             // التحقق من أن التاريخ ليس في الماضي
             if (!isValidDate(date)) {
-                alert('لا يمكن حجز موعد في تاريخ ماضي. يرجى اختيار تاريخ من اليوم أو فيما بعد.');
+                alert('{{ __('booking.alert_past_date') }}');
                 return;
             }
 
@@ -329,8 +326,8 @@ function loadAvailableTimes(date, day) {
         container.innerHTML = `
             <div class="py-4 text-center">
                 <i class="mb-3 fas fa-calendar-times fa-2x text-warning"></i>
-                <h5>لا يمكن اختيار تاريخ ماضي</h5>
-                <p class="text-muted">يرجى اختيار تاريخ من اليوم أو فيما بعد</p>
+                <h5>{{ __('booking.cannot_select_past_date') }}</h5>
+                <p class="text-muted">{{ __('booking.select_future_date') }}</p>
             </div>
         `;
         
@@ -348,12 +345,12 @@ function loadAvailableTimes(date, day) {
     container.innerHTML = `
         <div class="py-4 text-center">
             <div class="mb-3 spinner-border text-primary" role="status">
-                <span class="visually-hidden">جاري التحميل...</span>
+                <span class="visually-hidden">{{ __('booking.loading_available_times') }}</span>
             </div>
-            <p>جاري تحميل الأوقات المتاحة...</p>
+            <p>{{ __('booking.loading_available_times') }}</p>
         </div>`;
 
-    fetch(`/doctors/${doctorId}/available-times?date=${date}`)
+    fetch(`/doctors/${doctorSlug}/available-times?date=${date}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -368,10 +365,10 @@ function loadAvailableTimes(date, day) {
             container.innerHTML = `
                 <div class="py-4 text-center">
                     <i class="mb-3 fas fa-exclamation-triangle fa-2x text-danger"></i>
-                    <h5>خطأ في تحميل البيانات</h5>
-                    <p class="text-muted">حدث خطأ أثناء جلب الأوقات المتاحة</p>
+                    <h5>{{ __('booking.error_loading_data') }}</h5>
+                    <p class="text-muted">{{ __('booking.error_fetching_times') }}</p>
                     <button class="btn btn-primary btn-sm" onclick="window.loadAvailableTimes('${date}', '${day}')">
-                        إعادة المحاولة
+                        {{ __('booking.retry') }}
                     </button>
                 </div>
             `;
@@ -381,7 +378,7 @@ function loadAvailableTimes(date, day) {
 
 
         function getBookUrl(week = 0) {
-            return `/doctors/book/{{ $doctor->id }}?week=${week}`;
+            return "{{ route('doctors.book', $doctor->doctorProfile->slug) }}?week=" + week;
         }
 
         // تحميل الأوقات المتاحة من السيرفر
@@ -395,12 +392,12 @@ function loadAvailableTimes(date, day) {
             container.innerHTML = `
                 <div class="py-4 text-center">
                     <div class="mb-3 spinner-border text-primary" role="status">
-                        <span class="visually-hidden">جاري التحميل...</span>
+                        <span class="visually-hidden">{{ __('booking.loading_available_times') }}</span>
                     </div>
-                    <p>جاري تحميل الأوقات المتاحة...</p>
+                    <p>{{ __('booking.loading_available_times') }}</p>
                 </div>`;
 
-            fetch(`/doctors/${doctorId}/available-times?date=${date}`)
+            fetch(`/doctors/${doctorSlug}/available-times?date=${date}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -415,10 +412,10 @@ function loadAvailableTimes(date, day) {
                     container.innerHTML = `
                         <div class="py-4 text-center">
                             <i class="mb-3 fas fa-exclamation-triangle fa-2x text-danger"></i>
-                            <h5>خطأ في تحميل البيانات</h5>
-                            <p class="text-muted">حدث خطأ أثناء جلب الأوقات المتاحة</p>
+                            <h5>{{ __('booking.error_loading_data') }}</h5>
+                            <p class="text-muted">{{ __('booking.error_fetching_times') }}</p>
                             <button class="btn btn-primary btn-sm" onclick="window.loadAvailableTimes('${date}', '${day}')">
-                                إعادة المحاولة
+                                {{ __('booking.retry') }}
                             </button>
                         </div>
                     `;
@@ -431,8 +428,8 @@ function loadAvailableTimes(date, day) {
                 container.innerHTML = `
                     <div class="py-4 text-center">
                         <i class="mb-3 fas fa-exclamation-triangle fa-2x text-warning"></i>
-                        <h5>لا توجد بيانات</h5>
-                        <p class="text-muted">لم يتم العثور على أوقات متاحة</p>
+                        <h5>{{ __('booking.no_data') }}</h5>
+                        <p class="text-muted">{{ __('booking.no_times_found') }}</p>
                     </div>
                 `;
                 return;
@@ -444,8 +441,8 @@ function loadAvailableTimes(date, day) {
                 container.innerHTML = `
                     <div class="py-4 text-center">
                         <i class="mb-3 fas fa-calendar-times fa-2x text-muted"></i>
-                        <h5>لا توجد أوقات متاحة</h5>
-                        <p class="text-muted">جميع المواعيد محجوزة في هذا اليوم</p>
+                        <h5>{{ __('booking.no_available_times') }}</h5>
+                        <p class="text-muted">{{ __('booking.all_booked_today') }}</p>
                     </div>
                 `;
                 return;
@@ -620,7 +617,7 @@ function loadAvailableTimes(date, day) {
                         const checkoutUrl = "{{ route('appointments.checkout', ['scheduleId' => 'PLACEHOLDER']) }}";
         window.location.href = checkoutUrl.replace('PLACEHOLDER', selectedScheduleId);
                     } else {
-                        alert('يرجى اختيار موعد أولاً');
+                        alert('{{ __('booking.alert_select_appointment') }}');
                     }
                 });
             }

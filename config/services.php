@@ -19,6 +19,14 @@ return [
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
+
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4'),
+        'temperature' => env('AI_TEMPERATURE', 0.7),
+        'max_tokens' => env('AI_MAX_TOKENS', 4000),
+    ],
+
     'stripe' => [
         'secret' => env('STRIPE_SECRET'),
     ],
@@ -35,7 +43,7 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => 'your_redirect_url',
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
     'facebook' => [
         'client_id' => env('FACEBOOK_CLIENT_ID'),

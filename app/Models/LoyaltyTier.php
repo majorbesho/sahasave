@@ -12,22 +12,32 @@ class LoyaltyTier extends Model
 
     protected $fillable = [
         'name',
-        'slug',
-        'min_points',
-        'max_points',
-        'point_multiplier',
-        'color',
-        'icon',
-        'description',
+        'code',
+        'level',
+        'min_points_required',
+        'min_monetary_value',
+        'points_earning_rate',
+        'points_expiry_days',
         'benefits',
-        'priority',
+        'perks',
+        'requirements',
         'is_active',
+        'priority',
+        'badge_image',
+        'badge_color',
     ];
 
     protected $casts = [
-        'point_multiplier' => 'decimal:2',
+        'level' => 'integer',
+        'min_points_required' => 'integer',
+        'min_monetary_value' => 'integer',
+        'points_earning_rate' => 'decimal:4',
+        'points_expiry_days' => 'integer',
         'benefits' => 'array',
+        'perks' => 'array',
+        'requirements' => 'array',
         'is_active' => 'boolean',
+        'priority' => 'integer',
     ];
 
     public function users()

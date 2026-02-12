@@ -87,9 +87,9 @@
                         <li class="breadcrumb-item">
                             <a href="{{ route('home') }}"><i class="isax isax-home-15"></i></a>
                         </li>
-                        <li class="breadcrumb-item active">تأكيد الحجز</li>
+                        <li class="breadcrumb-item active">{{ __('confirmation.title') }}</li>
                     </ol>
-                    <h2 class="breadcrumb-title">تأكيد الحجز</h2>
+                    <h2 class="breadcrumb-title">{{ __('confirmation.title') }}</h2>
                 </nav>
             </div>
         </div>
@@ -107,29 +107,38 @@
                     <div class="success-icon">
                         <i class="fas fa-circle-check text-success"></i>
                     </div>
-                    <h4 class="mt-3">تم حجز موعدك بنجاح</h4>
-                    <p class="text-muted">سيتم إرسال تأكيد الحجز إلى بريدك الإلكتروني</p>
+                    <h4 class="mt-3">{{ __('confirmation.success_message') }}</h4>
+                    <p class="text-muted">{{ __('confirmation.email_notice') }}</p>
                 </div>
                 
                 <div class="card booking-card mt-4">
                     <div class="card-body booking-card-body booking-list-body">
                         <div class="booking-doctor-left booking-success-info">
                             <div class="booking-doctor-img">
-                                <a href="{{ route('doctorshome.show', $appointment->doctor->id) }}">
-                                    <img src="{{ $appointment->doctor->photo_url }}" alt="{{ $appointment->doctor->name }}" class="img-fluid">
-                                </a>
+                                @if($appointment->doctor)
+                                    <a href="{{ $appointment->doctor->doctorProfile && $appointment->doctor->doctorProfile->slug ? route('doctors.show', $appointment->doctor->doctorProfile->slug) : '#' }}">
+                                        <img src="{{ $appointment->doctor->photo_url }}" alt="{{ $appointment->doctor->name }}" class="img-fluid">
+                                    </a>
+                                @else
+                                    <img src="{{ $appointment->medicalCenter->logo_url ?? asset('frontend/xx/assets/img/medical-center-placeholder.png') }}" alt="{{ $appointment->medicalCenter->name ?? '' }}" class="img-fluid">
+                                @endif
                             </div>
                             <div class="booking-doctor-info">
-                                <h4>
-                                    <a href="{{ route('doctorshome.show', $appointment->doctor->id) }}">
-                                        د. {{ $appointment->doctor->name }}
-                                    </a>
-                                </h4>
-                                <p>{{ $appointment->doctor->doctorProfile->specialization ?? 'طبيب' }}</p>
+                                @if($appointment->doctor)
+                                    <h4>
+                                        <a href="{{ $appointment->doctor->doctorProfile && $appointment->doctor->doctorProfile->slug ? route('doctors.show', $appointment->doctor->doctorProfile->slug) : '#' }}">
+                                            د. {{ $appointment->doctor->name }}
+                                        </a>
+                                    </h4>
+                                    <p>{{ $appointment->doctor->doctorProfile->specialization ?? __('confirmation.doctor_specialization_default') }}</p>
+                                @else
+                                    <h4>{{ $appointment->medicalCenter->name ?? '' }}</h4>
+                                    <p>{{ __('medical_centers.medical_center') }}</p>
+                                @endif
                                 <div class="booking-doctor-location">
                                     <p>
                                         <i class="feather-map-pin"></i> 
-                                        {{ $appointment->doctor->address ?? 'لم يتم تحديد العنوان' }}
+                                        {{ $appointment->doctor->address ?? $appointment->medicalCenter->address ?? __('confirmation.address_not_specified') }}
                                     </p>
                                 </div>
                             </div>
@@ -139,34 +148,34 @@
                             <div class="booking-date-list consultation-date-list">
                                 <ul>
                                     <li>
-                                        <strong>رقم الحجز:</strong> 
+                                        <strong>{{ __('confirmation.booking_number') }}:</strong> 
                                         <span class="text-primary">{{ $appointment->appointment_number }}</span>
                                     </li>
                                     <li>
-                                        <strong>تاريخ الحجز:</strong> 
+                                        <strong>{{ __('confirmation.booking_date') }}:</strong> 
                                         <span>{{ $appointment->scheduled_for->translatedFormat('l, j F Y') }}</span>
                                     </li>
                                     <li>
-                                        <strong>وقت الحجز: 
+                                        <strong>{{ __('confirmation.booking_time') }}: 
                                             <i class="warning"></i>
-                                            الموعد غير مؤكد ... برجاء الانتظار التاكيد في خلال 24 ساعه 
+                                            {{ __('confirmation.unconfirmed_notice') }} 
                                         </strong> 
                                         <span>{{ $appointment->scheduled_for->format('h:i A') }}</span>
                                     </li>
                                     <li>
-                                        <strong>نوع الاستشارة:</strong> 
+                                        <strong>{{ __('confirmation.consultation_type') }}:</strong> 
                                         <span>
                                             @if($appointment->type === 'video_call')
-                                                <i class="feather-video text-primary"></i> استشارة فيديو
+                                                <i class="feather-video text-primary"></i> {{ __('confirmation.video_consultation') }}
                                             @elseif($appointment->type === 'audio_call')
-                                                <i class="feather-phone text-primary"></i> استشارة صوتية
+                                                <i class="feather-phone text-primary"></i> {{ __('confirmation.audio_consultation') }}
                                             @else
-                                                <i class="feather-map-pin text-primary"></i> زيارة مباشرة
+                                                <i class="feather-map-pin text-primary"></i> {{ __('confirmation.direct_visit') }}
                                             @endif
                                         </span>
                                     </li>
                                     <li>
-                                        <strong>الحالة:</strong> 
+                                        <strong>{{ __('confirmation.status') }}:</strong> 
                                         <span class="badge 
                                             @if($appointment->status === 'confirmed') bg-success
                                             @elseif($appointment->status === 'pending') bg-warning
@@ -177,8 +186,8 @@
                                     </li>
                                     @if($appointment->final_fee > 0)
                                     <li>
-                                        <strong>المبلغ المدفوع:</strong> 
-                                        <span class="text-success">{{ number_format($appointment->final_fee, 2) }} درهم</span>
+                                        <strong>{{ __('confirmation.amount_paid') }}:</strong> 
+                                        <span class="text-success">{{ number_format($appointment->final_fee, 2) }} {{ __('confirmation.currency') }}</span>
                                     </li>
                                     @endif
                                 </ul>
@@ -188,17 +197,15 @@
                 </div>
 
                 <div class="success-btn text-center mt-4">
-                    <!-- إضافة إلى تقويم جوجل -->
                     <a href="{{ $appointment->getGoogleCalendarLink() }}" 
                        class="btn btn-primary prime-btn" 
                        target="_blank">
-                        <i class="fab fa-google me-2"></i>إضافة إلى تقويم Google
+                        <i class="fab fa-google me-2"></i>{{ __('confirmation.add_to_google_calendar') }}
                     </a>
                     
-                    <!-- عرض تفاصيل الموعد -->
-                    <a href="{{ route('patient.appointment.details', $appointment->id) }}" 
+                    <a href="{{ route('patient.appointment.details', $appointment->slug) }}" 
                        class="btn btn-light">
-                        <i class="feather-eye me-2"></i>عرض تفاصيل الموعد
+                        <i class="feather-eye me-2"></i>{{ __('confirmation.view_appointment_details') }}
                     </a>
                 </div>
 
@@ -206,18 +213,18 @@
                     <div class="d-flex align-items-center">
                         <i class="feather-info me-2"></i>
                         <div>
-                            <strong>ملاحظة:</strong> 
-                            ستصلك رسالة تأكيد قبل الموعد بـ 24 ساعة. يرجى التأكد من توفرك في الوقت المحدد.
+                            <strong>{{ __('confirmation.note') }}:</strong> 
+                            {{ __('confirmation.confirmation_notice_details') }}
                         </div>
                     </div>
                 </div>
 
                 <div class="success-dashboard-link text-center mt-4">
                     <a href="{{ route('patient.dashboard') }}" class="btn btn-outline-primary">
-                        <i class="fa-solid fa-arrow-left-long me-2"></i> العودة للرئيسية
+                        <i class="fa-solid fa-arrow-left-long me-2"></i> {{ __('confirmation.back_to_home') }}
                     </a>
                     <a href="{{ route('patient.appointments') }}" class="btn btn-outline-secondary ms-2">
-                        <i class="feather-calendar me-2"></i> مواعيدي
+                        <i class="feather-calendar me-2"></i> {{ __('confirmation.my_appointments') }}
                     </a>
                 </div>
             </div>

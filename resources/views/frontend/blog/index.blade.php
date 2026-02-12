@@ -48,11 +48,7 @@
                 <div class="blog">
                     <div class="blog-image">
                         <a href="{{ route('blog.show', $blog->slug) }}">
-                            @if($blog->featured_image)
-                                <img class="img-fluid" src="{{ asset('storage/' . $blog->featured_image) }}" alt="{{ $blog->title }}">
-                            @else
-                                <img class="img-fluid" src="{{ asset('assets/img/blog/blog-list-01.jpg') }}" alt="Default Image">
-                            @endif
+                            <img class="img-fluid" src="{{ $blog->featured_image_url }}" alt="{{ $blog->title }}">
                         </a>
                         @if($blog->category)
                             <span class="badge badge-cyan category-slug">{{ $blog->category->name }}</span>
@@ -63,11 +59,7 @@
                             <li>
                                 <div class="post-author">
                                     <a href="#">
-                                        @if($blog->author && $blog->author->photo)
-                                            <img src="{{ asset('storage/' . $blog->author->photo) }}" alt="Post Author">
-                                        @else
-                                            <img src="{{ asset('frontend/xx/assets/img/logo.png') }}" alt="Default Author">
-                                        @endif
+                                        <img src="{{ $blog->author ? $blog->author->photoUrl(asset('frontend/xx/assets/img/logo.png')) : asset('frontend/xx/assets/img/logo.png') }}" alt="Post Author">
                                         <span>{{ $blog->author ? $blog->author->name : 'Admin' }}</span>
                                     </a>
                                 </div>
@@ -136,11 +128,7 @@
                             <li>
                                 <div class="post-thumb">
                                     <a href="{{ route('blog.show', $recent->slug) }}">
-                                        @if($recent->featured_image)
-                                            <img class="img-fluid" src="{{ asset('storage/' . $recent->featured_image) }}" alt="">
-                                        @else
-                                            <img class="img-fluid" src="{{ asset('assets/img/blog/blog-thumb-01.jpg') }}" alt="">
-                                        @endif
+                                        <img class="img-fluid" src="{{ $recent->featured_image_url }}" alt="">
                                     </a>
                                 </div>
                                 <div class="post-info">

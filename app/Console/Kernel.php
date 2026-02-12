@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Models\Blog;
+use Illuminate\Support\Str;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +17,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // تشغيل المهام الخلفية (Queue) كل دقيقة
+        // هذا الأمر ضروري للاستضافة المشتركة التي لا تدعم Supervisor
+        $schedule->command('queue:work --stop-when-empty --tries=3')
+            ->everyMinute()
+            ->withoutOverlapping();
+
         // $schedule->command('inspire')->hourly();
 
         // تقييم جميع المستخدمين في أول يوم من كل شهر
@@ -77,5 +84,11 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    private function optimizeMetaDescription($blog)
+    {
+        // تحسين وصفي بسيط لتفادي الخطأ
+        return Str::limit(strip_tags($blog->content ?? ''), 160);
     }
 }

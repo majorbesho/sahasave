@@ -1,24 +1,20 @@
 <!-- Vendor JS -->
 
 
-
-
-
-
 <!-- في نهاية body قبل </body> -->
 
 <!-- jQuery (مرة واحدة فقط) -->
 <script src="{{ asset('frontend/xx/assets/js/jquery-3.7.1.min.js') }}"></script>
 
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+        crossorigin="anonymous"></script>
 
 <!-- المكتبات الأخرى (مرة واحدة) -->
 <script src="{{ asset('frontend/xx/assets/js/feather.min.js') }}"></script>
 <script src="{{ asset('frontend/xx/assets/js/slick.js') }}"></script>
 <script src="{{ asset('frontend/xx/assets/js/moment.min.js') }}"></script>
-{{-- <script src="{{ asset('frontend/xx/assets/js/counter.js') }}"></script> --}}
-{{-- <script src="{{ asset('frontend/xx/assets/js/backToTop.js') }}"></script> --}}
 <script src="{{ asset('frontend/xx/assets/js/aos.js') }}"></script>
 <script src="{{ asset('frontend/xx/assets/js/owl.carousel.min.js') }}"></script>
 
@@ -26,8 +22,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- DateTimePicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
 <!-- SweetAlert -->
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -43,7 +38,6 @@
         const searchBox = document.querySelector('.togglesearch');
 
         if (searchToggle && searchBox) {
-            // إضافة CSS ديناميكي للبحث
             const searchStyles = `
             .togglesearch {
                 position: absolute;
@@ -89,92 +83,43 @@
             styleSheet.textContent = searchStyles;
             document.head.appendChild(styleSheet);
 
-            // إدارة ظهور/اختفاء البحث
             searchToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 searchBox.classList.toggle('show');
             });
 
-            // إغلاق البحث عند النقر خارج المنطقة
             document.addEventListener('click', function(e) {
                 if (!searchBox.contains(e.target) && !searchToggle.contains(e.target)) {
                     searchBox.classList.remove('show');
                 }
             });
 
-            // منع إغلاق البحث عند النقر داخله
             searchBox.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
         }
 
-        // تهيئة datetimepicker مع التحقق من jQuery
+        // تهيئة datetimepicker
         if (typeof jQuery !== 'undefined' && jQuery.fn.datetimepicker) {
             $('.datetimepicker').datetimepicker({
                 format: 'Y-m-d H:i',
                 minDate: 0,
                 step: 30,
-                defaultTime: '09:00'
+                defaultTime: '09:00',
+                validateOnBlur: false,
+                scrollInput: false
             });
-        } else {
-            console.warn('DateTimePicker not available');
         }
 
-        // دالة تغيير اللغة
-        window.changeLanguage = function(lang) {
-            window.location.href = "http://127.0.0.1:8000/language/" + lang;
-        };
-    });
-</script>
-
-{{--
-
-<script src="{{ asset('frontend/xx/assets/js/jquery-3.7.1.min.js') }}"></script>
-
-
-
-
-
-
-
-
-
-
-
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
-</script>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // التحقق من تحميل jQuery أولاً
-        if (typeof jQuery === 'undefined') {
-            console.error('jQuery is not loaded');
-            return;
-        }
-
-        // تهيئة datetimepicker مع إعدادات محسنة
-        $('.datetimepicker').datetimepicker({
-            format: 'Y-m-d H:i',
-            minDate: 0,
-            step: 30,
-            defaultTime: '09:00',
-            validateOnBlur: false,
-            scrollInput: false
-        });
-
-        // تحسين تجربة البحث
+        // تحسين تجربة البحث في الـ Hero
         const searchForm = document.querySelector('.search-box-one form');
         if (searchForm) {
             searchForm.addEventListener('submit', function(e) {
                 const searchInput = this.querySelector('input[name="search"]');
-                if (!searchInput.value.trim()) {
+                if (searchInput && !searchInput.value.trim()) {
                     e.preventDefault();
                     searchInput.focus();
-                    // إضافة تأثير visual للتنبيه
                     searchInput.style.border = '2px solid #ff4757';
                     setTimeout(() => {
                         searchInput.style.border = '';
@@ -182,18 +127,10 @@
                 }
             });
         }
+
+        // دالة تغيير اللغة
+        window.changeLanguage = function(lang) {
+            window.location.href = "{{ url('language') }}/" + lang;
+        };
     });
 </script>
-
-<script>
-    // كود تشخيصي
-    console.log('jQuery loaded:', typeof jQuery !== 'undefined');
-    console.log('Search elements:', {
-        toggle: document.querySelector('.searchbar a'),
-        box: document.querySelector('.togglesearch')
-    });
-
-  
-</script>
-
-<script></script>

@@ -1,5 +1,6 @@
 @extends('frontend.layouts.master')
-
+@section('title', __('seo.services.title'))
+@section('meta_description', __('seo.services.description'))
 
 @section('content')
     <!--Start Page Header-->
@@ -8,10 +9,10 @@
             style="background-image: url({{ asset('4/assets/images/backgrounds/Downpic.cc-1303342297.jpg') }})">
         </div>
         <div class="page-header__pattern"><img src="{{ asset('4/assets/images/pattern/contact-page-top-pattern.png') }}"
-                alt=""></div>
+                alt="" width="200" height="200"></div>
         <div class="container">
             <div class="page-header__inner">
-                <h2>Service</h2>
+                <h1>Service</h1>
                 <ul class="thm-breadcrumb">
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><span class="icon-right-arrow21"></span></li>

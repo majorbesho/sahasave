@@ -44,8 +44,8 @@
     <!-- Theme style -->
 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <link href="{{ asset('backend/plugins/switch-button-bootstrap/css/bootstrap-switch-button.min.css') }}"
-        rel="stylesheet">
+    {{-- <link href="{{ asset('backend/plugins/switch-button-bootstrap/css/bootstrap-switch-button.min.css') }}"
+        rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('backend/dist/css/custom.css') }}">
 
 </head>

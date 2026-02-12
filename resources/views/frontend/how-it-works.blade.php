@@ -216,21 +216,6 @@
         }
     </style>
 
-    <!-- Language Switcher -->
-    {{-- <div class="lang-switcher">
-        <form action="{{ route('language.switch') }}" method="POST">
-            @csrf
-            <button type="submit" name="locale" value="{{ $lang === 'ar' ? 'en' : 'ar' }}" class="lang-btn">
-                @if($lang === 'ar')
-                    <i class="fa-solid fa-globe"></i>
-                    <span>English</span>
-                @else
-                    <i class="fa-solid fa-globe"></i>
-                    <span>العربية</span>
-                @endif
-            </button>
-        </form>
-    </div> --}}
 
     <!-- Hero Section -->
     <header class="relative min-h-screen flex items-center pt-20 overflow-hidden hero-bg text-white">
@@ -629,12 +614,6 @@
         const stepsSection = document.getElementById('stepsLine');
         if(stepsSection) observer.observe(stepsSection);
 
-        // Language switcher confirmation
-        document.querySelector('.lang-btn').addEventListener('click', function(e) {
-            if(!confirm('{{ $isRTL ? "هل تريد تغيير اللغة؟" : "Do you want to change the language?" }}')) {
-                e.preventDefault();
-            }
-        });
 
         // RTL/LTR specific animations
         @if($isRTL)

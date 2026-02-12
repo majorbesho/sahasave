@@ -14,6 +14,7 @@ use App\Http\Controllers\frontend\SearchControll;
 use App\Http\Controllers\Auth\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Auth\PatientRegisterController;
 use App\Http\Controllers\Auth\DoctorRegisterController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Patient\PatientDashboardController;
@@ -29,7 +30,6 @@ use App\Http\Controllers\Patient\FavoriteController;
 use App\Http\Controllers\SpecialtyController;
 use Illuminate\Support\Facades\Artisan;
 
-use App\Http\Controllers\Doctor\DoctorController;
 use App\Http\Controllers\frontend\HowItWorksController;
 use App\Http\Controllers\InteractiveMapController;
 use App\Http\Controllers\MedicalCentersController;
@@ -40,10 +40,20 @@ use App\Http\Controllers\MedicalCentersController;
 |--------------------------------------------------------------------------
 */
 
+// Clinic Registration
+Route::get('/clinic-registration', [App\Http\Controllers\ClinicRegistrationController::class, 'create'])->name('clinic.register')->middleware('auth');
+Route::post('/clinic-registration', [App\Http\Controllers\ClinicRegistrationController::class, 'store'])->name('clinic.register.store')->middleware('auth');
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/doctor.php';
 require __DIR__ . '/patient.php';
+require __DIR__ . '/medical-center.php';
+
+
+
+require __DIR__ . '/clinic.php';
+
 // ==================== SYSTEM UTILITY ROUTES ====================
 Route::prefix('system')->group(function () {
     Route::get('/key', function () {
@@ -110,16 +120,7 @@ Auth::routes(['verify' => true]);
 // Social Authentication
 
 
-// Medical Platform Specific Registration
-Route::get('register/patient', [PatientRegisterController::class, 'create'])->name('register.patient');
-Route::post('register/patient', [PatientRegisterController::class, 'store'])->name('patient.register.save');
 
-Route::get('register/doctor', [DoctorRegisterController::class, 'create'])->name('register.doctor');
-Route::post('register/doctor', [DoctorRegisterController::class, 'store'])->name('doctor.register.save');
-Route::get('/register/doctor/pending', function () {
-
-    return view('auth.doctor-pending');
-})->name('register.doctor.pending');
 
 // ==================== FRONTEND ROUTES ====================
 
@@ -141,10 +142,10 @@ Route::get('/price', [IndexController::class, 'priceindex'])->name('index.price'
 
 // Blog Routes
 Route::prefix('blog')->name('blog.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Frontend\BlogController::class, 'index'])->name('index');
-    Route::get('/category/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'category'])->name('category');
-    Route::get('/tag/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'tag'])->name('tag');
-    Route::get('/{slug}', [App\Http\Controllers\Frontend\BlogController::class, 'show'])->name('show');
+    Route::get('/', [App\Http\Controllers\frontend\BlogController::class, 'index'])->name('index');
+    Route::get('/category/{slug}', [App\Http\Controllers\frontend\BlogController::class, 'category'])->name('category');
+    Route::get('/tag/{slug}', [App\Http\Controllers\frontend\BlogController::class, 'tag'])->name('tag');
+    Route::get('/{slug}', [App\Http\Controllers\frontend\BlogController::class, 'show'])->name('show');
 });
 
 Route::get('/doctor-search', [DoctorSearchController::class, 'search'])->name('search.doctors');
@@ -209,18 +210,12 @@ Route::match(['get', 'post'], 'wishlist/move-to-cart', [WishListController::clas
 
 
 
-// Doctor Search Routes (إذا لم تكن موجودة)doctor.book
+// ==================== DOCTOR SEARCH & PROFILE ROUTES ====================
 Route::get('/doctors', [DoctorDoctorController::class, 'index'])->name('doctors.search');
-
-
-//Route::get('/doctors/{id}', [App\Http\Controllers\Doctor\DoctorController::class, 'show'])->name('doctors.show');
-Route::get('/doctors/book/{id}', [DoctorDoctorController::class, 'book'])->name('doctors.book');
+Route::get('/doctors/{slug}', [DoctorDoctorController::class, 'show'])->name('doctors.show');
 Route::get('/doctors/book/create', [DoctorDoctorController::class, 'bookingcreate'])->name('booking.create');
-
-//Route::get('/doctors/{id}/available-times', [DoctorController::class, 'getAvailableTimes'])->name('doctors.available-times');
-
-// Route::get('/doctors/{id}/available-times', [App\Http\Controllers\Doctor\DoctorController::class, 'getAvailableTimes']);
-Route::get('/doctors/{id}/available-times', [App\Http\Controllers\Doctor\DoctorController::class, 'getAvailableTimes'])->name('doctors.available-times');
+Route::get('/doctors/book/{slug}', [DoctorDoctorController::class, 'book'])->name('doctors.book');
+Route::get('/doctors/{slug}/available-times', [DoctorDoctorController::class, 'getAvailableTimes'])->name('doctors.available-times');
 
 
 // ==================== PAYMENT ROUTES ====================
@@ -245,6 +240,10 @@ Route::get('/social-media-share', [App\Http\Controllers\SocialShareButtonsContro
 
 // ==================== PATIENT ROUTES ====================
 
+Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])
+    ->middleware('auth')
+    ->name('reviews.store');
+
 
 
 
@@ -260,7 +259,7 @@ Route::get('/newsletter/manage-subscription', [IndexController::class, 'manageSu
     ->name('newsletter.manage');
 
 
-Route::get('/doctors/book/{id}', [DoctorDoctorController::class, 'book'])->name('doctorshomex.booking.create');
+// Route::get('/doctors/book/{id}', [DoctorDoctorController::class, 'book'])->name('doctorshomex.booking.create');
 // Route::get('/doctors/book/{id}', function ($id) {
 //     dd('Route is working, ID: ' . $id);
 // })->name('doctorshome.booking.create');
@@ -275,12 +274,31 @@ Route::prefix('medical-centers')->name('medical-centershome.')->group(function (
     Route::get('/city/{city}', [MedicalCentersController::class, 'byCity'])->name('by-city');
     Route::get('/specialty/{specialty}', [MedicalCentersController::class, 'bySpecialty'])->name('by-specialty');
     Route::get('/{slug}', [MedicalCentersController::class, 'show'])->name('show');
+
+    // General Booking Flow
+    Route::get('/{slug}/book-general', [App\Http\Controllers\frontend\MedicalCenterBookingController::class, 'show'])
+        ->name('book-general')
+        ->middleware('auth');
+    Route::post('/book-general/store', [App\Http\Controllers\frontend\MedicalCenterBookingController::class, 'store'])
+        ->name('book-general.store')
+        ->middleware('auth');
 });
 
 
 Route::get('/how-it-works', [HowItWorksController::class, 'index'])->name('how-it-works');
-Route::get('/map', [InteractiveMapController::class, 'index'])->name('map.index');
-Route::get('/api/map-data', [InteractiveMapController::class, 'getMapData'])->name('map.data');
+
+
+
+
+// خريطة تفاعلية
+Route::get('/map', [InteractiveMapController::class, 'index'])
+    ->name('map.index');
+
+// API للخريطة
+Route::get('/api/map-data', [InteractiveMapController::class, 'getMapData'])
+    ->name('api.map.data');
+
+
 
 
 
@@ -349,4 +367,103 @@ Route::middleware(['auth'])->group(function () {
 // Legacy sitemap redirect
 Route::get('/sitemap', function () {
     return redirect('/sitemap.xml', 301);
+});
+
+// Authentication Routes (Public)
+Route::middleware('guest')->group(function () {
+    // Medical Platform Specific Registration
+    Route::get('register/patient', [PatientRegisterController::class, 'create'])->name('register.patient');
+    Route::post('register/patient', [PatientRegisterController::class, 'store'])->name('patient.register.save');
+
+    Route::get('register/doctor', [DoctorRegisterController::class, 'create'])->name('register.doctor');
+    Route::post('register/doctor', [DoctorRegisterController::class, 'store'])->name('doctor.register.save');
+
+    Route::get('/register/doctor/pending', function () {
+        return view('auth.doctor-pending');
+    })->name('register.doctor.pending');
+});
+
+// Google Authentication Routes (Public)
+Route::middleware(['guest', 'throttle:google-auth'])->group(function () {
+    Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])
+        ->name('auth.google');
+
+    Route::get('/auth/google/doctor', [GoogleAuthController::class, 'redirectToDoctor'])
+        ->name('auth.google.doctor');
+
+    Route::get('/auth/google/patient', [GoogleAuthController::class, 'redirectToPatient'])
+        ->name('auth.google.patient');
+});
+
+// Google Callback Route (Public)
+Route::middleware(['guest', 'throttle:google-callback'])->group(function () {
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])
+        ->name('auth.google.callback');
+});
+
+// Protected Google Account Routes (Require Authentication)
+Route::middleware(['auth', 'throttle:google-account'])->group(function () {
+    Route::post('/auth/google/connect', [GoogleAuthController::class, 'connectGoogleAccount'])
+        ->name('auth.google.connect');
+
+    Route::post('/auth/google/disconnect', [GoogleAuthController::class, 'disconnectGoogleAccount'])
+        ->name('auth.google.disconnect');
+});
+
+// Test Route
+Route::get('/test-rate-limit', function () {
+    $ip = request()->ip();
+
+    $loginKey = 'login:' . $ip;
+    $loginAttempts = RateLimiter::attempts($loginKey) ?? 0;
+
+    $googleKey = 'google-auth:' . $ip;
+    $googleAttempts = RateLimiter::attempts($googleKey) ?? 0;
+
+    return response()->json([
+        'ip' => $ip,
+        'login_attempts' => $loginAttempts,
+        'google_auth_attempts' => $googleAttempts,
+        'time' => now()->toDateTimeString(),
+    ]);
+});
+
+
+
+Route::get('/test-rate-limit', function () {
+    $ip = request()->ip();
+
+    // Test login rate limiting
+    $loginKey = 'login:' . $ip;
+    $loginAttempts = RateLimiter::attempts($loginKey);
+
+    // Test google auth rate limiting
+    $googleKey = 'google-auth:' . $ip;
+    $googleAttempts = RateLimiter::attempts($googleKey);
+
+    return response()->json([
+        'ip' => $ip,
+        'login_attempts' => $loginAttempts,
+        'google_auth_attempts' => $googleAttempts,
+        'time' => now()->toDateTimeString(),
+    ]);
+});
+
+
+
+// ==================== FRONTEND FAQ ROUTES ====================
+Route::prefix('faqs')->name('frontend.faq.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Frontend\FaqController::class, 'index'])->name('index');
+    Route::get('/{slug}', [\App\Http\Controllers\Frontend\FaqController::class, 'show'])->name('show');
+    Route::post('/{id}/helpful', [\App\Http\Controllers\Frontend\FaqController::class, 'markHelpful'])->name('helpful');
+    Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\FaqController::class, 'byCategory'])->name('category');
+    Route::get('/tag/{slug}', [\App\Http\Controllers\Frontend\FaqController::class, 'byTag'])->name('tag');
+});
+
+// ==================== RESTAURANT AI AGENT ROUTES ====================
+Route::prefix('restaurant-ai')->name('restaurant-ai.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\RestaurantAiController::class, 'index'])->name('home');
+    Route::get('/pricing', [\App\Http\Controllers\RestaurantAiController::class, 'pricing'])->name('pricing');
+    Route::get('/features', [\App\Http\Controllers\RestaurantAiController::class, 'features'])->name('features');
+    Route::post('/demo-request', [\App\Http\Controllers\RestaurantAiController::class, 'demoRequest'])->name('demo.request');
 });

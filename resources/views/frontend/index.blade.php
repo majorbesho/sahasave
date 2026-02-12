@@ -1,4 +1,6 @@
 @extends('frontend.layouts.master')
+@section('title', __('seo.home.title'))
+@section('meta_description', __('seo.home.description'))
 @section('content')
 <style>
     /* دعم RTL للغة العربية */
@@ -38,13 +40,13 @@
                                 @foreach ($stats['recent_doctors'] as $doctor)
                                     <span class="avatar avatar-rounded">
                                         <img class="border border-white"
-                                            src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-' . (22 + $loop->index) . '.jpg') }}"
-                                            alt="{{ $doctor->name }}" />
+                                            src="{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctors/doctor-thumb-' . (22 + $loop->index) . '.jpg')) }}"
+                                            alt="{{ $doctor->name }}" width="45" height="45" />
                                     </span>
                                 @endforeach
                             </div>
                             <div class="me-2">
-                                <h6>{{ number_format($stats['total_appointments_count']) }}+ Appointments</h6>
+                                <h6>{{ number_format($stats['total_appointments_count']) }}+ {{ __('banner.appointments') }}</h6>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
                                         @for ($i = 1; $i <= 5; $i++)
@@ -57,17 +59,23 @@
                                             @endif
                                         @endfor
                                     </div>
-                                    <p>{{ $stats['average_rating'] }} Ratings</p>
+                                    <p>{{ $stats['average_rating'] }} {{ __('banner.ratings') }}</p>
                                 </div>
                             </div>
                         </div>
-                        <h1 class="display-5">
-                            Discover Health: Find Your Trusted
-                            <span class="banner-icon"><img src="{{ asset('frontend/xx/assets/img/icons/video.svg') }}"
-                                    alt="img" /></span>
-                            <span class="text-gradient">Doctors</span>
-                            Today
-                        </h1>
+                    <h1 class="display-5">
+                        @lang('banner.title') <span class="text-gradient">@lang('banner.cashback')</span>
+                        @lang('banner.after_visit')
+
+                        <span class="banner-icon">
+                            <img src="{{ asset('frontend/xx/assets/img/icons/video.svg') }}" 
+                                alt="@lang('banner.video_icon_alt')" />
+                        </span>
+                        
+                        <span class="text-gradient">@lang('banner.paid_by')</span>
+                        @lang('banner.tagline') </br> 
+                        @lang('banner.reward')
+                    </h1>
                         <div class="search-box-one aos" data-aos="fade-up">
                             <form action="{{ route('search.doctors') }}" method="GET">
                                 @csrf
@@ -75,25 +83,25 @@
                                     <i class="isax isax-hospital5 bficon"></i>
                                     <div class="mb-0">
                                         <input type="text" class="form-control" name="search"
-                                            placeholder="Search doctors, clinics, hospitals, etc" />
+                                            placeholder="{{ __('banner.search_placeholder') }}" />
                                     </div>
                                 </div>
                                 <div class="search-input search-map-line">
                                     <i class="isax isax-location5"></i>
                                     <div class="mb-0">
-                                        <input type="text" class="form-control" name="location" placeholder="Location" />
+                                        <input type="text" class="form-control" name="location" placeholder="{{ __('banner.location') }}" />
                                     </div>
                                 </div>
                                 <div class="search-input search-calendar-line">
                                     <i class="isax isax-calendar-tick5"></i>
                                     <div class="mb-0">
                                         <input type="text" class="form-control datetimepicker" name="date"
-                                            placeholder="Date" />
+                                            placeholder="{{ __('banner.date') }}" />
                                     </div>
                                 </div>
                                 <div class="form-search-btn">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="isax isax-search-normal5 me-2"></i>Search
+                                    <button class="btn btn-primary" type="submit" aria-label="{{ __('banner.search') }}">
+                                        <i class="isax isax-search-normal5 me-2"></i>{{ __('banner.search') }}
                                     </button>
                                 </div>
                             </form>
@@ -103,25 +111,26 @@
                 <div class="col-lg-5">
                     <div class="banner-img aos" data-aos="fade-up">
                         <img src="{{ asset('frontend/xx/assets/img/banner/banner-doctor.svg') }}" class="img-fluid"
-                            alt="patient-image" />
+                            alt="patient-image" width="512" height="512" />
                         <div class="banner-appointment">
                             <h6>{{ number_format($stats['total_appointments'] / 1000, 1) }}K</h6>
                             <p>
-                                Appointments
-                                <span class="d-block">Completed</span>
+                                @lang('banner.appointments')
+
+                                <span class="d-block">@lang('banner.completed')</span>
                             </p>
                         </div>
                         <div class="banner-patient">
                             <div class="avatar-list-stacked avatar-group-sm">
                                 @foreach ($stats['recent_patients'] as $patient)
                                     <span class="avatar avatar-rounded">
-                                        <img src="{{ $patient->photo ? asset('storage/' . $patient->photo) : asset('frontend/xx/assets/img/patients/patient' . (16 + $loop->index) . '.jpg') }}"
-                                            alt="{{ $patient->name }}" />
+                                        <img src="{{ $patient->photoUrl(asset('frontend/xx/assets/img/patients/patient' . (16 + $loop->index) . '.jpg')) }}"
+                                            alt="{{ $patient->name }}" width="40" height="40" />
                                     </span>
                                 @endforeach
                             </div>
                             <p>{{ number_format($stats['satisfied_patients'] / 1000, 1) }}K+</p>
-                            <p>Satisfied Patients</p>
+                            <p>@lang('banner.satisfied_patients')</p>
                         </div>
                     </div>
                 </div>
@@ -156,30 +165,30 @@
                         class="flex-wrap gap-4 d-flex align-items-center justify-content-center justify-content-xl-between list-wraps">
                         <a href="{{route('doctors.search')}}" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-secondary">
-                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-01.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-01.svg') }}" alt="img" loading="lazy" width="48" height="48" />
                             </div>
-                            <h6>Book Appointment</h6>
+                            <h6>{{__('banner.book_appointment')}}</h6>
                         </a>
                      
                         <a href="{{route('medical-centershome.index')}}" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-pink">
-                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-03.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-03.svg') }}" alt="img" loading="lazy" width="48" height="48" />
                             </div>
-                            <h6>Hospitals & Clinics</h6>
+                            <h6>{{__('banner.hospitals_clinics')}}</h6>
                         </a>
                         <a href="{{route('map.index')}}" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-cyan">
-                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-04.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-04.svg') }}" alt="img" loading="lazy" width="48" height="48" />
                             </div>
-                            <h6>Healthcare</h6>
+                            <h6>{{__('banner.healthcare')}}</h6>
                         </a>
-                        {{-- <a href="index-13.html" class="list-item aos" data-aos="fade-up">
+                        <a href="{{route('how-it-works')}}" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-purple">
-                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-05.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-05.svg') }}" alt="img" width="48" height="48" />
                             </div>
-                            <h6>Medicine & Supplies</h6><br>
-                            <span>(coming soon)</span>
-                        </a> --}}
+                            <h6>{{__('banner.how_it_works')}}</h6>
+                            
+                        </a> 
 
                         {{-- <a href="index-12.html" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-orange">
@@ -188,11 +197,11 @@
                             <h6>Lab Testing</h6><br>
                             <span>(coming soon)</span>
                         </a> --}}
-                        <a href="index-13.html" class="list-item aos" data-aos="fade-up">
+                        <a href="#" class="list-item aos" data-aos="fade-up">
                             <div class="list-icon bg-teal">
-                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-07.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/list-icon-07.svg') }}" alt="img" width="48" height="48" />
                             </div>
-                            <h6>Home Care</h6>
+                            <h6>{{__('banner.home_care')}}</h6>
                         </a>
                     </div>
                 </div>
@@ -210,16 +219,16 @@
     <section class="speciality-section">
         <div class="container">
             <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
-                <span class="badge badge-primary">Top Specialties</span>
-                <h2>Highlighting the Care & Support</h2>
+                <span class="badge badge-primary">{{__('banner.top_specialties')}}</span>
+                <h2>{{__('banner.highlighting_the_care_and_support')}}</h2>
             </div>
             <div class="owl-carousel spciality-slider aos" data-aos="fade-up">
                 @foreach ($specialties as $specialty)
                     <div class="spaciality-item">
                         <div class="spaciality-img">
-                            <img src="{{ $specialty->image_url }}" alt="{{ $specialty->name }}" />
+                            <img src="{{ $specialty->image_url }}" alt="{{ $specialty->name }}" loading="lazy" width="100" height="100" />
                             <span class="spaciality-icon">
-                                <img src="{{ $specialty->icon_url }}" alt="{{ $specialty->name }}" />
+                                <img src="{{ $specialty->icon_url }}" alt="{{ $specialty->name }}" loading="lazy" width="30" height="30" />
                             </span>
                         </div>
                         <h6>
@@ -227,7 +236,7 @@
                                 {{ $specialty->name }}
                             </a>
                         </h6>
-                        <p class="mb-0">{{ $specialty->active_doctors_count }} Doctors</p>
+                        <p class="mb-0">{{ $specialty->active_doctors_count }} {{ __('banner.doctors') }}</p>
                     </div>
                 @endforeach
             </div>
@@ -249,17 +258,17 @@
     <section class="doctor-section">
         <div class="container">
             <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
-                <span class="badge badge-primary">Featured Doctors</span>
-                <h2>Our Highlighted Doctors</h2>
+                <span class="badge badge-primary">{{__('banner.featured_doctors')}}</span>
+                <h2>{{__('banner.our_highlighted_doctors')}}</h2>
             </div>
 
             <div class="doctors-slider owl-carousel aos" data-aos="fade-up">
                 @forelse($featuredDoctors as $doctor)
                     <div class="card">
                         <div class="card-img card-img-hover">
-                            <a href="{{ route('doctorshome.show', $doctor->id) }}">
-                                <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctor-grid/doctor-grid-01.jpg') }}"
-                                    alt="Dr. {{ $doctor->name }}" />
+                            <a href="{{ route('doctors.show', $doctor->doctorProfile->slug) }}">
+                                <img src="{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctor-grid/doctor-grid-01.jpg')) }}"
+                                    alt="Dr. {{ $doctor->name }}" loading="lazy" width="300" height="400" />
                             </a>
                             <div class="grid-overlay-item d-flex align-items-center justify-content-between">
                                 <span class="badge bg-orange">
@@ -274,48 +283,48 @@
                         <div class="p-0 card-body">
                             <div class="p-3 d-flex active-bar align-items-center justify-content-between">
                                 <a href="#" class="text-indigo fw-medium fs-14">
-                                    {{ $doctor->doctorProfile->specialization ?? 'General Practitioner' }}
+                                    {{ $doctor->doctorProfile->specialization ?? __('banner.general_practitioner') }}
                                 </a>
                                 <span class="badge bg-success-light d-inline-flex align-items-center">
                                     <i class="fa-solid fa-circle fs-5 me-1"></i>
-                                    {{ $doctor->doctorProfile->accepting_new_patients ? 'Available' : 'Not Available' }}
+                                    {{ $doctor->doctorProfile->accepting_new_patients ? __('banner.available') : __('banner.not_available') }}
                                 </span>
                             </div>
                             <div class="p-3 pt-0">
                                 <div class="pb-3 mb-3 doctor-info-detail">
                                     <h3 class="mb-1">
-                                        <a href="{{ route('doctorshome.show', $doctor->id) }}">Dr.
+                                        <a href="{{ route('doctors.show', $doctor->doctorProfile->slug) }}">
                                             {{ $doctor->name }}</a>
                                     </h3>
                                     <div class="d-flex align-items-center">
                                         <p class="mb-0 d-flex align-items-center fs-14">
                                             <i class="isax isax-location me-2"></i>
-                                            {{ $doctor->address ?? 'Location not specified' }}
+                                            {{ $doctor->address ?? __('banner.location_not_specified') }}
                                         </p>
                                         <i class="mx-2 fa-solid fa-circle fs-5 text-primary me-1"></i>
                                         <span class="fs-14 fw-medium">
-                                            {{ $doctor->doctorProfile->appointment_duration ?? '30' }} Min
+                                            {{ $doctor->doctorProfile->appointment_duration ?? '30' }} {{ __('index.min') }}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div>
-                                        <p class="mb-1">Consultation Fees</p>
+                                        <p class="mb-1">{{ __('banner.consultation_fees') }}</p>
                                         <h3 class="text-orange">
-                                            ${{ number_format($doctor->doctorProfile->consultation_fee ?? 0, 0) }}</h3>
+                                            AED{{ number_format($doctor->doctorProfile->consultation_fee ?? 0, 0) }}</h3>
                                     </div>
                                     @if ($doctor->doctorProfile && $doctor->doctorProfile->canAcceptAppointments())
-                                        <a href="{{ route('doctorshome.show', $doctor->id) }}"
+                                        <a href="{{ route('doctors.show', $doctor->doctorProfile->slug) }}"
                                             class="inline-flex btn btn-md btn-dark align-items-center rounded-pill">
                                             <i class="isax isax-calendar-1 me-2"></i>
-                                            Book Now
+                                            {{ __('banner.book_now') }}
                                         </a>
                                     @else
                                         <button
                                             class="inline-flex btn btn-md btn-secondary align-items-center rounded-pill"
                                             disabled>
                                             <i class="isax isax-calendar-1 me-2"></i>
-                                            Not Available
+                                            {{ __('banner.not_available') }}
                                         </button>
                                     @endif
                                 </div>
@@ -441,177 +450,163 @@
                     <div class="bookus-img">
                         <div class="row g-3">
                             <div class="col-md-12 aos" data-aos="fade-up">
-                                <img src="{{ asset('frontend/xx/assets//img/book-01.jpg') }}" alt="img"
-                                    class="img-fluid" />
+                                <img src="{{ asset('frontend/xx/assets/img/book-01.jpg') }}" alt="img"
+                                    class="img-fluid" width="600" height="400" />
                             </div>
                             <div class="col-sm-6 aos" data-aos="fade-up">
-                                <img src="{{ asset('frontend/xx/assets//img/book-02.jpg') }}" alt="img"
-                                    class="img-fluid" />
+                                <img src="{{ asset('frontend/xx/assets/img/book-02.jpg') }}" alt="img"
+                                    class="img-fluid" width="300" height="200" />
                             </div>
                             <div class="col-sm-6 aos" data-aos="fade-up">
-                                <img src="{{ asset('frontend/xx/assets//img/book-03.jpg') }}" alt="img"
-                                    class="img-fluid" />
+                                <img src="{{ asset('frontend/xx/assets/img/book-03.jpg') }}" alt="img"
+                                    class="img-fluid" width="300" height="200" />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="mb-2 section-header sec-header-one aos" data-aos="fade-up">
-                        <span class="badge badge-primary">Why Book With Us</span>
-                        <h2 class="text-white">
-                            We are committed to understanding your
-                            <span class="text-primary-gradient">unique needs and delivering care.</span>
-                        </h2>
-                    </div>
-                    <p class="mb-4 text-light">
-                        As a trusted healthAs a trusted healthcare
-                        provider in our community, we are passionate
-                        about promoting health and wellness beyond the
-                        clinic. We actively engage in community outreach
-                        programs, health fairs, and educational
-                        workshop.
-                    </p>
-                    <div class="faq-info aos" data-aos="fade-up">
-                        <div class="accordion" id="faq-details">
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <a href="javascript:void(0);" class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        01 . Our Vision
-                                    </a>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show"
-                                    aria-labelledby="headingOne" data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                We envision a community
-                                                where everyone has
-                                                access to high-quality
-                                                healthcare and the
-                                                resources they need to
-                                                lead healthy, fulfilling
-                                                lives.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
 
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingTwo">
-                                    <a href="javascript:void(0);" class="accordion-button collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                        aria-controls="collapseTwo">
-                                        02 . Our Mission
-                                    </a>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                                    data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                We envision a community
-                                                where everyone has
-                                                access to high-quality
-                                                healthcare and the
-                                                resources they need to
-                                                lead healthy, fulfilling
-                                                lives.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
+              <div class="col-lg-6">
+    <div class="mb-2 section-header sec-header-one aos" data-aos="fade-up">
+        <span class="badge badge-primary">{{ __('sehasave.why_choose_badge') }}</span>
+        <h2 class="text-white">
+            {!! __('sehasave.why_choose_title') !!}
+        </h2>
+    </div>
+    <p class="mb-4 text-light">
+        {!! __('sehasave.why_choose_intro') !!}
+    </p>
+    <div class="faq-info aos" data-aos="fade-up">
+        <div class="accordion" id="why-choose-accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="whyHeadingOne">
+                    <a href="javascript:void(0);" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#whyCollapseOne" aria-expanded="true" aria-controls="whyCollapseOne">
+                        01 . {{ __('sehasave.faq_cashback_title') }}
+                    </a>
+                </h2>
+                <div id="whyCollapseOne" class="accordion-collapse collapse show" aria-labelledby="whyHeadingOne" data-bs-parent="#why-choose-accordion">
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>{!! __('sehasave.faq_cashback_body') !!}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="bookus-sec">
-                <div class="row g-4">
-                    <div class="col-lg-3">
-                        <div class="book-item">
-                            <div class="book-icon bg-primary">
-                                <i class="isax isax-search-normal5"></i>
-                            </div>
-                            <div class="book-info">
-                                <h6 class="mb-2 text-white">
-                                    Search For Doctors
-                                </h6>
-                                <p class="fs-14 text-light">
-                                    Search for a doctor based on
-                                    specialization, location, or
-                                    availability for your Treatements
-                                </p>
-                            </div>
-                            <div class="way-icon">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/way-icon.svg') }}" alt="img" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="book-item">
-                            <div class="book-icon bg-orange">
-                                <i class="isax isax-security-user5"></i>
-                            </div>
-                            <div class="book-info">
-                                <h6 class="mb-2 text-white">
-                                    Check Doctor Profile
-                                </h6>
-                                <p class="fs-14 text-light">
-                                    Explore detailed doctor profiles on
-                                    our platform to make informed
-                                    healthcare decisions.
-                                </p>
-                            </div>
-                            <div class="way-icon">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/way-icon.svg') }}" alt="img" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="book-item">
-                            <div class="book-icon bg-cyan">
-                                <i class="isax isax-calendar5"></i>
-                            </div>
-                            <div class="book-info">
-                                <h6 class="mb-2 text-white">
-                                    Schedule Appointment
-                                </h6>
-                                <p class="fs-14 text-light">
-                                    After choose your preferred doctor,
-                                    select a convenient time slot, &
-                                    confirm your appointment.
-                                </p>
-                            </div>
-                            <div class="way-icon">
-                                <img src="{{ asset('frontend/xx/assets//img/icons/way-icon.svg') }}" alt="img" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="book-item">
-                            <div class="book-icon bg-indigo">
-                                <i class="isax isax-blend5"></i>
-                            </div>
-                            <div class="book-info">
-                                <h6 class="mb-2 text-white">
-                                    Get Your Solution
-                                </h6>
-                                <p class="fs-14 text-light">
-                                    Discuss your health concerns with
-                                    the doctor and receive the
-                                    personalized advice & with solution.
-                                </p>
-                            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="whyHeadingTwo">
+                    <a href="javascript:void(0);" class="accordion-button collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#whyCollapseTwo" aria-expanded="false" aria-controls="whyCollapseTwo">
+                        02 . {{ __('sehasave.faq_doctors_title') }}
+                    </a>
+                </h2>
+                <div id="whyCollapseTwo" class="accordion-collapse collapse" aria-labelledby="whyHeadingTwo" data-bs-parent="#why-choose-accordion">
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>{!! __('sehasave.faq_doctors_body') !!}</p>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="whyHeadingThree">
+                    <a href="javascript:void(0);" class="accordion-button collapsed"
+                        data-bs-toggle="collapse" data-bs-target="#whyCollapseThree" aria-expanded="false" aria-controls="whyCollapseThree">
+                        03 . {{ __('sehasave.faq_risk_title') }}
+                    </a>
+                </h2>
+                <div id="whyCollapseThree" class="accordion-collapse collapse" aria-labelledby="whyHeadingThree" data-bs-parent="#why-choose-accordion">
+                    <div class="accordion-body">
+                        <div class="accordion-content">
+                            <p>{!! __('sehasave.faq_risk_body') !!}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            </div>
+<div class="bookus-sec">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="book-item">
+                <div class="book-icon bg-primary">
+                    <i class="isax isax-search-normal5"></i>
+                </div>
+                <div class="book-info">
+                    <h6 class="mb-2 text-white">
+                        {{ __('bookus.search_doctors.title') }}
+                    </h6>
+                    <p class="fs-14 text-light">
+                        {{ __('bookus.search_doctors.description') }}
+                    </p>
+                </div>
+                <div class="way-icon">
+                    <img src="{{ asset('frontend/xx/assets/img/icons/way-icon.svg') }}" 
+                         alt="{{ __('bookus.icons.alt') }}" width="24" height="24" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+            <div class="book-item">
+                <div class="book-icon bg-orange">
+                    <i class="isax isax-security-user5"></i>
+                </div>
+                <div class="book-info">
+                    <h6 class="mb-2 text-white">
+                        {{ __('bookus.check_profile.title') }}
+                    </h6>
+                    <p class="fs-14 text-light">
+                        {{ __('bookus.check_profile.description') }}
+                    </p>
+                </div>
+                <div class="way-icon">
+                    <img src="{{ asset('frontend/xx/assets/img/icons/way-icon.svg') }}" 
+                         alt="{{ __('bookus.icons.alt') }}" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+            <div class="book-item">
+                <div class="book-icon bg-cyan">
+                    <i class="isax isax-calendar5"></i>
+                </div>
+                <div class="book-info">
+                    <h6 class="mb-2 text-white">
+                        {{ __('bookus.schedule_appointment.title') }}
+                    </h6>
+                    <p class="fs-14 text-light">
+                        {{ __('bookus.schedule_appointment.description') }}
+                    </p>
+                </div>
+                <div class="way-icon">
+                    <img src="{{ asset('frontend/xx/assets/img/icons/way-icon.svg') }}" 
+                         alt="{{ __('bookus.icons.alt') }}" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+            <div class="book-item">
+                <div class="book-icon bg-indigo">
+                    <i class="isax isax-blend5"></i>
+                </div>
+                <div class="book-info">
+                    <h6 class="mb-2 text-white">
+                        {{ __('bookus.get_solution.title') }}
+                    </h6>
+                    <p class="fs-14 text-light">
+                        {{ __('bookus.get_solution.description') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </section>
     <!-- /Bookus Section -->
@@ -620,8 +615,8 @@
     <section class="testimonial-section-one">
         <div class="container">
             <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
-                <span class="badge badge-primary">Testimonials</span>
-                <h2>15k Users Trust SehaSave.com Worldwide</h2>
+                <span class="badge badge-primary">{{ __('index.testimonials_title') }}</span>
+                <h2>{{ __('index.trust_message') }}</h2>
             </div>
 
             <!-- Testimonial Slider -->
@@ -637,7 +632,7 @@
                                 <i class="fa-solid fa-star filled"></i>
                             </div>
                             <span>
-                                <img src="{{ asset('frontend/xx/assets//img/icons/quote-icon.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/quote-icon.svg') }}" alt="img" width="30" height="30" />
                             </span>
                         </div>
                         <h6 class="mb-2 fs-16 fw-medium">
@@ -650,8 +645,8 @@
                         </p>
                         <div class="d-flex align-items-center">
                             <a href="javascript:void(0);" class="avatar avatar-lg">
-                                <img src="{{ asset('frontend/xx/assets//img/patients/patient22.jpg') }}"
-                                    class="rounded-circle" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/patients/patient22.jpg') }}"
+                                    class="rounded-circle" alt="img" width="60" height="60" />
                             </a>
                             <div class="ms-2">
                                 <h6 class="mb-1">
@@ -673,7 +668,7 @@
                                 <i class="fa-solid fa-star filled"></i>
                             </div>
                             <span>
-                                <img src="{{ asset('frontend/xx/assets//img/icons/quote-icon.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/quote-icon.svg') }}" alt="img" />
                             </span>
                         </div>
                         <h6 class="mb-2 fs-16 fw-medium">
@@ -686,8 +681,8 @@
                         </p>
                         <div class="d-flex align-items-center">
                             <a href="javascript:void(0);" class="avatar avatar-lg">
-                                <img src="{{ asset('frontend/xx/assets//img/patients/patient21.jpg') }}"
-                                    class="rounded-circle" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/patients/patient21.jpg') }}"
+                                    class="rounded-circle" alt="img" width="60" height="60" />
                             </a>
                             <div class="ms-2">
                                 <h6 class="mb-1">
@@ -709,7 +704,7 @@
                                 <i class="fa-solid fa-star filled"></i>
                             </div>
                             <span>
-                                <img src="{{ asset('frontend/xx/assets//img/icons/quote-icon.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/quote-icon.svg') }}" alt="img" />
                             </span>
                         </div>
                         <h6 class="mb-2 fs-16 fw-medium">
@@ -722,7 +717,7 @@
                         </p>
                         <div class="d-flex align-items-center">
                             <a href="javascript:void(0);" class="avatar avatar-lg">
-                                <img src="{{ asset('frontend/xx/assets//img/patients/patient.jpg') }}"
+                                <img src="{{ asset('frontend/xx/assets/img/patients/patient.jpg') }}"
                                     class="rounded-circle" alt="img" />
                             </a>
                             <div class="ms-2">
@@ -745,7 +740,7 @@
                                 <i class="fa-solid fa-star filled"></i>
                             </div>
                             <span>
-                                <img src="{{ asset('frontend/xx/assets//img/icons/quote-icon.svg') }}" alt="img" />
+                                <img src="{{ asset('frontend/xx/assets/img/icons/quote-icon.svg') }}" alt="img" />
                             </span>
                         </div>
                         <h6 class="mb-2 fs-16 fw-medium">
@@ -758,7 +753,7 @@
                         </p>
                         <div class="d-flex align-items-center">
                             <a href="javascript:void(0);" class="avatar avatar-lg">
-                                <img src="{{ asset('frontend/xx/assets//img/patients/patient23.jpg') }}"
+                                <img src="{{ asset('frontend/xx/assets/img/patients/patient23.jpg') }}"
                                     class="rounded-circle" alt="img" />
                             </a>
                             <div class="ms-2">
@@ -780,25 +775,25 @@
                         <h6 class="display-6">
                             <span class="count-digit">500</span>+
                         </h6>
-                        <p>Doctors Available</p>
+                        <p>{{ __('index.doctors_available') }}</p>
                     </div>
                     <div class="text-center counter-item aos" data-aos="fade-up">
                         <h6 class="display-6 secondary-count">
                             <span class="count-digit">18</span>+
                         </h6>
-                        <p>Specialities</p>
+                        <p>{{ __('index.specialities') }}</p>
                     </div>
                     <div class="text-center counter-item aos" data-aos="fade-up">
                         <h6 class="display-6 purple-count">
                             <span class="count-digit">30</span>K
                         </h6>
-                        <p>Bookings Done</p>
+                        <p>{{ __('index.bookings_done') }}</p>
                     </div>
                     <div class="text-center counter-item aos" data-aos="fade-up">
                         <h6 class="display-6 pink-count">
                             <span class="count-digit">97</span>+
                         </h6>
-                        <p>Hospitals & Clinic</p>
+                        <p>{{ __('index.hospitals_clinics_count') }}</p>
                     </div>
                     <div class="text-center counter-item aos" data-aos="fade-up">
                         <h6 class="display-6 warning-count">
@@ -813,7 +808,7 @@
     </section>
     <!-- /Testimonial Section -->
 
-    <section class="company-section bg-dark aos" data-aos="fade-up">
+    {{-- <section class="company-section bg-dark aos" data-aos="fade-up">
         <div class="container">
             <div class="text-center section-header sec-header-one">
                 <h6 class="text-light">
@@ -822,199 +817,119 @@
             </div>
             <div class="owl-carousel company-slider">
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-01.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-01.svg') }}" alt="company 1" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-02.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-02.svg') }}" alt="company 2" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-03.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-03.svg') }}" alt="company 3" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-04.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-04.svg') }}" alt="company 4" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-05.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-05.svg') }}" alt="company 5" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-06.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-06.svg') }}" alt="company 6" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-07.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-07.svg') }}" alt="company 7" loading="lazy" width="150" height="50" />
                 </div>
                 <div>
-                    <img src="{{ asset('frontend/xx/assets//img/company/company-08.svg') }}" alt="img" />
+                    <img src="{{ asset('frontend/xx/assets//img/company/company-08.svg') }}" alt="company 8" loading="lazy" width="150" height="50" />
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
-    <section class="faq-section-one">
-        <div class="container">
-            <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
-                <span class="badge badge-primary">FAQ’S</span>
-                <h2>Your Questions are Answered</h2>
-            </div>
-            <div class="row">
-                <div class="mx-auto col-md-10">
-                    <div class="faq-info aos" data-aos="fade-up">
-                        <div class="accordion" id="faq-details">
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <a href="javascript:void(0);" class="accordion-button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        How do I book an appointment
-                                        with a doctor?
-                                    </a>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show"
-                                    aria-labelledby="headingOne" data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                Yes, simply visit our
-                                                website and log in or
-                                                create an account.
-                                                Search for a doctor
-                                                based on specialization,
-                                                location, or
-                                                availability & confirm
-                                                your booking.
-                                            </p>
+<section class="faq-section-one">
+    <div class="container">
+        <div class="text-center section-header sec-header-one aos" data-aos="fade-up">
+            <span class="badge badge-primary">{{ __('faq.title') }}</span>
+            <h2>{{ __('faq.subtitle') }}</h2>
+        </div>
+        
+        @if($faqs->count() > 0)
+        <div class="row">
+            <div class="mx-auto col-md-10">
+                <div class="faq-info aos" data-aos="fade-up">
+                    <div class="accordion" id="faq-details">
+                        @foreach($faqs as $index => $faq)
+                        <!-- FAQ Item -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ $loop->iteration }}">
+                                <a href="javascript:void(0);" class="accordion-button 
+                                    {{ $loop->first ? '' : 'collapsed' }}" 
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ $loop->iteration }}" 
+                                    aria-expanded="{{ $loop->first ? 'true' : 'false' }}" 
+                                    aria-controls="collapse{{ $loop->iteration }}">
+                                    
+                                    {{ $faq->question }}
+                                </a>
+                            </h2>
+                            <div id="collapse{{ $loop->iteration }}" 
+                                 class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" 
+                                 aria-labelledby="heading{{ $loop->iteration }}" 
+                                 data-bs-parent="#faq-details">
+                                <div class="accordion-body">
+                                    <div class="accordion-content">
+                                        {!! $faq->answer !!}
+                                        
+                                        {{-- معلومات إضافية --}}
+                                        @if($faq->category)
+                                        <div class="mt-3">
+                                            <span class="badge bg-info">
+                                                {{ $faq->category->translateOrDefault(app()->getLocale())->name ?? $faq->category->name }}
+                                            </span>
+                                        </div>
+                                        @endif
+                                        
+                                        {{-- روابط للتفاصيل --}}
+                                        <div class="mt-3">
+                                            <a href="{{ route('frontend.faq.show', $faq->slug) }}" class="btn btn-sm btn-outline-primary">
+                                                {{ __('faq.read_more') }}
+                                            </a>
+                                            
+                                            @if($faq->helpful_yes > 0 || $faq->helpful_no > 0)
+                                            <span class="ms-2 text-muted">
+                                                <i class="fas fa-thumbs-up"></i> {{ $faq->helpful_yes }}
+                                                <i class="fas fa-thumbs-down ms-2"></i> {{ $faq->helpful_no }}
+                                            </span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- /FAQ Item -->
-
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingTwo">
-                                    <a href="javascript:void(0);" class="accordion-button collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
-                                        aria-controls="collapseTwo">
-                                        Can I request a specific doctor
-                                        when booking my appointment?
-                                    </a>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                                    data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                Yes, you can usually
-                                                request a specific
-                                                doctor when booking your
-                                                appointment, though
-                                                availability may vary
-                                                based on their schedule.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
-
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingThree">
-                                    <a href="javascript:void(0);" class="accordion-button collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
-                                        aria-controls="collapseThree">
-                                        What should I do if I need to
-                                        cancel or reschedule my
-                                        appointment?
-                                    </a>
-                                </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse"
-                                    aria-labelledby="headingThree" data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                If you need to cancel or
-                                                reschedule your
-                                                appointment, contact the
-                                                doctor as soon as
-                                                possible to inform them
-                                                and to reschedule for
-                                                another available time
-                                                slot.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
-
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingFour">
-                                    <a href="javascript:void(0);" class="accordion-button collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false"
-                                        aria-controls="collapseFour">
-                                        What if I'm running late for my
-                                        appointment?
-                                    </a>
-                                </h2>
-                                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                                    data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                If you know you will be
-                                                late, it's courteous to
-                                                call the doctor's office
-                                                and inform them.
-                                                Depending on their
-                                                policy and schedule,
-                                                they may be able to
-                                                accommodate you or
-                                                reschedule your
-                                                appointment.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
-
-                            <!-- FAQ Item -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingFive">
-                                    <a href="javascript:void(0);" class="accordion-button collapsed"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false"
-                                        aria-controls="collapseFive">
-                                        Can I book appointments for
-                                        family members or dependents?
-                                    </a>
-                                </h2>
-                                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
-                                    data-bs-parent="#faq-details">
-                                    <div class="accordion-body">
-                                        <div class="accordion-content">
-                                            <p>
-                                                Yes, in many cases, you
-                                                can book appointments
-                                                for family members or
-                                                dependents. However, you
-                                                may need to provide
-                                                their personal
-                                                information and consent
-                                                to do so.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /FAQ Item -->
                         </div>
+                        <!-- /FAQ Item -->
+                        @endforeach
+                    </div>
+                    
+                    {{-- رابط لعرض جميع الأسئلة --}}
+                    <div class="text-center mt-4">
+                        <a href="{{ route('frontend.faq.index') }}" class="btn btn-primary">
+                            {{ __('faq.view_all') }}
+                            <i class="fas fa-arrow-left ms-2"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
+        @else
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i>
+                    {{ __('faq.no_faqs') }}
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+</section>
     <!-- App Section -->
     <section class="p-0 app-section app-sec-one">
         <div class="container">
@@ -1034,12 +949,12 @@
                                 </p>
                             </div>
                             <div class="google-imgs aos" data-aos="fade-up">
-                                <a href="javascript:void(0);"><img
+                                <a href="javascript:void(0);" aria-label="Download on App Store"><img
                                         src="{{ asset('frontend/xx/assets//img/icons/app-store-01.svg') }}"
-                                        alt="img" /></a>
-                                <a href="javascript:void(0);"><img
+                                        alt="App Store" loading="lazy" width="135" height="40" /></a>
+                                <a href="javascript:void(0);" aria-label="Get it on Google Play"><img
                                         src="{{ asset('frontend/xx/assets//img/icons/google-play-01.svg') }}"
-                                        alt="img" /></a>
+                                        alt="Google Play" loading="lazy" width="135" height="40" /></a>
                             </div>
                         </div>
                     </div>
@@ -1081,9 +996,9 @@
                             <div class="article-img">
                                 <a href="{{ route('blog.show', $blog->slug) }}">
                                     @if($blog->featured_image)
-                                        <img src="{{ asset('storage/' . $blog->featured_image) }}" class="img-fluid" alt="{{ $blog->title }}" />
+                                        <img src="{{ asset('storage/' . $blog->featured_image) }}" class="img-fluid" alt="{{ $blog->title }}" loading="lazy" width="600" height="400" />
                                     @else
-                                        <img src="{{ asset('frontend/xx/assets//img/blog/article-01.jpg') }}" class="img-fluid" alt="img" />
+                                        <img src="{{ asset('frontend/xx/assets//img/blog/article-01.jpg') }}" class="img-fluid" alt="default blog image" loading="lazy" width="600" height="400" />
                                     @endif
                                 </a>
                                 <div class="date-icon">

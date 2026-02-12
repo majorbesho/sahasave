@@ -2,19 +2,20 @@
 
 namespace App\Listeners;
 
-use App\Events\UserRegistered;
+use Illuminate\Auth\Events\Registered;
 use App\Models\LoyaltyPoint;
 use App\Models\LoyaltyTier;
 use App\Models\PointTransaction;
 use App\Models\Voucher;
 use App\Models\Wallet;
 use App\Models\WalletTransaction;
+use App\Models\LoyaltySetting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class InitializeUserWallet
 {
-    public function handle(UserRegistered $event)
+    public function handle(Registered $event)
     {
         $user = $event->user;
 
@@ -55,7 +56,7 @@ class InitializeUserWallet
         $wallet = Wallet::create([
             'user_id' => $user->id,
             'type' => 'personal',
-            'currency' => 'SAR',
+            'currency' => 'AED',
             'status' => 'active',
             'is_default' => true,
             'settings' => [
@@ -74,7 +75,7 @@ class InitializeUserWallet
         $wallet->save();
 
         // تسجيل معاملة الإيداع الأولي (إذا كان هناك مكافأة تسجيل)
-        $welcomeBonus = config('wallet.welcome_bonus', 0);
+        $welcomeBonus = LoyaltySetting::get('wallet_welcome_bonus', 0);
         if ($welcomeBonus > 0) {
             $wallet->deposit(
                 $welcomeBonus,
@@ -112,7 +113,7 @@ class InitializeUserWallet
 
     private function grantWelcomePoints($user, $loyaltyPoints)
     {
-        $welcomePoints = config('loyalty.welcome_points', 0);
+        $welcomePoints = LoyaltySetting::get('loyalty_welcome_points', 0);
 
         if ($welcomePoints > 0) {
             // Use the User model's earnPoints method if available, or manual logic
@@ -146,7 +147,7 @@ class InitializeUserWallet
 
     private function grantWelcomeVoucher($user)
     {
-        $welcomeVoucherCode = config('loyalty.welcome_voucher_template', 'WELCOME100');
+        $welcomeVoucherCode = LoyaltySetting::get('welcome_voucher_template', 'WELCOME100');
         $templateVoucher = Voucher::where('code', $welcomeVoucherCode)->first();
 
         if ($templateVoucher) {

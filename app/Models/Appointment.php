@@ -9,6 +9,11 @@ class Appointment extends Model
 {
     use HasFactory;
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     protected $fillable = [
         'patient_id',
         'doctor_id',
@@ -52,7 +57,8 @@ class Appointment extends Model
         'completed_at',
         'rescheduled_from',
         'video_call_url',
-        'audio_call_url'
+        'audio_call_url',
+        'slug'
     ];
 
     protected $casts = [
@@ -123,6 +129,11 @@ class Appointment extends Model
     public function cancelledBy()
     {
         return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class);
     }
 
 
@@ -326,7 +337,7 @@ class Appointment extends Model
         $this->save();
 
         // تحديث إحصائيات الطبيب
-        if ($this->doctor->doctorProfile) {
+        if ($this->doctor && $this->doctor->doctorProfile) {
             $this->doctor->doctorProfile->increment('total_consultations');
         }
     }
@@ -382,11 +393,14 @@ class Appointment extends Model
 
     public function calculateFees()
     {
-        $doctorFee = $this->doctor->medicalCenters()
-            ->where('medical_center_id', $this->medical_center_id)
-            ->first()
-            ->pivot
-            ->consultation_fee ?? 0;
+        $doctorFee = 0;
+        if ($this->doctor) {
+            $doctorFee = $this->doctor->medicalCenters()
+                ->where('medical_center_id', $this->medical_center_id)
+                ->first()
+                ->pivot
+                ->consultation_fee ?? 0;
+        }
 
         $this->original_fee = $doctorFee;
         $this->final_fee = $doctorFee - $this->discount_amount;
@@ -412,9 +426,12 @@ class Appointment extends Model
         static::creating(function ($appointment) {
             $appointment->generateAppointmentNumber();
 
-            // إذا كان لا يزال الرقم فارغاً، استخدم طريقة بديلة
             if (empty($appointment->appointment_number)) {
                 $appointment->appointment_number = 'APT' . now()->format('YmdHis') . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            }
+
+            if (empty($appointment->slug)) {
+                $appointment->slug = \Illuminate\Support\Str::random(12) . '-' . time();
             }
         });
 
@@ -465,8 +482,10 @@ class Appointment extends Model
         $startTime = $this->scheduled_for->format('Ymd\THis\Z');
         $endTime = $this->scheduled_for->addMinutes($this->duration ?? 30)->format('Ymd\THis\Z');
 
-        $title = "موعد مع د. {$this->doctor->name}";
-        $details = "موعد طبي مع د. {$this->doctor->name} - {$this->reason}";
+        $title = $this->doctor ? "موعد مع {$this->doctor->name}" : "موعد في {$this->medicalCenter->name}";
+        $details = $this->doctor
+            ? "موعد طبي مع {$this->doctor->name} - {$this->reason}"
+            : "موعد طبي في {$this->medicalCenter->name} - {$this->reason}";
 
         $params = [
             'action' => 'TEMPLATE',
@@ -489,6 +508,18 @@ class Appointment extends Model
             'confirmed' => 'مؤكد',
             'completed' => 'مكتمل',
             'cancelled' => 'ملغي',
+            default => $this->status
+        };
+    }
+
+    public function getStatusText()
+    {
+        return match ($this->status) {
+            'pending' => __('booking.pending'),
+            'confirmed' => __('booking.confirmed'),
+            'completed' => __('booking.completed'),
+            'cancelled' => __('booking.cancelled'),
+            'no_show' => __('booking.no_show'),
             default => $this->status
         };
     }

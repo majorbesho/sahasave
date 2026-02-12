@@ -9,6 +9,7 @@ use App\Models\BlogTag;
 use App\Models\TranslatableContent;
 use App\Models\TranslationJob;
 use App\Models\Language;
+use App\Services\AI\BlogAIGenerator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,99 @@ use Illuminate\Support\Facades\Cache;
 
 class AdminBlogController extends Controller
 {
+
+
+    protected $aiGenerator;
+
+    public function __construct()
+    {
+        $this->aiGenerator = new BlogAIGenerator();
+    }
+
+
+
+    public function generateWithAI(Request $request)
+    {
+        $request->validate([
+            'topic' => 'required|string|max:255',
+            'category_id' => 'required|exists:blog_categories,id',
+            'content_type' => 'required|in:article,guide,research,tips,faq,case_study',
+            'keywords' => 'nullable|string',
+            'word_count' => 'nullable|integer|min:500|max:5000'
+        ]);
+
+        $params = [
+            'topic' => $request->topic,
+            'category_id' => $request->category_id,
+            'content_type' => $request->content_type,
+            'keywords' => $request->keywords ? explode(',', $request->keywords) : [],
+            'word_count' => $request->word_count ?? 1500
+        ];
+
+        $articleData = $this->aiGenerator->generateMedicalArticle($params);
+
+        return response()->json([
+            'success' => true,
+            'data' => $articleData,
+            'suggestions' => [
+                'titles' => $this->aiGenerator->suggestTitles($request->topic, 5),
+                'meta_descriptions' => $this->aiGenerator->generateSEOMeta($articleData['title'], $articleData['content'])
+            ]
+        ]);
+    }
+
+    /**
+     * تحسين مقال موجود بالذكاء الاصطناعي
+     */
+    public function improveWithAI($id)
+    {
+        $blog = Blog::findOrFail($id);
+
+        $improvedData = $this->aiGenerator->improveExistingArticle($blog);
+
+        return view('backend.blog.improve-with-ai', compact('blog', 'improvedData'));
+    }
+
+    /**
+     * حفظ المقال المولد
+     */
+    public function storeAIGenerated(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'excerpt' => 'required|string|max:500',
+            'category_id' => 'required|exists:blog_categories,id',
+            'meta_title' => 'nullable|string|max:70',
+            'meta_description' => 'nullable|string|max:160',
+            'target_keywords' => 'nullable|array',
+            'faq_json' => 'nullable|array',
+            'is_ai_generated' => 'boolean'
+        ]);
+
+        $blog = Blog::create([
+            'title' => $request->title,
+            'slug' => \Illuminate\Support\Str::slug($request->title) . '-' . \Illuminate\Support\Str::random(6),
+            'excerpt' => $request->excerpt,
+            'content' => $request->content,
+            'category_id' => $request->category_id,
+            'meta_title' => $request->meta_title,
+            'meta_description' => $request->meta_description,
+            'target_keywords' => $request->target_keywords,
+            'faq_json' => $request->faq_json,
+            'word_count' => str_word_count($request->content),
+            'reading_time' => ceil(str_word_count($request->content) / 200) . ' min',
+            'author_id' => auth()->id(),
+            'status' => 'draft',
+            'is_ai_generated' => $request->boolean('is_ai_generated', true),
+            'ai_generated_at' => now(),
+            'ai_model' => 'gpt-4'
+        ]);
+
+        return redirect()->route('admin.blog.edit', $blog->id)
+            ->with('success', 'تم إنشاء المقال بالذكاء الاصطناعي بنجاح. يمكنك الآن مراجعته وتعديله.');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -132,6 +226,10 @@ class AdminBlogController extends Controller
             'meta_description' => 'nullable|string|max:160',
             'schema_type' => 'nullable|string',
             'target_keywords' => 'nullable|string',
+            'author_credentials' => 'nullable|string',
+            'author_bio' => 'nullable|string',
+            'canonical_url' => 'nullable|url',
+            'update_frequency' => 'nullable|string',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:blog_tags,id',
             'source_locale' => 'required|string|size:2',
@@ -179,6 +277,10 @@ class AdminBlogController extends Controller
                 'featured' => $request->boolean('featured'),
                 'published_at' => $request->status === 'published' ? now() : null,
                 'scheduled_for' => $request->scheduled_for ? Carbon::parse($request->scheduled_for) : null,
+                'author_credentials' => $request->author_credentials,
+                'author_bio' => $request->author_bio,
+                'update_frequency' => $request->update_frequency,
+                'last_updated' => now(),
             ]);
 
             // Sync tags
@@ -306,6 +408,10 @@ class AdminBlogController extends Controller
             'meta_description' => 'nullable|string|max:160',
             'schema_type' => 'nullable|string',
             'target_keywords' => 'nullable|string',
+            'author_credentials' => 'nullable|string',
+            'author_bio' => 'nullable|string',
+            'canonical_url' => 'nullable|url',
+            'update_frequency' => 'nullable|string',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:blog_tags,id',
             'target_locales' => 'nullable|array',
@@ -336,6 +442,8 @@ class AdminBlogController extends Controller
                 'scheduled_for' => $request->scheduled_for ? Carbon::parse($request->scheduled_for) : null,
                 'last_updated' => now(),
                 'update_frequency' => $request->update_frequency,
+                'author_credentials' => $request->author_credentials,
+                'author_bio' => $request->author_bio,
             ];
 
             // Handle featured image
@@ -741,13 +849,13 @@ class AdminBlogController extends Controller
         }
 
         // Check if target keywords exist
-        if ($blog->target_keywords && !empty(json_decode($blog->target_keywords, true))) {
+        if ($blog->target_keywords && !empty($blog->target_keywords)) {
             $keywordsScore += 5;
         }
 
         // Check keyword density
         if ($blog->target_keywords) {
-            $keywords = json_decode($blog->target_keywords, true);
+            $keywords = $blog->target_keywords;
             $content = strtolower(strip_tags($blog->content));
             $totalWords = str_word_count($content);
 
@@ -953,7 +1061,7 @@ class AdminBlogController extends Controller
             $score += 30;
         }
 
-        if ($blog->target_keywords && !empty(json_decode($blog->target_keywords, true))) {
+        if ($blog->target_keywords && !empty($blog->target_keywords)) {
             $score += 30;
         }
 
@@ -974,7 +1082,7 @@ class AdminBlogController extends Controller
     {
         if (!$blog->target_keywords) return 0;
 
-        $keywords = json_decode($blog->target_keywords, true);
+        $keywords = $blog->target_keywords;
         if (empty($keywords)) return 0;
 
         $content = strtolower(strip_tags($blog->content));

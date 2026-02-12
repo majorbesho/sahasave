@@ -139,18 +139,15 @@
         <div class="row">
             <div class="text-center pending-container col-4">
                 <div class="pending-card">
-                    <!-- 1. الأيقونة التفاعلية -->
                     <div class="pending-icon">
-                        <i class="fas fa-hourglass-half"></i> <!-- يمكنك استخدام أيقونة أخرى من FontAwesome -->
+                        <i class="fas fa-hourglass-half"></i>
                     </div>
 
-                    <!-- 2. الرسالة الرئيسية -->
                     <h1>Thank You for Applying!</h1>
                     <p class="lead">Your application has been successfully submitted and is now under review.</p>
 
                     <hr class="my-4">
 
-                    <!-- 3. قسم "ماذا بعد؟" -->
                     <h5 class="mb-3">What's Next?</h5>
                     <ul class="timeline">
                         <li class="timeline-item completed">
@@ -176,7 +173,6 @@
                         </li>
                     </ul>
 
-                    <!-- 4. زر العودة للصفحة الرئيسية -->
                     <a href="{{ route('home') }}" class="mt-3 btn btn-primary btn-home">
                         <i class="fas fa-home me-2"></i> Back to Homepage
                     </a>

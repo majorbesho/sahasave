@@ -21,7 +21,7 @@
                                     <div class="row text-start">
                                         <div class="col-md-6">
                                             <p><strong>رقم الحجز:</strong> {{ $appointment->appointment_number }}</p>
-                                            <p><strong>الطبيب:</strong> د. {{ $appointment->doctor->name }}</p>
+                                            <p><strong>الطبيب:</strong> {{ $appointment->doctor->name }}</p>
                                             <p><strong>التخصص:</strong> {{ $appointment->doctor->doctor_specialization }}
                                             </p>
                                         </div>

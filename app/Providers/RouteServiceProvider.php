@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+
+use Illuminate\Cache\RateLimiting\Limit;
+
+
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -19,15 +22,6 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/';
-
-    /**
-     * The controller namespace for the application.
-     *
-     * When present, controller route declarations will automatically be prefixed with this namespace.
-     *
-     * @var string|null
-     */
-    // protected $namespace = 'App\\Http\\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -74,6 +68,30 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        });
+
+        // Google OAuth Rate Limiting
+        RateLimiter::for('google-auth', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
+        RateLimiter::for('google-callback', function (Request $request) {
+            return Limit::perMinute(15)->by($request->ip());
+        });
+
+        RateLimiter::for('google-account', function (Request $request) {
+            return Limit::perHour(5)->by(optional($request->user())->id ?: $request->ip());
+        });
+
+        // Login Rate Limiting
+        RateLimiter::for('login', function (Request $request) {
+            $key = $request->input('email') ?: $request->ip();
+            return Limit::perMinute(5)->by($key);
+        });
+
+        // Registration Rate Limiting
+        RateLimiter::for('register', function (Request $request) {
+            return Limit::perMinute(3)->by($request->ip());
         });
     }
 }

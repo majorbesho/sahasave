@@ -32,8 +32,17 @@ class PatientRegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-
+            'referral_code' => ['nullable', 'string', 'exists:users,referral_code'],
         ]);
+
+        $referredBy = null;
+        if ($request->filled('referral_code')) {
+            $referrer = User::where('referral_code', $request->referral_code)->first();
+            if ($referrer) {
+                $referredBy = $referrer->id;
+                $referrer->increment('referral_count');
+            }
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -41,7 +50,13 @@ class PatientRegisterController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => 'patient',
+            'provider' => $request->provider,
+            'provider_id' => $request->provider_id,
+            'referred_by' => $referredBy,
         ]);
+
+        // Generate referral code for new user
+        $user->generateReferralCode();
 
         event(new Registered($user));
 

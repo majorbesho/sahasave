@@ -481,7 +481,7 @@
                     <a href="mailto:careers@sehasave.com" class="bg-sky-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-sky-600 transition shadow-lg flex items-center justify-center gap-3">
                         <i class="fas fa-paper-plane"></i> {{ __('careers.cta.send_cv') }}
                     </a>
-                    <a href="{{ route('contact') }}" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition flex items-center justify-center gap-3">
+                    <a href="{{ route('contactus') }}" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition flex items-center justify-center gap-3">
                         <i class="fas fa-headset"></i> {{ __('careers.cta.contact_hr') }}
                     </a>
                 </div>

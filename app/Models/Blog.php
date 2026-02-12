@@ -165,6 +165,19 @@ class Blog extends Model
         $this->save();
     }
 
+    public function getFeaturedImageUrlAttribute()
+    {
+        if (!$this->featured_image) {
+            return asset('assets/img/blog/blog-placeholder.jpg');
+        }
+
+        if (filter_var($this->featured_image, FILTER_VALIDATE_URL)) {
+            return $this->featured_image;
+        }
+
+        return asset('storage/' . $this->featured_image);
+    }
+
     public function generateStructuredData()
     {
         return [
@@ -187,16 +200,18 @@ class Blog extends Model
                     'url' => asset('assets/img/logo.png')
                 ]
             ],
-            'datePublished' => $this->published_at->toIso8601String(),
-            'dateModified' => $this->last_updated ? $this->last_updated->toIso8601String() : $this->published_at->toIso8601String(),
+            'datePublished' => $this->published_at ? $this->published_at->toIso8601String() : $this->created_at->toIso8601String(),
+            'dateModified' => $this->last_updated ? $this->last_updated->toIso8601String() : ($this->published_at ? $this->published_at->toIso8601String() : $this->updated_at->toIso8601String()),
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
                 '@id' => url()->current()
             ],
             'wordCount' => $this->word_count,
             'timeRequired' => "PT{$this->reading_time}M",
-            'keywords' => $this->target_keywords,
+            'keywords' => is_array($this->target_keywords) ? implode(', ', $this->target_keywords) : $this->target_keywords,
             'articleSection' => $this->category->name ?? 'Health',
+            'citation' => $this->sources_references,
+            'backstory' => $this->author_bio,
         ];
     }
 }

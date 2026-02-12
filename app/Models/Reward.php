@@ -628,9 +628,10 @@ class Reward extends Model
             RewardTransaction::create([
                 'reward_id' => $reward->id,
                 'user_id' => $reward->user_id,
-                'type' => 'issued',
-                'amount' => $reward->amount,
-                'description' => 'إصدار مكافأة جديدة',
+                'transaction_type' => 'reward_issuance',
+                'amount' => $reward->amount ?? 0,
+                'notes' => 'إصدار مكافأة جديدة',
+                'status' => 'completed',
             ]);
         });
     }

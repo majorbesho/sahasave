@@ -122,8 +122,11 @@ thoughts, and insights' => 'اشترك في التنبيهات وأحدث مدو
     'Truck Type' => 'نوع الشاحنة ',
     'Truck Sub Type' => 'نوع الشاحنة',
     'date' => ' التاريخ ',
-
-
-
-
+    'testimonials_title' => 'آراء العملاء',
+    'trust_message' => 'أكثر من 15 ألف مستخدم يثقون في SehaSave.com حول العالم',
+    'doctors_available' => 'طبيب متاح',
+    'specialities' => 'تخصص طبي',
+    'bookings_done' => 'عملية حجز',
+    'hospitals_clinics_count' => 'مستشفى وعيادة',
+    'min' => 'دقيقة',
 ];

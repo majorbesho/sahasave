@@ -10,6 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Nette\Utils\Paginator as UtilsPaginator;
 use Illuminate\Support\Facades\DB;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Schema;
 
 
 
@@ -37,9 +39,27 @@ class AppServiceProvider extends ServiceProvider
 
         if (env('APP_DEBUG')) {
             DB::listen(function ($query) {
-                \Log::info("Query Time: {$query->time}ms - SQL: {$query->sql}");
+                if ($query->time > 1000) {
+                    \Log::channel('daily')->warning("Slow Query Detected ({$query->time}ms): " . $query->sql, [
+                        'bindings' => $query->bindings,
+                        'url' => request()->fullUrl(),
+                    ]);
+                }
             });
         }
+
+        Schema::defaultStringLength(191);
+
+        // Register Google socialite driver
+        Socialite::extend('google', function ($app) {
+            $config = $app['config']['services.google'];
+
+            return Socialite::buildProvider(
+                \Laravel\Socialite\Two\GoogleProvider::class,
+                $config
+            );
+        });
+
 
 
         // $locale = config('app.locale') == 'ar' ? 'ar' : config('app.locale');

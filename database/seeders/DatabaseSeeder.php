@@ -31,6 +31,9 @@ class DatabaseSeeder extends Seeder
             BlogCategorySeeder::class,
             BlogTagSeeder::class,
             BlogSeeder::class,
+            DubaiOrthoSualSeeder::class,
+            RealSualSeeder::class,
+            FaqSeeder::class,
         ]);
 
 

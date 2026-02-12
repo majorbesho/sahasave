@@ -13,10 +13,9 @@
                             </div>
                             <div class="col-md-12 col-lg-6 login-right">
                                 <div class="login-header">
-                                    <h3>{{ __('messages.doctor_register_title') }} <a
+                                    <h1 class="h3">{{ __('messages.doctor_register_title') }} <a
                                             href="{{ route('register.patient') }}">{{ __('messages.not_a_doctor') }}</a>
-                                    </h3>
-                                    <!-- 3. إضافة نص توضيحي -->
+                                    </h1>
                                     <p class="text-muted">{{ __('messages.doctor_register_subtitle') }}</p>
                                 </div>
 
@@ -26,7 +25,6 @@
                                     <h5 class="mb-3">{{ __('messages.account_information') }}</h5>
                                     <hr class="mt-0">
 
-                                    <!-- Name, Email, Phone -->
                                     <div class="mb-3">
                                         <label class="form-label">{{ __('messages.name') }}</label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
@@ -115,7 +113,16 @@
                                                 name="password_confirmation" required></div>
                                     </div>
 
-                                    <!-- 2. إضافة الموافقة على الشروط -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Referral Code (Optional)</label>
+                                        <input type="text" class="form-control @error('referral_code') is-invalid @enderror" 
+                                            name="referral_code" value="{{ old('referral_code', request('ref')) }}" 
+                                            placeholder="Enter referral code">
+                                        @error('referral_code')
+                                            <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+
                                     <div class="mb-3 form-check">
                                         <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox"
                                             name="terms" id="terms" required>

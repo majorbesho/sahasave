@@ -126,5 +126,11 @@ return [
     'Truck Sub Type' => 'Truck / Trailer Type',
 
     'date' => 'Pick Up Date',
-
+    'testimonials_title' => 'Testimonials',
+    'trust_message' => '15k Users Trust SehaSave.com Worldwide',
+    'doctors_available' => 'Doctors Available',
+    'specialities' => 'Specialties',
+    'bookings_done' => 'Bookings Done',
+    'hospitals_clinics_count' => 'Hospitals & Clinic',
+    'min' => 'Min',
 ];

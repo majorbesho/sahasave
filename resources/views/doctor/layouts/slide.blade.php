@@ -57,7 +57,7 @@
 
 
                     <li class="{{ request()->routeIs('doctor.medical-centers.*') ? 'active' : '' }}">
-                        <a href="{{ route('doctor.doctor.medical-centers.index') }}">
+                        <a href="{{ route('doctor.medical-centers.index') }}">
                             <i class="isax isax-calendar-1"></i>
                             <span>doctor Linked to Ceneter</span>
                         </a>
@@ -79,7 +79,7 @@
                         </a>
                     </li>
                     <li class="{{ request()->routeIs('doctor.specialties.*') ? 'active' : '' }}">
-                        <a href="{{ route('specialties.index') }}">
+                        <a href="{{ route('doctor.specialties.index') }}">
                             <i class="isax isax-clock"></i>
                             <span>Specialties & Services</span>
                         </a>
@@ -94,24 +94,24 @@
                             <span>Reviews</span>
                         </a>
                     </li>
-                    <li class="{{ request()->routeIs('doctor.accounts.*') ? 'active' : '' }}">
+                    {{-- <li class="{{ request()->routeIs('doctor.accounts.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.accounts.index') }}">
                             <i class="isax isax-profile-tick"></i>
                             <span>Accounts</span>
                         </a>
-                    </li>
-                    <li class="{{ request()->routeIs('doctor.invoices.*') ? 'active' : '' }}">
+                    </li> --}}
+                    {{-- <li class="{{ request()->routeIs('doctor.invoices.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.invoices.index') }}">
                             <i class="isax isax-document-text"></i>
                             <span>Invoices</span>
                         </a>
-                    </li>
-                    <li class="{{ request()->routeIs('doctor.payouts.*') ? 'active' : '' }}">
+                    </li> --}}
+                    {{-- <li class="{{ request()->routeIs('doctor.payouts.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.payouts.index') }}">
                             <i class="fa-solid fa-money-bill-1"></i>
                             <span>Payout Settings</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="{{ request()->routeIs('doctor.chat.*') ? 'active' : '' }}">
                         <a href="{{ route('doctor.chat.index') }}">
                             <i class="isax isax-messages-1"></i>

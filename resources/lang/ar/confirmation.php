@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'تأكيد الحجز',
+    'success_message' => 'تم حجز موعدك بنجاح',
+    'email_notice' => 'سيتم إرسال تأكيد الحجز إلى بريدك الإلكتروني',
+    'doctor_specialization_default' => 'طبيب',
+    'address_not_specified' => 'لم يتم تحديد العنوان',
+    'booking_number' => 'رقم الحجز',
+    'booking_date' => 'تاريخ الحجز',
+    'booking_time' => 'وقت الحجز',
+    'unconfirmed_notice' => 'الموعد غير مؤكد ... برجاء الانتظار التاكيد في خلال 24 ساعه',
+    'consultation_type' => 'نوع الاستشارة',
+    'video_consultation' => 'استشارة فيديو',
+    'audio_consultation' => 'استشارة صوتية',
+    'direct_visit' => 'زيارة مباشرة',
+    'status' => 'الحالة',
+    'amount_paid' => 'المبلغ المدفوع',
+    'currency' => 'درهم',
+    'add_to_google_calendar' => 'إضافة إلى تقويم Google',
+    'view_appointment_details' => 'عرض تفاصيل الموعد',
+    'note' => 'ملاحظة',
+    'confirmation_notice_details' => 'ستصلك رسالة تأكيد قبل الموعد بـ 24 ساعة. يرجى التأكد من توفرك في الوقت المحدد.',
+    'back_to_home' => 'العودة للرئيسية',
+    'my_appointments' => 'مواعيدي',
+];

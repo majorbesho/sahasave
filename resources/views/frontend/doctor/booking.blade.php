@@ -11,12 +11,11 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}">الرئيسية</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('search.doctors') }}">الأطباء</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('doctorshome.show', $doctor->id) }}">د.
-                                    {{ $doctor->name }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('doctors.search') }}">الأطباء</a></li>
+                            <li class="breadcrumb-item"><a href="{{ $doctor->doctorProfile && $doctor->doctorProfile->slug ? route('doctors.show', $doctor->doctorProfile->slug) : '#' }}">{{ $doctor->name }}</a></li>
                             <li class="breadcrumb-item active">حجز موعد</li>
                         </ol>
-                        <h2 class="breadcrumb-title">حجز موعد مع د. {{ $doctor->name }}</h2>
+                        <h2 class="breadcrumb-title">حجز موعد مع {{ $doctor->name }}</h2>
                     </nav>
                 </div>
             </div>
@@ -93,7 +92,7 @@
                             <h5 class="mb-0 card-title">تفاصيل الحجز</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('doctorshome.book.store', $doctor->id) }}" method="POST"
+                            <form action="{{ route('appointments.store') }}" method="POST"
                                 id="bookingForm">
                                 @csrf
 

@@ -15,7 +15,7 @@
                             <li class="breadcrumb-item">Doctor</li>
                             <li class="breadcrumb-item active">Doctor Search</li>
                         </ol>
-                        <h2 class="breadcrumb-title">Find Your Doctor</h2>
+                        <h1 class="breadcrumb-title">Find Your Doctor</h1>
                     </nav>
                 </div>
             </div>
@@ -250,8 +250,8 @@
                                     <div class="card doctor-list-card">
                                         <div class="d-md-flex align-items-center">
                                             <div class="card-img card-img-hover">
-                                                <a href="{{ route('doctorshome.show', $doctor->id) }}">
-                                                    <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg') }}"
+                                                <a href="{{ route('doctors.show', $doctor->doctorProfile->slug ?? '#') }}">
+                                                    <img src="{{ $doctor->photoUrl(asset('frontend/xx/assets/img/doctors/doctor-thumb-01.jpg')) }}"
                                                         alt="{{ $doctor->name }}">
                                                 </a>
                                                 <div
@@ -289,7 +289,7 @@
                                                                 <div>
                                                                     <h6 class="mb-1 d-flex align-items-center">
                                                                         <a
-                                                                            href="{{ route('doctorshome.show', $doctor->id) }}">Dr.
+                                                                            href="{{ route('doctors.show', $doctor->doctorProfile->slug ?? '#') }}">Dr.
                                                                             {{ $doctor->name }}</a>
                                                                         @if ($doctor->doctorProfile && $doctor->doctorProfile->is_verified)
                                                                             <i
@@ -366,7 +366,7 @@
                                                                 @endif
                                                             </p>
                                                         </div>
-                                                         <a href="{{ route('doctorshomex.booking.create', $doctor->id) }}"
+                                                         <a href="{{ route('doctors.book', $doctor->doctorProfile->slug ?? '#') }}"
                                                             class="inline-flex btn btn-md btn-primary-gradient align-items-center rounded-pill">
                                                             <i class="isax isax-calendar-1 me-2"></i>
                                                             Book Appointment
